@@ -1,18 +1,38 @@
-import React from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import React, { useEffect } from "react";
+import { Alert, Col, Container, Row, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import ProductCard from "../component/ProductCard";
+import { productActions } from "../redux/actions/productAction";
 
 const ProductAll = () => {
   const dispatch = useDispatch();
-  const error = useSelector((state) => state.product.error);
-  
+  const {loading, error, products} = useSelector((state) => state.product);
+  useEffect(() => {
+    dispatch(productActions.getProductList());
+  }, []);
+  console.log('products', products);
   return (
     <Container>
+      {loading && (
+        <div className="spinner-box">
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden loading-message">Loading...</span>
+        </Spinner>
+      </div>
+      )}
+      {error && (
+        <div>
+          <Alert variant="danger" className="error-message">
+            {error}
+          </Alert>
+        </div>
+      )}
       <Row>
-        <Col md={3} sm={12}>
-          <ProductCard />
-        </Col>
+        {products?.map((item) => (
+          <Col md={3} sm={12} key={item._id}>
+            <ProductCard item={item} /> 
+          </Col>
+        ))}
       </Row>
     </Container>
   );

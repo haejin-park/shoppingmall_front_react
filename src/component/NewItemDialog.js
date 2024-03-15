@@ -38,12 +38,14 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     //재고를 입력하지 않았으면 에러
-    if(stock.length === 0) setStockError(true);
+    if(stock?.length === 0) {
+      setStockError(true);
+      return;
+    }
     // 재고를 배열에서 객체로 바꿔주기 => [['M',2]] 에서 {M:2}로
     let stockObj = stock.reduce((total, item) => {
       return {...total, [item[0]]: parseInt(item[1])};
     },{});
-    // console.log('stockObj', stockObj);
     if(!formData) setFormDataError(true);
     if (mode === "new") {
       //새 상품 만들기
@@ -208,16 +210,16 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
                       handleSizeChange(event.target.value, index)
                     }
                     required
-                    defaultValue={item[0] ? item[0].toLowerCase() : ""}
+                    defaultValue={item[0] ? item[0].toUpperCase() : ""}
                   >
                     <option value="" disabled hidden>
                       Please Choose...
                     </option>
                     {SIZE.map((item, index) => (
                       <option
-                        value={item.toLowerCase()}
+                        value={item.toUpperCase()}
                         disabled={stock.some(
-                          (size) => size[0] === item.toLowerCase()
+                          (size) => size[0] === item.toUpperCase()
                         )}
                         key={index}
                       >

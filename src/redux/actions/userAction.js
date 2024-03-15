@@ -22,6 +22,7 @@ const loginWithEmail = ({email, password}, navigate) => async (dispatch) => {
     sessionStorage.setItem("token", response.data.token);
     api.defaults.headers.authorization = `Bearer ${response.data.token}`;
     if(response.data.user) navigate('/');
+    dispatch(commonUiActions.showToastMessage("로그인 되었습니다.", "success"));
   } catch(error) {
     dispatch({type: types.LOGIN_FAIL, payload: error.message});
     dispatch(commonUiActions.showToastMessage(error.message, "error"));
@@ -42,6 +43,7 @@ const loginWithGoogle = ({googleToken}, navigate) => async (dispatch) => {
     sessionStorage.setItem('token', response.data.token);
     api.defaults.headers.authorization = `Bearer ${response.data.token}`;
     if(response.data.user) navigate('/');
+    dispatch(commonUiActions.showToastMessage("로그인 되었습니다.", "success"));
   } catch (error) {
     dispatch({type: types.GOOGLE_LOGIN_FAIL, payload: error.message});
     dispatch(commonUiActions.showToastMessage(error.message, "error"));

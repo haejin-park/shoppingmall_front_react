@@ -40,6 +40,7 @@ body{
 }
 .burger-menu{
   margin-left: 20px;
+  visibility: hidden;
 }
 
 .landing-search-box{
@@ -57,11 +58,26 @@ body{
   padding: 5px;
 }
 
-@media (max-width: 767px){
-  .landing-search-box {
-    visibility: hidden;
-  }
-} 
+.side-search-box {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.side-search-box input {
+  border: none;
+  background-color: beige;
+  height: 30px;
+  width: 80%;
+  font-size: 16px;
+  margin-left: 3%;
+}
+
+.side-search-box input:focus {
+  outline:none;
+}
 
 .search-box input{
   border:none;
@@ -137,13 +153,26 @@ body{
 }
 
 
-
 .drop-down{
   margin-top:20px;
+  margin-bottom:20px;
+}
+
+.selected-option-box {
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.selected-option-row {
+  align-items: center;
+  margin-bottom: 10px;
+  width: 100%;
 }
 
 .add-button{
-  margin-top:20px;
+  margin-top:10px;
   width: 100%;
 }
 
@@ -151,10 +180,6 @@ body{
   transform: scale(1.1);
   z-index: 1;
 }
-.hide{
-  visibility:hidden
-}
-
 
 .side-menu {
   height: 100%;
@@ -245,10 +270,10 @@ body{
 
 
 @media screen and (max-width: 63rem) {
-  .hide {
+  .burger-menu{
     visibility:visible;
   }
-  .menu {
+  .menu, .landing-search-box  {
     display: none;
   }
  

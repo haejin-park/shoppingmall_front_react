@@ -21,11 +21,10 @@ const Navbar = ({ user }) => {
     } else {
       setMenuAndSearchBar(true);
     }
-  }, [user, location.pathname, navigate]);
+  }, [location.pathname, navigate]);
   const dispatch = useDispatch();
   const { cartItemCount } = useSelector((state) => state.cart);
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
-  console.log('isMobile', isMobile);
   const [showSearchBox, setShowSearchBox] = useState(false);
   const menuList = [
     "여성",
@@ -76,6 +75,14 @@ const Navbar = ({ user }) => {
         <button className="closebtn" onClick={() => setWidth(0)}>
           &times;
         </button>
+        <div className="side-search-box">
+          <FontAwesomeIcon icon={faSearch} />
+          <input
+            type="text"
+            placeholder="제품검색"
+            onKeyPress={onCheckEnter}
+          />
+        </div>
         <div className="side-menu-list" id="menu-list">
           {menuList.map((menu, index) => (
             <button key={index}>{menu}</button>
@@ -90,7 +97,7 @@ const Navbar = ({ user }) => {
       )}
       {menuAndSearchBar && ( 
         <div className="nav-header">
-          <div className="burger-menu hide">
+          <div className="burger-menu">
             <FontAwesomeIcon icon={faBars} onClick={() => setWidth(250)} />
           </div>
           <div>

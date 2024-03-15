@@ -1,55 +1,111 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, Dropdown, Row } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { Alert, Button, Col, Container, Dropdown, Form, Row, Spinner } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import "../style/productDetail.style.css";
+import { productActions } from "../redux/actions/productAction";
+import { cartActions } from "../redux/actions/cartAction";
 
 const ProductDetail = () => {
   const dispatch = useDispatch();
-
-  const [size, setSize] = useState("");
+  const { user } = useSelector((state) => state.user);
+  const { product, loading, error } = useSelector((state) => state.product);
   const { id } = useParams();
-  const [sizeError, setSizeError] = useState(false);
 
+  const [ selectedOption, setSelectedOption ] = useState([]);
+  const [ sizeError, setSizeError ] = useState(false);
   const navigate = useNavigate();
-
   const addItemToCart = () => {
-    //사이즈를 아직 선택안했다면 에러
-    // 아직 로그인을 안한유저라면 로그인페이지로
+    //선택한 옵션(사이즈)이 없다면 에러
+    if(selectedOption.length === 0) {
+      setSizeError(true);
+      return;
+    }
+
+    // 선택한 옵션 배열 반복 돌리며 비어있는 수량은 1로 설정
+    let newSelectedOption = selectedOption.map((option) => {
+      if(!option[1]) {
+        let updateOptionQty = [...option];
+        updateOptionQty[1] = 1 
+        return updateOptionQty;
+      } 
+      return option
+    });
+    setSelectedOption(newSelectedOption);
+
+    // 선택한 옵션을 배열에서 객체로 변경 => ex) [['S',1], ['M',2]] 에서 {S:1, M:2}로
+    let selectedOptionObj = newSelectedOption.reduce((total, item) => {
+      return {...total, [item[0]]: parseInt(item[1])};
+    },[]);
+
+    if(!user) navigate('/login');
+
     // 카트에 아이템 추가하기
+    dispatch(cartActions.addToCart({id, selectedOptionObj}));
+    //추가 후 초기화
+    setSelectedOption([]);
   };
-  const selectSize = (value) => {
-    // 사이즈 추가하기
+  const handleSelectSize = (value) => {
+    // 사이즈 선택하기
+    if(selectedOption?.length > 0){
+      let newOption = [...selectedOption, [value]];
+      setSelectedOption(newOption); 
+    } else {
+      setSelectedOption([[value]]);
+    }
+    setSizeError(false);     
   };
 
-  //카트에러가 있으면 에러메세지 보여주기
+  const handleSelectQty = (value, index) => {
+    //value는 수량, index는 selectedOption의 인덱스
+    const newSelectedOption = [...selectedOption];
+    if(value >= 1) {
+      newSelectedOption[index][1] = value;
+    } else {
+      newSelectedOption[index][1] = 1;
+    }
+    setSelectedOption([...newSelectedOption]);
+  };
 
-  //에러가 있으면 에러메세지 보여주기
+  const deleteSelectedOption = (index) => {
+    const newSelectedOption = selectedOption.filter((option, idx) => index !== idx);
+    setSelectedOption(newSelectedOption);
+  }
 
   useEffect(() => {
     //상품 디테일 정보 가져오기
+    dispatch(productActions.getProductDetail(id));
   }, [id]);
 
   return (
     <Container className="product-detail-card">
+      {loading && (
+        <div className="spinner-box">
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden loading-message">Loading...</span>
+        </Spinner>
+      </div>
+      )}
+      {error && (
+        <div>
+          <Alert variant="danger" className="error-message">
+            {error}
+          </Alert>
+        </div>
+      )}
       <Row>
         <Col sm={6}>
-          <img
-            src="https://lp2.hm.com/hmgoepprod?set=quality%5B79%5D%2Csource%5B%2F3a%2F04%2F3a04ededbfa6a7b535e0ffa30474853fc95d2e81.jpg%5D%2Corigin%5Bdam%5D%2Ccategory%5B%5D%2Ctype%5BLOOKBOOK%5D%2Cres%5Bm%5D%2Chmver%5B1%5D&call=url[file:/product/fullscreen]"
-            className="w-100"
-            alt="image"
-          />
+          <img src={product.image} className="w-100" alt={product.name} />
         </Col>
         <Col className="product-info-area" sm={6}>
-          <div className="product-info">리넨셔츠</div>
-          <div className="product-info">₩ 45,000</div>
-          <div className="product-info">샘플설명</div>
+          <div className="product-info">{product.name}</div>
+          <div className="product-info">₩ {product.price}</div>
+          <div className="product-info">{product.description}</div>
 
           <Dropdown
             className="drop-down size-drop-down"
-            title={size}
             align="start"
-            onSelect={(value) => selectSize(value)}
+            onSelect={(value) => handleSelectSize(value)}
           >
             <Dropdown.Toggle
               className="size-drop-down"
@@ -57,13 +113,50 @@ const ProductDetail = () => {
               id="dropdown-basic"
               align="start"
             >
-              {size === "" ? "사이즈 선택" : size.toUpperCase()}
+            사이즈 선택
             </Dropdown.Toggle>
-
             <Dropdown.Menu className="size-drop-down">
-              <Dropdown.Item>M</Dropdown.Item>
+              {product.stock && Object.keys(product?.stock).map((size, index) => (
+                <Dropdown.Item 
+                  key={index} 
+                  eventKey={size}
+                  disabled={selectedOption.some(
+                    (option) => option[0].toUpperCase() === size.toUpperCase()
+                  )}
+                >
+                  {`${size} (재고 수량 ${product?.stock[size]})`}
+                </Dropdown.Item>
+              ))}
             </Dropdown.Menu>
-          </Dropdown>
+          </Dropdown>          
+          {selectedOption?.map((item, index) => (
+            <div className="selected-option-box" key={index}>
+              <Row className="selected-option-row">
+                <Col sm={2}>
+                  {item[0]}
+                </Col>
+                <Col sm={8}>
+                  <Form.Control
+                    onChange={(event) =>
+                      handleSelectQty(event.target.value, index)
+                    }
+                    type="number"
+                    value={item[1] || 1}
+                    required
+                  />
+                </Col>
+                <Col sm={2}>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => deleteSelectedOption(index)}
+                  >
+                    -
+                  </Button>
+                </Col>
+              </Row>
+            </div>
+          ))}
           <div className="warning-message">
             {sizeError && "사이즈를 선택해주세요."}
           </div>
