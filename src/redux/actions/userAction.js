@@ -22,7 +22,6 @@ const loginWithEmail = ({email, password}, navigate) => async (dispatch) => {
     sessionStorage.setItem("token", response.data.token);
     api.defaults.headers.authorization = `Bearer ${response.data.token}`;
     if(response.data.user) navigate('/');
-    dispatch(commonUiActions.showToastMessage("로그인 되었습니다.", "success"));
   } catch(error) {
     dispatch({type: types.LOGIN_FAIL, payload: error.message});
     dispatch(commonUiActions.showToastMessage(error.message, "error"));
@@ -43,7 +42,6 @@ const loginWithGoogle = ({googleToken}, navigate) => async (dispatch) => {
     sessionStorage.setItem('token', response.data.token);
     api.defaults.headers.authorization = `Bearer ${response.data.token}`;
     if(response.data.user) navigate('/');
-    dispatch(commonUiActions.showToastMessage("로그인 되었습니다.", "success"));
   } catch (error) {
     dispatch({type: types.GOOGLE_LOGIN_FAIL, payload: error.message});
     dispatch(commonUiActions.showToastMessage(error.message, "error"));
@@ -57,7 +55,6 @@ const registerUser = ({ email, name, password }, navigate) => async (dispatch) =
     if(response.status !== 200) throw new Error(response.message);
     dispatch({type: types.REGISTER_USER_SUCCESS});
     dispatch(commonUiActions.showToastMessage("회원가입을 완료했습니다.", "success"));
-    // 성공후 로그인 페이지로 넘어가기
     navigate('/login');
   } catch(error) {
     dispatch({type: types.REGISTER_USER_FAIL});

@@ -5,10 +5,9 @@ import { commonUiActions } from './commonUiAction';
 
 const getProductList = (query) => async (dispatch) => {
   try {
-    console.log('query', query);
+    // console.log('query', query);
     dispatch({type:types.PRODUCT_GET_REQUEST, payload: query});
     const response = await api.get(`/product`, {params: {...query}});
-    console.log('response', response);
     if(response.status !== 200) throw new Error(response.message);
     dispatch({type:types.PRODUCT_GET_SUCCESS, payload: response.data});
   } catch(error) {
@@ -46,10 +45,20 @@ const editProduct = (formData, id) => async (dispatch) => {
 
 };
 
+const saveSearchKeyword = (searchQuery) => async(dispatch) => {
+  try {
+    dispatch({type:types.SAVE_SEARCH_KEYWORD_REQUEST})
+    dispatch({type:types.SAVE_SEARCH_KEYWORD_SUCCESS, payload:searchQuery});
+  } catch(error) {
+    dispatch({type:types.SAVE_SEARCH_KEYWORD_FAIL, paryload:error.message});
+  }
+};
+
 export const productActions = {
   getProductList,
   createProduct,
   deleteProduct,
   editProduct,
   getProductDetail,
+  saveSearchKeyword
 };

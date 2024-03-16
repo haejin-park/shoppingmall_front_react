@@ -5,6 +5,7 @@ const initialState = {
   error: '',
   products: [],
   product: {},
+  searchQuery: {},
 };
 
 function productReducer(state = initialState, action) {
@@ -65,7 +66,26 @@ function productReducer(state = initialState, action) {
         ...state,
         loading: false,
         error: payload
-      }  
+      }
+    case types.SAVE_SEARCH_KEYWORD_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: ''
+      }
+    case types.SAVE_SEARCH_KEYWORD_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: '',
+        searchQuery: payload
+      }
+    case types.SAVE_SEARCH_KEYWORD_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: payload
+      }        
     default: 
       return state;  
   }

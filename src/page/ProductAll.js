@@ -1,16 +1,26 @@
 import React, { useEffect } from "react";
 import { Alert, Col, Container, Row, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ProductCard from "../component/ProductCard";
 import { productActions } from "../redux/actions/productAction";
 
 const ProductAll = () => {
   const dispatch = useDispatch();
-  const {loading, error, products} = useSelector((state) => state.product);
+  const navigate = useNavigate();
+  const [query, setQuery] = useSearchParams();
+  const {loading, error, products, searchQuery} = useSelector((state) => state.product);
+  
   useEffect(() => {
-    dispatch(productActions.getProductList());
-  }, []);
-  console.log('products', products);
+    dispatch(productActions.getProductList({...searchQuery}));
+  }, [query]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchQuery); 
+    const queryString = decodeURIComponent(params.toString());
+    navigate("?"+queryString);
+  }, [searchQuery]);
+
   return (
     <Container>
       {loading && (

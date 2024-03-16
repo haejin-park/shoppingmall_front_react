@@ -8,12 +8,14 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { userActions } from "../redux/actions/userAction";
+import { productActions } from "../redux/actions/productAction";
 
 const Navbar = ({ user }) => {
   let location = useLocation();
   let navigate = useNavigate();
+  const [query, setQuery] = useSearchParams();
   let [menuAndSearchBar, setMenuAndSearchBar] = useState(true);
   useEffect(() => {
     if(location.pathname === '/login' || location.pathname === '/register') {
@@ -37,12 +39,13 @@ const Navbar = ({ user }) => {
     "지속가능성",
   ];
   let [width, setWidth] = useState(0);
+  //넘겨야할거 => 검색어 => state등록
   const onCheckEnter = (event) => {
     if (event.key === "Enter") {
+      dispatch(productActions.saveSearchKeyword({page: 1, name: event.target.value}));
       if (event.target.value === "") {
-        return navigate("/");
+        dispatch(productActions.saveSearchKeyword({page: 1 }));
       }
-      navigate(`?name=${event.target.value}`);
     }
   };
   const logout = () => {
