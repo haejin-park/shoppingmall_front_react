@@ -5,8 +5,10 @@ import { commonUiActions } from './commonUiAction';
 
 const getProductList = (query) => async (dispatch) => {
   try {
-    dispatch({type:types.PRODUCT_GET_REQUEST});
-    const response = await api.get("/product");
+    console.log('query', query);
+    dispatch({type:types.PRODUCT_GET_REQUEST, payload: query});
+    const response = await api.get(`/product`, {params: {...query}});
+    console.log('response', response);
     if(response.status !== 200) throw new Error(response.message);
     dispatch({type:types.PRODUCT_GET_SUCCESS, payload: response.data});
   } catch(error) {
@@ -18,7 +20,6 @@ const getProductDetail = (id) => async (dispatch) => {
   try {
     dispatch({type:types.PRODUCT_GET_DETAIL_REQUEST});
     const response = await api.get(`/product/${id}`);
-    console.log('response',response);
     if(response.status !== 200) throw new Error(response.message);
     dispatch({type:types.PRODUCT_GET_DETAIL_SUCCESS, payload: response.data});
   } catch(error) {

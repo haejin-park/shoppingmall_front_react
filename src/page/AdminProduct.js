@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Alert, Button, Container, Spinner } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import NewItemDialog from "../component/NewItemDialog";
 import ProductTable from "../component/ProductTable";
 import SearchBox from "../component/SearchBox";
+import { productActions } from "../redux/actions/productAction";
 
 const AdminProduct = () => {
+  /*
+  SearchBox에서 keyword로 검색어 읽어오기(엔터 치면 SearchQuery객체 update됨 ex {name:팬츠}) 
+    => searchQuery객체 안에 아이템 기준으로 url새로 생성해서 호출 ex) &name=스트레이트+팬츠 
+    => url쿼리 읽어오기
+    => url쿼리 기준으로 back에 검색 조건과 함께 호출 
+   */
+  const dispatch = useDispatch();
+  const {loading, error, products} = useSelector((state) => state.product);
   const navigate = useNavigate();
   const [query, setQuery] = useSearchParams();
-  const dispatch = useDispatch();
   const [showDialog, setShowDialog] = useState(false);
   const [searchQuery, setSearchQuery] = useState({
     page: query.get("page") || 1,
@@ -29,10 +37,19 @@ const AdminProduct = () => {
     "",
   ];
 
-  //상품리스트 가져오기 (url쿼리 맞춰서)
+  useEffect(() => { 
+    //url쿼리 읽어오기(query) => 쿼리 값에 맞춰서 상품리스트 가져오기
+    dispatch(productActions.getProductList({...searchQuery}));
+  }, [query]);
 
+  //상품리스트 가져오기 (url쿼리 맞춰서)
   useEffect(() => {
-    //검색어나 페이지가 바뀌면 url바꿔주기 (검색어또는 페이지가 바뀜 => url 바꿔줌=> url쿼리 읽어옴=> 이 쿼리값 맞춰서  상품리스트 가져오기)
+    //검색어 없으면 url에서도 삭제해서 첫 페이지로 돌아갈 수 있도록
+    if(!searchQuery.name) delete searchQuery.name;
+    //검색어나 페이지가 바뀌면 => 검색어를 파라미터 형태로 => url바꿔주기 
+    const params = new URLSearchParams(searchQuery);
+    const queryString =  decodeURIComponent(params.toString());
+    navigate("?" + queryString)
   }, [searchQuery]);
 
   const deleteItem = (id) => {
@@ -58,6 +75,20 @@ const AdminProduct = () => {
   return (
     <div className="locate-center">
       <Container>
+        {loading && (
+          <div className="spinner-box">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden loading-message">Loading...</span>
+          </Spinner>
+        </div>
+        )}
+        {error && (
+          <div>
+            <Alert variant="danger" className="error-message">
+              {error}
+            </Alert>
+          </div>
+        )}
         <div className="mt-2">
           <SearchBox
             searchQuery={searchQuery}
@@ -72,7 +103,7 @@ const AdminProduct = () => {
 
         <ProductTable
           header={tableHeader}
-          data=""
+          data={products}
           deleteItem={deleteItem}
           openEditForm={openEditForm}
         />
