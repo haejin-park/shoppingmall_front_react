@@ -108,24 +108,42 @@ function productReducer(state = initialState, action) {
         loading: false,
         error: payload
       }      
-    case types.EDIT_PRODUCT_REQUEST:
+    case types.UPDATE_PRODUCT_REQUEST:
       return {
         ...state,
         loading: true,
         error: ''
       }
-    case types.EDIT_PRODUCT_SUCCESS:
+    case types.UPDATE_PRODUCT_SUCCESS:
       return {
         ...state,
         loading: false,
         error: ''
       }
-    case types.EDIT_PRODUCT_FAIL:
+    case types.UPDATE_PRODUCT_FAIL:
       return {
         ...state,
         loading: false,
         error: payload
-      }     
+      }
+    case types.DELETE_PRODUCT_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: ''
+      }
+    case types.DELETE_PRODUCT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: ''
+      }
+    case types.DELETE_PRODUCT_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: payload
+      }            
     default: 
       return state;  
   }

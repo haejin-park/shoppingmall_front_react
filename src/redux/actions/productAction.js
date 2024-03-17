@@ -40,17 +40,28 @@ const createProduct = (formData) => async (dispatch) => {
   }
 };
 
-const deleteProduct = (id) => async (dispatch) => {};
-
-const editProduct = (formData) => async (dispatch) => {
+const deleteProduct = (id) => async (dispatch) => {
   try {
-    dispatch({type:types.EDIT_PRODUCT_REQUEST});
+    if(!id) throw new Error('삭제하려는 상품의 ID가 존재하지 않습니다.');
+    dispatch({type:types.DELETE_PRODUCT_REQUEST});
+    await api.put(`/product/delete/${id}`);
+    dispatch({type:types.DELETE_PRODUCT_SUCCESS});
+    dispatch(commonUiActions.showToastMessage("상품을 삭제했습니다.", "success"));
+  } catch(error) {
+    dispatch({type:types.DELETE_PRODUCT_FAIL, payload:error.message});
+    dispatch(commonUiActions.showToastMessage(error.message, "error"));
+  }
+};
+
+const updateProduct = (formData) => async (dispatch) => {
+  try {
+    dispatch({type:types.UPDATE_PRODUCT_REQUEST});
     const response = await api.put(`/product/${formData._id}`, {formData});
     if(response.status !== 200) throw new Error(response.message);
-    dispatch({type:types.EDIT_PRODUCT_SUCCESS, payload:response.data});
+    dispatch({type:types.UPDATE_PRODUCT_SUCCESS});
     dispatch(commonUiActions.showToastMessage("상품 수정을 완료했습니다.", "success"));
   } catch(error) {
-    dispatch({type:types.EDIT_PRODUCT_FAIL, payload:error.message});
+    dispatch({type:types.UPDATE_PRODUCT_FAIL, payload:error.message});
     dispatch(commonUiActions.showToastMessage(error.message, "error"));
   }
 };
@@ -76,7 +87,7 @@ export const productActions = {
   getProductList,
   createProduct,
   deleteProduct,
-  editProduct,
+  updateProduct,
   getProductDetail,
   searchProduct,
   selectProduct
