@@ -1,11 +1,14 @@
-import { faUser } from "@fortawesome/free-regular-svg-icons";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
   faBox,
   faSearch,
   faShoppingBag,
+  faRightToBracket,
+  faUser,
+  faRightFromBracket
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -17,13 +20,20 @@ const Navbar = ({ user }) => {
   let navigate = useNavigate();
   const dispatch = useDispatch();
   const { cartItemCount } = useSelector((state) => state.cart);
-  let [menuAndSearchBar, setMenuAndSearchBar] = useState(true);
+  let [loginStatus, setLoginStatus] = useState(true);
+  let [mainPageStatus, setMainPageStatus] = useState(true);
   const [showSearchBox, setShowSearchBox] = useState(false);
   useEffect(() => {
-    if(location.pathname === '/login' || location.pathname === '/register') {
-      setMenuAndSearchBar(false);
+    if(!user && location.pathname === '/login' || location.pathname === '/register') {
+      setLoginStatus(false);
     } else {
-      setMenuAndSearchBar(true);
+      setLoginStatus(true);
+    }
+
+    if(location.pathname === '/') {
+      setMainPageStatus(false)
+    } else {
+      setMainPageStatus(true)
     }
   }, [location.pathname, navigate]);
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
@@ -73,7 +83,7 @@ const Navbar = ({ user }) => {
           </div>
         </div>
       )}
-      {menuAndSearchBar && (
+      {loginStatus && (
       <div className="side-menu" style={{ width: width }}>
         <button className="closebtn" onClick={() => setWidth(0)}>
           &times;
@@ -93,28 +103,31 @@ const Navbar = ({ user }) => {
         </div>
       </div>
       )}
-      {user && user.level === "admin" && (
-        <Link to="/admin/product?page=1" className="link-area">
-          Admin page
-        </Link>
-      )}
-      {menuAndSearchBar && ( 
+      {loginStatus && ( 
         <div className="nav-header">
           <div className="burger-menu">
             <FontAwesomeIcon icon={faBars} onClick={() => setWidth(250)} />
           </div>
           <div>
             <div className="display-flex">
+              {user && user.level === "admin" && (
+                <div onClick={() => navigate("/admin/product?page=1")} className="nav-icon">
+                  <FontAwesomeIcon icon={faUser} />
+                  {!isMobile && (
+                    <span style={{ cursor: "pointer" }}>관리자</span>
+                  )}
+                </div>
+              )}
               {user ? 
                 <div onClick={logout} className="nav-icon">
-                  <FontAwesomeIcon icon={faUser} />
+                  <FontAwesomeIcon icon={faRightFromBracket} />
                   {!isMobile && (
                     <span style={{ cursor: "pointer" }}>로그아웃</span>
                   )}
                 </div>
                 : 
                 <div onClick={() => navigate("/login")} className="nav-icon">
-                  <FontAwesomeIcon icon={faUser} />
+                  <FontAwesomeIcon icon={faRightToBracket} />
                   {!isMobile && <span style={{ cursor: "pointer" }}>로그인</span>}
                 </div>
               }             
@@ -143,12 +156,12 @@ const Navbar = ({ user }) => {
           </div>
         </div>
       )}
-      <div className="nav-logo">
+      <div className={`nav-logo ${loginStatus? '' : 'login-false'}`}>
         <Link to="/">
           <img width={100} src="/image/hm-logo.png" alt="hm-logo.png" />
         </Link>
       </div>
-      {menuAndSearchBar && (
+      {loginStatus && (
         <div className="nav-menu-area">
           <ul className="menu">
             {menuList.map((menu, index) => (

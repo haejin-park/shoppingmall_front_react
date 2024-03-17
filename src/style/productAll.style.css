@@ -1,0 +1,11 @@
+.productall-paginate-row {
+    margin-top: 27px;
+    margin-bottom: 27px;
+}
+
+@media (min-width: 769px) and (max-width: 1008px) {
+    .productall-paginate-row {
+        margin-top: 17px;
+        margin-bottom: 27px;
+    }
+}

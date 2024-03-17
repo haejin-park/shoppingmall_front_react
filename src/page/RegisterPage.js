@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { userActions } from "../redux/actions/userAction";
 import "../style/register.style.css";
+import { Link } from "react-router-dom";
 const RegisterPage = () => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
@@ -116,15 +117,18 @@ return (
           {passwordError}
         </Form.Control.Feedback>
       </Form.Group>
-      <Form.Group className="mb-3">
-        <Form.Check
-          type="checkbox"
-          label="이용약관에 동의합니다"
-          id="policy"
-          onChange={handleChange}
-          isInvalid={policyError}
-        />
-      </Form.Group>
+      <div className="mb-3 terms-and-link-box">
+        <Form.Group>
+          <Form.Check
+            type="checkbox"
+            label="이용약관에 동의합니다"
+            id="policy"
+            onChange={handleChange}
+            isInvalid={policyError}
+          />
+        </Form.Group>
+        <Link to="/login">로그인으로 돌아가기</Link>
+      </div>
       <Button variant="danger" type="submit">
         회원가입
       </Button>

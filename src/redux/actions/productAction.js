@@ -14,6 +14,7 @@ const getProductList = (query) => async (dispatch) => {
     dispatch(commonUiActions.showToastMessage(error.message, "error"));
   }
 };
+
 const getProductDetail = (id) => async (dispatch) => {
   try {
     dispatch({type:types.GET_PRODUCT_DETAIL_REQUEST});
@@ -32,17 +33,16 @@ const createProduct = (formData) => async (dispatch) => {
     const response = await api.post("/product", {formData});
     if(response.status !== 200) throw new Error(response.message);
     dispatch({type:types.CREATE_PRODUCT_SUCCESS});
-    dispatch(commonUiActions.showToastMessage("상품 생성 완료", "success"));
+    dispatch(commonUiActions.showToastMessage("상품 생성을 완료했습니다.", "success"));
   } catch(error) {
     dispatch({type:types.CREATE_PRODUCT_FAIL, payload:error.message});
     dispatch(commonUiActions.showToastMessage(error.message, "error"));
   }
 };
+
 const deleteProduct = (id) => async (dispatch) => {};
 
-const editProduct = (formData, id) => async (dispatch) => {
-
-};
+const editProduct = (formData, id) => async (dispatch) => {};
 
 const searchProduct = (searchQuery) => async(dispatch) => {
   try {
@@ -52,6 +52,7 @@ const searchProduct = (searchQuery) => async(dispatch) => {
     dispatch({type:types.SEARCH_PRODUCT_FAIL, paryload:error.message});
   }
 };
+
 export const productActions = {
   getProductList,
   createProduct,

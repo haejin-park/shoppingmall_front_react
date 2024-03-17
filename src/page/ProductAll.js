@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import ProductCard from "../component/ProductCard";
 import { productActions } from "../redux/actions/productAction";
 import ReactPaginate from "react-paginate";
-
+import "../style/productAll.style.css";
 const ProductAll = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -50,28 +50,28 @@ const ProductAll = () => {
           </Col>
         ))}
       </Row>
-      <Row>
-      <ReactPaginate
-          nextLabel="next >"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={8}
-          pageCount={totalPageNum}
-          forcePage={currentPage - 1}  // 1페이지면 여긴 2가됨 (한개씩 +1 되므로 -1해줘야함)
-          previousLabel="< previous"
-          renderOnZeroPageCount={null}
-          pageClassName="page-item"
-          pageLinkClassName="page-link"
-          previousClassName="page-item"
-          previousLinkClassName="page-link"
-          nextClassName="page-item"
-          nextLinkClassName="page-link"
-          breakLabel="..."
-          breakClassName="page-item"
-          breakLinkClassName="page-link"
-          containerClassName="pagination"
-          activeClassName="active"
-          className="display-center list-style-none"
-        />
+      <Row className="productall-paginate-row">
+        <ReactPaginate
+            nextLabel="next >"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={8}
+            pageCount={totalPageNum}
+            forcePage={currentPage - 1}  // 1페이지면 여긴 2가됨 (한개씩 +1 되므로 -1해줘야함)
+            previousLabel="< previous"
+            renderOnZeroPageCount={null}
+            pageClassName="page-item"
+            pageLinkClassName="page-link"
+            previousClassName="page-item"
+            previousLinkClassName="page-link"
+            nextClassName="page-item"
+            nextLinkClassName="page-link"
+            breakLabel="..."
+            breakClassName="page-item"
+            breakLinkClassName="page-link"
+            containerClassName="pagination"
+            activeClassName="active"
+            className="display-center list-style-none"
+          />
       </Row>
     </Container>
   );

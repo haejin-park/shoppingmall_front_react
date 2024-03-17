@@ -9,7 +9,7 @@ const ProductCard = ({item}) => {
   return (
     <div className="card" onClick={() => showProduct(item?._id)}>
       <img src={item?.image} alt={item?.name} />
-      <div>{item?.name}</div>
+      <div className="product-name">{item?.name}</div>
       <div>₩ {item?.price}</div>
     </div>
   );
