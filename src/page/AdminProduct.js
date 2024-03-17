@@ -24,7 +24,6 @@ const AdminProduct = () => {
     page: query.get("page") || 1,
     name: query.get("name") || "",
   }); //검색 조건들을 저장하는 객체
-
   const [mode, setMode] = useState("new");
   const tableHeader = [
     "#",
@@ -40,7 +39,7 @@ const AdminProduct = () => {
   useEffect(() => { 
     //url쿼리 읽어오기(query) => 쿼리 값에 맞춰서 상품리스트 가져오기
     dispatch(productActions.getProductList({...searchQuery}));
-  }, [query]);
+  }, [query, showDialog]);
 
   //상품리스트 가져오기 (url쿼리 맞춰서)
   useEffect(() => {
@@ -57,8 +56,11 @@ const AdminProduct = () => {
   };
 
   const openEditForm = (product) => {
+    dispatch(productActions.selectProduct(product));
     //edit모드로 설정하고
+    setMode('edit');
     // 아이템 수정다이얼로그 열어주기
+    setShowDialog(true);
   };
 
   const handleClickNewItem = () => {

@@ -17,21 +17,32 @@ const InitialFormData = {
   price: 0,
 };
 const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
-  const selectedProduct = useSelector((state) => state.product.selectedProduct);
-  const { loading, error } = useSelector((state) => state.product);
+  const { loading, error, selectedProduct } = useSelector((state) => state.product);
   const [formData, setFormData] = useState(
-    mode === "new" ? { ...InitialFormData } : selectedProduct
+    mode === "new" ? { ...InitialFormData } : {...selectedProduct }
   );
-
   const [stock, setStock] = useState([]);
   const dispatch = useDispatch();
   const [stockError, setStockError] = useState(false);
   const [formDataError, setFormDataError] = useState(false);
+
+  useEffect(() => {
+    //수정 데이터 바로 불러와 지도록, 컴포넌트가 마운트될 때 selectedProduct가 초기에 값이 없는 경우 제어되지 않는 상태에 대한 경고 해결
+    if(mode === "new"){
+      setFormData({ ...InitialFormData })
+    } else {
+      setFormData({...selectedProduct }) 
+      //selectedProduct의 stock객체를 배열로 바꾼뒤 setStock에 넣는다 ex){ S:2, M:2 } =>[[S:2], [M,2]] 
+      const stockArrary = Object.entries(selectedProduct.stock);
+      setStock(stockArrary);
+    }
+  }, [mode, selectedProduct, showDialog]);
+
   const handleClose = () => {
     //다이얼로그 닫아주기
     setShowDialog(false);
     //모든걸 초기화시키기
-    mode === "new" ? setFormData({ ...InitialFormData }) : setFormData(selectedProduct)
+    mode === "new" ? setFormData({ ...InitialFormData }) : setFormData({...selectedProduct})
     setStock([]);
   };
 
@@ -46,12 +57,14 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     let stockObj = stock.reduce((total, item) => {
       return {...total, [item[0]]: parseInt(item[1])};
     },{});
+    console.log('stockObj',stockObj);
     if(!formData) setFormDataError(true);
     if (mode === "new") {
       //새 상품 만들기
       dispatch(productActions.createProduct({...formData, stock:stockObj}));
     } else {
       // 상품 수정하기
+      dispatch(productActions.editProduct({...formData, stock:stockObj}));
     }
     handleClose();
   };
@@ -204,7 +217,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
           <div className="mt-2">
             {stock.map((item, index) => (
               <Row key={index}>
-                <Col sm={4}>
+                <Col sm={5}>
                   <Form.Select
                     onChange={(event) =>
                       handleSizeChange(event.target.value, index)
@@ -213,7 +226,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
                     defaultValue={item[0] ? item[0].toUpperCase() : ""}
                   >
                     <option value="" disabled hidden>
-                      Please Choose...
+                      please choose size of stock
                     </option>
                     {SIZE.map((item, index) => (
                       <option
@@ -234,12 +247,12 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
                       handleStockChange(event.target.value, index)
                     }
                     type="number"
-                    placeholder="number of stock"
+                    placeholder="please set quantity of stock"
                     value={item[1] || ''}
                     required
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={1}>
                   <Button
                     variant="danger"
                     size="sm"
@@ -252,14 +265,14 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
             ))}
           </div>
         </Form.Group>
-
+          
         <Form.Group className="mb-3" controlId="Image" required>
           <Form.Label>Image</Form.Label>
           <CloudinaryUploadWidget uploadImage={uploadImage} />
           <img
             id="uploadedimage"
             src={formData.image}
-            className="upload-image mt-2"
+            className="upload-image mt-2 ml-2"
             alt="uploadedimage"
           />
         </Form.Group>

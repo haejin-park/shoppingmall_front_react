@@ -5,8 +5,9 @@ const initialState = {
   error: '',
   productList: [],
   product: {},
+  selectedProduct: {},
   searchQuery: {},
-  totalPageNum: 1
+  totalPageNum: 1,
 };
 
 function productReducer(state = initialState, action) {
@@ -87,7 +88,44 @@ function productReducer(state = initialState, action) {
         ...state,
         loading: false,
         error: payload
-      }                  
+      }
+    case types.SELECT_PRODUCT_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: ''
+      }
+    case types.SELECT_PRODUCT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: '',
+        selectedProduct: payload
+      }
+    case types.SELECT_PRODUCT_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: payload
+      }      
+    case types.EDIT_PRODUCT_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: ''
+      }
+    case types.EDIT_PRODUCT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: ''
+      }
+    case types.EDIT_PRODUCT_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: payload
+      }     
     default: 
       return state;  
   }
