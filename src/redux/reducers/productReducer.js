@@ -3,89 +3,91 @@ import * as types from '../../constants/product.constants';
 const initialState = {
   loading: false,
   error: '',
-  products: [],
+  productList: [],
   product: {},
   searchQuery: {},
+  totalPageNum: 1
 };
 
 function productReducer(state = initialState, action) {
   const { type, payload } = action;
   switch(type) {
-    case types.PRODUCT_CREATE_REQUEST:
+    case types.CREATE_PRODUCT_REQUEST:
       return {
         ...state,
         loading: true,
         error: ''
       }
-    case types.PRODUCT_CREATE_SUCCESS:
+    case types.CREATE_PRODUCT_SUCCESS:
       return {
         ...state,
         loading: false,
         error: ''
       }
-    case types.PRODUCT_CREATE_FAIL:
+    case types.CREATE_PRODUCT_FAIL:
       return {
         ...state,
         loading: false,
         error: payload
       }
-    case types.PRODUCT_GET_REQUEST:
+    case types.GET_PRODUCT_LIST_REQUEST:
       return {
         ...state,
         loading: true,
         error: ''
       }
-    case types.PRODUCT_GET_SUCCESS:
+    case types.GET_PRODUCT_LIST_SUCCESS:
       return {
         ...state,
         loading: false,
         error: '',
-        products: payload.products
+        productList: payload.productList,
+        totalPageNum: payload.totalPageNum
       }
-    case types.PRODUCT_GET_FAIL:
+    case types.GET_PRODUCT_LIST_FAIL:
       return {
         ...state,
         loading: false,
         error: payload
       }
-    case types.PRODUCT_GET_DETAIL_REQUEST:
+    case types.GET_PRODUCT_DETAIL_REQUEST:
       return {
         ...state,
         loading: true,
         error: ''
       }
-    case types.PRODUCT_GET_DETAIL_SUCCESS:
+    case types.GET_PRODUCT_DETAIL_SUCCESS:
       return {
         ...state,
         loading: false,
         error: '',
         product: payload.product
       }
-    case types.PRODUCT_GET_DETAIL_FAIL:
+    case types.GET_PRODUCT_DETAIL_FAIL:
       return {
         ...state,
         loading: false,
         error: payload
       }
-    case types.SAVE_SEARCH_KEYWORD_REQUEST:
+    case types.SEARCH_PRODUCT_REQUEST:
       return {
         ...state,
         loading: true,
         error: ''
       }
-    case types.SAVE_SEARCH_KEYWORD_SUCCESS:
+    case types.SEARCH_PRODUCT_SUCCESS:
       return {
         ...state,
         loading: false,
         error: '',
         searchQuery: payload
       }
-    case types.SAVE_SEARCH_KEYWORD_FAIL:
+    case types.SEARCH_PRODUCT_FAIL:
       return {
         ...state,
         loading: false,
         error: payload
-      }        
+      }                  
     default: 
       return state;  
   }

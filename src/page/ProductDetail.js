@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import "../style/productDetail.style.css";
 import { productActions } from "../redux/actions/productAction";
 import { cartActions } from "../redux/actions/cartAction";
+import { commonUiActions } from "../redux/actions/commonUiAction";
 
 const ProductDetail = () => {
   const dispatch = useDispatch();
@@ -38,8 +39,11 @@ const ProductDetail = () => {
       return {...total, [item[0]]: parseInt(item[1])};
     },[]);
 
-    if(!user) navigate('/login');
-
+    if(!user) {
+      dispatch(commonUiActions.showToastMessage("로그인 후 이용 가능합니다.", "error"));
+      navigate('/login');
+      return;
+    }
     // 카트에 아이템 추가하기
     dispatch(cartActions.addToCart({id, selectedOptionObj}));
     //추가 후 초기화

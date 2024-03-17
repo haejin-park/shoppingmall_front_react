@@ -53,8 +53,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     } else {
       // 상품 수정하기
     }
-    // handleClose();
-  
+    handleClose();
   };
 
   const handleChange = (event) => {
@@ -67,6 +66,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   const addStock = (sizeLength) => {
     if(stock.length < sizeLength) {
       setStock([...stock, []]);
+      setStockError(false)
     }
   };
 
@@ -196,7 +196,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
         <Form.Group className="mb-3" controlId="stock">
           <Form.Label className="mr-1">Stock</Form.Label>
           {stockError && (
-            <span className="error-message">재고를 입력해주세요</span>
+            <span className="error-message">재고를 추가해주세요</span>
           )}
           <Button size="sm" onClick={() => addStock(SIZE.length)}>
             Add +

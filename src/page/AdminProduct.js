@@ -16,7 +16,7 @@ const AdminProduct = () => {
     => url쿼리 기준으로 back에 검색 조건과 함께 호출 
    */
   const dispatch = useDispatch();
-  const {loading, error, products} = useSelector((state) => state.product);
+  const {loading, error, productList, totalPageNum} = useSelector((state) => state.product);
   const navigate = useNavigate();
   const [query, setQuery] = useSearchParams();
   const [showDialog, setShowDialog] = useState(false);
@@ -70,6 +70,7 @@ const AdminProduct = () => {
 
   const handlePageClick = ({ selected }) => {
     //  쿼리에 페이지값 바꿔주기
+    setSearchQuery({ ...searchQuery, page: selected + 1 });
   };
 
   return (
@@ -103,16 +104,16 @@ const AdminProduct = () => {
 
         <ProductTable
           header={tableHeader}
-          data={products}
+          data={productList}
           deleteItem={deleteItem}
           openEditForm={openEditForm}
         />
         <ReactPaginate
           nextLabel="next >"
           onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
-          pageCount={100}
-          forcePage={2} // 1페이지면 2임 여긴 한개씩 +1 해야함
+          pageRangeDisplayed={8}
+          pageCount={totalPageNum}
+          forcePage={searchQuery.page - 1} // 1페이지면 여긴 2가됨 (한개씩 +1 되므로 -1해줘야함)
           previousLabel="< previous"
           renderOnZeroPageCount={null}
           pageClassName="page-item"

@@ -8,15 +8,17 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { userActions } from "../redux/actions/userAction";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { productActions } from "../redux/actions/productAction";
+import { userActions } from "../redux/actions/userAction";
 
 const Navbar = ({ user }) => {
   let location = useLocation();
   let navigate = useNavigate();
-  const [query, setQuery] = useSearchParams();
+  const dispatch = useDispatch();
+  const { cartItemCount } = useSelector((state) => state.cart);
   let [menuAndSearchBar, setMenuAndSearchBar] = useState(true);
+  const [showSearchBox, setShowSearchBox] = useState(false);
   useEffect(() => {
     if(location.pathname === '/login' || location.pathname === '/register') {
       setMenuAndSearchBar(false);
@@ -24,10 +26,7 @@ const Navbar = ({ user }) => {
       setMenuAndSearchBar(true);
     }
   }, [location.pathname, navigate]);
-  const dispatch = useDispatch();
-  const { cartItemCount } = useSelector((state) => state.cart);
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
-  const [showSearchBox, setShowSearchBox] = useState(false);
   const menuList = [
     "여성",
     "Divided",
@@ -42,9 +41,10 @@ const Navbar = ({ user }) => {
   //넘겨야할거 => 검색어 => state등록
   const onCheckEnter = (event) => {
     if (event.key === "Enter") {
-      dispatch(productActions.saveSearchKeyword({page: 1, name: event.target.value}));
       if (event.target.value === "") {
-        dispatch(productActions.saveSearchKeyword({page: 1 }));
+        dispatch(productActions.searchProduct());
+      } else {
+        dispatch(productActions.searchProduct({name: event.target.value}));
       }
     }
   };
