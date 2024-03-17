@@ -52,8 +52,8 @@ const AdminProduct = () => {
   }, [searchQuery]);
 
   const deleteItem = (id) => {
-    //아이템 삭제하기
-    dispatch(productActions.deleteProduct(id));
+    //아이템 삭제하기 후 미들웨어에서 다시 조회 함수 호출
+    dispatch(productActions.deleteProduct(id,{...searchQuery}));
   };
 
   const openEditForm = (product) => {
@@ -138,6 +138,7 @@ const AdminProduct = () => {
         mode={mode}
         showDialog={showDialog}
         setShowDialog={setShowDialog}
+        searchQuery={searchQuery}
       />
     </div>
   );

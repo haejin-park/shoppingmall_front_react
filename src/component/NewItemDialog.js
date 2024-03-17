@@ -16,7 +16,7 @@ const InitialFormData = {
   status: "active",
   price: 0,
 };
-const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
+const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery }) => {
   const { loading, error, selectedProduct } = useSelector((state) => state.product);
   const [formData, setFormData] = useState(
     mode === "new" ? { ...InitialFormData } : {...selectedProduct }
@@ -59,8 +59,8 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     },{});
     if(!formData) setFormDataError(true);
     if (mode === "new") {
-      //새 상품 만들기
-      dispatch(productActions.createProduct({...formData, stock:stockObj}));
+      //새 상품 만들기 후 미들웨어에서 다시 조회 함수 호출
+      dispatch(productActions.createProduct({...formData, stock:stockObj},{...searchQuery}));
     } else {
       // 상품 수정하기
       dispatch(productActions.updateProduct({...formData, stock:stockObj}));
