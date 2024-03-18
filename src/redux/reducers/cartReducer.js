@@ -15,6 +15,14 @@ function cartReducer(state = initialState, action) {
         loading: true,
         error: ''
       }
+
+    case types.ADD_TO_CART_FAIL: 
+    return {
+      ...state,
+      loading: true,
+      error: ''
+    }    
+    
     case types.ADD_TO_CART_SUCCESS: 
       return {
         ...state,
@@ -22,12 +30,7 @@ function cartReducer(state = initialState, action) {
         error: '',
         cartItemCount: payload.cartItemCount
       }
-    case types.ADD_TO_CART_FAIL: 
-      return {
-        ...state,
-        loading: true,
-        error: ''
-      }  
+
     default: 
       return state; 
   }
