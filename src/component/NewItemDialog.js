@@ -22,7 +22,6 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery }) => {
     mode === "new" ? { ...InitialFormData } : {...selectedProduct }
   );
   const [stock, setStock] = useState([]);
-  // console.log('삭제 함수 밖 stock', stock);
   const dispatch = useDispatch();
   const [stockError, setStockError] = useState(false);
   const [formDataError, setFormDataError] = useState(false);
@@ -52,7 +51,9 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery }) => {
     //formData에 데이터 넣어주기
     event.preventDefault();
     const {id, value} = event.target;
-    if(id === 'price' && value < 1) return;
+    // if(value === '') return;
+    const price = id === 'price' && value === ''? 1: Number(value);
+    if(price < 1) return;
     setFormData({...formData, [id]: value});
   };
 
@@ -65,9 +66,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery }) => {
 
   const deleteStock = (index) => { //기존 코드
     //삭제 클릭한 index 제외
-    // console.log('삭제 함수 안 stock', stock);
     const newStock = stock.filter((item, idx) => idx !== index);
-    // console.log('newStock', newStock);
     setStock(newStock);
   };
 
