@@ -55,13 +55,14 @@ const deleteProduct = (id, query) => async (dispatch) => {
   }
 };
 
-const updateProduct = (formData) => async (dispatch) => {
+const updateProduct = (formData, query) => async (dispatch) => {
   try {
     dispatch({type:types.UPDATE_PRODUCT_REQUEST});
     const response = await api.put(`/product/${formData._id}`, {formData});
     if(response.status !== 200) throw new Error(response.message);
     dispatch({type:types.UPDATE_PRODUCT_SUCCESS});
     dispatch(commonUiActions.showToastMessage("상품 수정을 완료했습니다.", "success"));
+    await dispatch(productActions.getProductList({...query}));
   } catch(error) {
     dispatch({type:types.UPDATE_PRODUCT_FAIL, payload:error.message});
     dispatch(commonUiActions.showToastMessage(error.message, "error"));

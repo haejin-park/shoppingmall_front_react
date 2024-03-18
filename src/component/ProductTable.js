@@ -1,7 +1,6 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
-import { currencyFormat } from "../utils/number";
 const ProductTable = ({ header, data, deleteItem, openEditForm }) => {
   return (
     <div className="overflow-x">
@@ -20,7 +19,7 @@ const ProductTable = ({ header, data, deleteItem, openEditForm }) => {
                 <th>{index}</th>
                 <th>{item.sku}</th>
                 <th style={{ minWidth: "100px" }}>{item.name}</th>
-                <th>{currencyFormat(item.price)}</th>
+                <th>{item.price.toLocaleString()}</th>
                 <th>
                   {Object.keys(item.stock).map((size, index) => (
                     <div key={index}>
