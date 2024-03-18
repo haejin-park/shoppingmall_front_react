@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Button, Col, Form, Modal, Row, Spinner } from "react-bootstrap";
+import { Alert, Button, Col, Form, Image, Modal, Row, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { CATEGORY, SIZE, STATUS } from "../constants/product.constants";
 import { productActions } from "../redux/actions/productAction";
@@ -24,7 +24,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery }) => {
   const [stock, setStock] = useState([]);
   const dispatch = useDispatch();
   const [stockError, setStockError] = useState(false);
-  const [formDataError, setFormDataError] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     //수정 데이터 바로 불러와 지도록, 컴포넌트가 마운트될 때 selectedProduct가 초기에 값이 없는 경우 제어되지 않는 상태에 대한 경고 해결
@@ -49,12 +49,15 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery }) => {
 
   const handleChange = (event) => {
     //formData에 데이터 넣어주기
-    event.preventDefault();
     const {id, value} = event.target;
-    // if(value === '') return;
-    const price = id === 'price' && value === ''? 1: Number(value);
-    if(price < 1) return;
-    setFormData({...formData, [id]: value});
+    if (id === 'price') {
+      let parsedValue = parseInt(value);
+      if(parsedValue >= 1) {
+        setFormData({...formData, [id]: value});
+      } 
+    } else {
+      setFormData({...formData, [id]: value});
+    }
   };
 
   const addStock = (sizeLength) => { //이전 코드
@@ -111,20 +114,26 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery }) => {
   const uploadImage = (url) => {
     //이미지 업로드
     setFormData({...formData, image:url});
+    setImageError(false)
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    
     //재고를 입력하지 않았으면 에러
     if(stock?.length === 0) {
       setStockError(true);
+      return;
+    }
+    if(!formData.image) {
+      setImageError(true);
       return;
     }
     // 재고를 배열에서 객체로 바꿔주기 => [['M',2]] 에서 {M:2}로
     let stockObj = stock.reduce((total, item) => {
       return {...total, [item[0]]: parseInt(item[1])};
     },{});
-    if(!formData) setFormDataError(true);
+
     if (mode === "new") {
       //새 상품 만들기 후 미들웨어에서 다시 조회 함수 호출
       dispatch(productActions.createProduct({...formData, stock:stockObj},{...searchQuery}));
@@ -145,10 +154,10 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery }) => {
           </Spinner>
         </div>
       )}
-      {(error || formDataError) && (
+      {error && (
         <div>
           <Alert variant="danger" className="error-message">
-            {error || '빈 값을 입력해주세요'}
+            {error}
           </Alert>
         </div>
       )}
@@ -202,7 +211,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery }) => {
         <Form.Group className="mb-3" controlId="stock">
           <Form.Label className="mr-1">Stock</Form.Label>
           {stockError && (
-            <span className="error-message">재고를 추가해주세요</span>
+            <span className="error-message mr-1">재고를 추가해주세요</span>
           )}
           <Button size="sm" onClick={() => addStock(SIZE.length)}>
             Add +
@@ -257,17 +266,19 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery }) => {
           </div>
         </Form.Group>
           
-        <Form.Group className="mb-3" controlId="Image" required>
-          <Form.Label>Image</Form.Label>
+        <Form.Group className="mb-3" controlId="image" required>
+          <Form.Label className="mr-1">Image</Form.Label>
+          {imageError && (
+            <span className="error-message">이미지를 업로드 해주세요</span>
+          )}
           <CloudinaryUploadWidget uploadImage={uploadImage} />
-          <img
+          <Image
             id="uploadedimage"
             src={formData.image}
             className="upload-image mt-2 ml-2"
             alt="uploadedimage"
           />
         </Form.Group>
-
         <Row className="mb-3">
           <Form.Group as={Col} controlId="price">
             <Form.Label>Price</Form.Label>
@@ -282,8 +293,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery }) => {
 
           <Form.Group as={Col} controlId="category">
             <Form.Label>Category</Form.Label>
-            <Form.Control
-              as="select"
+            <Form.Select
               multiple
               onChange={onHandleCategory}
               value={formData.category}
@@ -294,7 +304,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery }) => {
                   {item}
                 </option>
               ))}
-            </Form.Control>
+            </Form.Select>
           </Form.Group>
 
           <Form.Group as={Col} controlId="status">
