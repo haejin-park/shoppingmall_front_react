@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { userActions } from "../redux/actions/userAction";
 import SearchBox from "./SearchBox";
+import { commonUiActions } from "../redux/actions/commonUiAction";
 
 const Navbar = ({ user }) => {
   let location = useLocation();
@@ -40,15 +41,25 @@ const Navbar = ({ user }) => {
     "지속가능성",
   ];
   let [width, setWidth] = useState(0);
+  let [overlayStatus, setOverlayStatus] = useState(false);
   const logout = () => {
     dispatch(userActions.logout());  
   };
+  const handleOpen = (width) => {
+    setWidth(width);
+    setOverlayStatus(true)
+  }
+
+  const handlClose = () => {
+    setWidth(0);
+    setOverlayStatus(false)
+  }
   return (
     <div>
       {loginStatus && ( 
         <div>
-          <div className="side-menu" style={{ width: width }}>
-            <button className="closebtn" onClick={() => setWidth(0)}>
+          <div className="side-menu" style={{ width }}>
+            <button className="closebtn" onClick={() => handlClose()}>
               &times;
             </button>
             <div className="mt-2 main-search-box">
@@ -60,13 +71,14 @@ const Navbar = ({ user }) => {
               ))}
             </div>
           </div>
+          <div className={`overlay ${overlayStatus ? 'overlay-show' : ''}`}></div>
           <div className="nav-header">
             <div className="burger-menu">
-              <FontAwesomeIcon icon={faBars} onClick={() => setWidth(250)} />
+              <FontAwesomeIcon icon={faBars} onClick={() => handleOpen(250)} />
             </div>
             <div>
               <div className="display-flex">
-                <div className="nav-function" onClick={() => setWidth(250)}>
+                <div className="nav-function" onClick={() => handleOpen(250)}>
                   <FontAwesomeIcon icon={faSearch} />
                   {!isMobile && (
                       <span style={{ cursor: "pointer" }}>상품 검색</span>

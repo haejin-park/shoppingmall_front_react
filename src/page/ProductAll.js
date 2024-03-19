@@ -29,60 +29,63 @@ const ProductAll = () => {
   };
 
   return (
-    <Container>
-      {loading && (
-        <div className="spinner-box">
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden loading-message">Loading...</span>
-        </Spinner>
-      </div>
-      )}
-      {error && (
-        <div>
-          <Alert variant="danger" className="error-message">
-            {error}
-          </Alert>
+    <div>
+      <Container>
+        {loading && (
+          <div className="spinner-box">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden loading-message">Loading...</span>
+          </Spinner>
         </div>
-      )}
-      <Row>
-      {productList.length === 0 ?(
-        <div>
-          <Alert variant="danger" className="error-message">
-            조회된 상품이 없습니다.
-          </Alert>
-        </div>
-      ) : (
-        productList?.map((item) => (
-          <Col md={3} sm={12} key={item._id}>
-            <ProductCard item={item} /> 
-          </Col>
-        ))
-      )}
-      </Row>
-      <Row className="productall-paginate-row">
-        <ReactPaginate
-            nextLabel="next >"
-            onPageChange={handlePageClick}
-            pageRangeDisplayed={8}
-            pageCount={totalPageNum}
-            forcePage={page - 1}
-            previousLabel="< previous"
-            renderOnZeroPageCount={null}
-            pageClassName="page-item"
-            pageLinkClassName="page-link"
-            previousClassName="page-item"
-            previousLinkClassName="page-link"
-            nextClassName="page-item"
-            nextLinkClassName="page-link"
-            breakLabel="..."
-            breakClassName="page-item"
-            breakLinkClassName="page-link"
-            containerClassName="pagination"
-            activeClassName="active"
-            className="display-center list-style-none"
-          />
-      </Row>
-    </Container>
+        )}
+        {error && (
+          <div>
+            <Alert variant="danger" className="error-message">
+              {error}
+            </Alert>
+          </div>
+        )}
+        <Row>
+        {productList.length === 0 ?(
+          <div>
+            <Alert variant="danger" className="error-message">
+              조회된 상품이 없습니다.
+            </Alert>
+          </div>
+        ) : (
+          productList?.map((item) => (
+            <Col md={3} sm={12} key={item._id}>
+              <ProductCard item={item} /> 
+            </Col>
+          ))
+        )}
+        </Row>
+        <Row className="productall-paginate-row">
+          <ReactPaginate
+              nextLabel="next >"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={8}
+              pageCount={totalPageNum}
+              forcePage={page - 1}
+              previousLabel="< previous"
+              renderOnZeroPageCount={null}
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              breakLabel="..."
+              breakClassName="page-item"
+              breakLinkClassName="page-link"
+              containerClassName="pagination"
+              activeClassName="active"
+              className="display-center list-style-none"
+            />
+        </Row>
+      </Container>
+    </div>
+    
   );
 };
 

@@ -7,7 +7,6 @@ import "./style/common.style.css";
 
 function App() {
   const {user} = useSelector((state) => state.user);
-
   return (
     <div>
       <AppLayout>
