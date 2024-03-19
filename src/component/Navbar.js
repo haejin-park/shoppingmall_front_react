@@ -45,7 +45,8 @@ const Navbar = ({ user }) => {
   };
   return (
     <div>
-      {loginStatus && (
+      {loginStatus && ( 
+      <div>
         <div className="side-menu" style={{ width: width }}>
           <button className="closebtn" onClick={() => setWidth(0)}>
             &times;
@@ -57,8 +58,6 @@ const Navbar = ({ user }) => {
               ))}
           </div>
         </div>
-      )}
-      {loginStatus && ( 
         <div className="nav-header">
           <div className="burger-menu">
             <FontAwesomeIcon icon={faBars} onClick={() => setWidth(250)} />
@@ -109,6 +108,7 @@ const Navbar = ({ user }) => {
             </div>
           </div>
         </div>
+      </div>  
       )}
       <div className={`nav-logo ${loginStatus? '' : 'login-false'}`}>
         <Link to="/">
