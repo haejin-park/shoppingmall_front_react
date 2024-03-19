@@ -1,19 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Offcanvas, Navbar, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
+  const [windowSize, setWidnowSize] = useState(window.innerWidth <= 992);
 
   const handleSelectMenu = (url) => {
     setShow(false);
     navigate(url);
   };
 
+    useEffect(() => {
+      const handleResize = () => {
+        setWidnowSize(window.innerWidth <= 992);
+        if (!windowSize && show) {
+          setShow(false);
+        }
+      }
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [windowSize, show]);
+
   const NavbarContent = () => {
     return (
-      <div>
+      <div className="sidebar-content">
         <Link to="/">
           <img width={100} src="/image/hm-logo.png" alt="hm-logo.png" />
         </Link>
@@ -37,21 +51,22 @@ const Sidebar = () => {
   };
   return (
     <>
-      <div className="sidebar-toggle">{NavbarContent()}</div>
+      <div className="sidebar-box">{NavbarContent()}</div>
 
       <Navbar bg="light" expand={false} className="mobile-sidebar-toggle">
         <Container fluid>
-          <img width={80} src="/image/hm-logo.png" alt="hm-logo.png" />
-          <Navbar.Brand href="#"></Navbar.Brand>
+          <Link to="/">
+            <img width={80} src="/image/hm-logo.png" alt="hm-logo.png" />
+          </Link>
           <Navbar.Toggle
             aria-controls={`offcanvasNavbar-expand`}
-            onClick={() => setShow(true)}
+            onClick={() => setShow(!show)}
           />
           <Navbar.Offcanvas
             id={`offcanvasNavbar-expand`}
             aria-labelledby={`offcanvasNavbarLabel-expand`}
             placement="start"
-            className="sidebar"
+            className="mobile-sidebar"
             show={show}
             onHide={() => setShow(false)}
           >

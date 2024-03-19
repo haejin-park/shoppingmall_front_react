@@ -232,19 +232,22 @@ body{
   padding-left: 0;
 }
 
-.sidebar{
+.sidebar-col {
   max-width: 300px;
-  padding:20px;
+  padding:40px;
   background-color: rgb(248,249,250);
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-  padding-left: 40px;
 }
 
 .mobile-sidebar-toggle{
   display:none;
 }
 
-@media screen and (max-width: 63rem) {
+.mobile-sidebar {
+  display:none;
+}
+
+@media screen and (max-width: 992px) {
   .burger-menu{
     visibility:visible;
   }
@@ -261,18 +264,22 @@ body{
   .nav-logo{
     margin-bottom: 0px;
   }
-  .sidebar-toggle{
+  .sidebar-col {
+    max-width: 100%;
+    padding:0px; 
+  }
+
+  .sidebar-box{
     display: none;
   }
+
   .mobile-sidebar-toggle{
     display:block;
   }
-  .sidebar{
-    max-width: 100%;
-    padding:0px;
-  }
-  .mobile-sidebar{
-    max-height: 104px;
+
+  .mobile-sidebar {
+    display:block;
+    width: 300px;
   }
 
   .side-menu-list {

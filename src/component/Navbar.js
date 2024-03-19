@@ -14,7 +14,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { userActions } from "../redux/actions/userAction";
 import SearchBox from "./SearchBox";
-import { commonUiActions } from "../redux/actions/commonUiAction";
 
 const Navbar = ({ user }) => {
   let location = useLocation();
