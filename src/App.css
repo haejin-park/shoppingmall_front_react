@@ -77,11 +77,12 @@ body{
   height: 30px;
   width: 100%;
   font-size: 16px;
-  margin-left: 22%;
+  color: white;
 }
 
 .main-search-box input::placeholder {
   color: rgb(255, 255, 255); /* placeholder의 색상을 검정색으로 설정 */
+  padding-left: 22%;
 }
 
 .main-search-box .search-icon {
