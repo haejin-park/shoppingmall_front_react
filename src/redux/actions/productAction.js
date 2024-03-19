@@ -5,7 +5,8 @@ import { commonUiActions } from './commonUiAction';
 
 const getProductList = (query) => async (dispatch) => {
   try {
-    dispatch({type:types.GET_PRODUCT_LIST_REQUEST, payload: query});
+    console.log('query', query);
+    dispatch({type:types.GET_PRODUCT_LIST_REQUEST});
     const response = await api.get(`/product`, {params: {...query}});
     if(response.status !== 200) throw new Error(response.message);
     dispatch({type:types.GET_PRODUCT_LIST_SUCCESS, payload: response.data});
@@ -57,7 +58,6 @@ const deleteProduct = (id, query) => async (dispatch) => {
 
 const updateProduct = (formData, query) => async (dispatch) => {
   try {
-    console.log('query', query);
     dispatch({type:types.UPDATE_PRODUCT_REQUEST});
     const response = await api.put(`/product/${formData._id}`, formData);
     if(response.status !== 200) throw new Error(response.message);

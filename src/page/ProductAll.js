@@ -14,14 +14,20 @@ const ProductAll = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    dispatch(productActions.getProductList({...searchQuery, page:currentPage}));
-  }, [query,currentPage,searchQuery,dispatch]);
-
-  useEffect(() => {
     const params = new URLSearchParams(searchQuery); 
     const queryString = decodeURIComponent(params.toString());
     navigate("?"+queryString);
   }, [searchQuery, navigate]);
+
+  useEffect(() => {
+    if(searchQuery?.name !== '') {
+      dispatch(productActions.getProductList({...searchQuery, page:currentPage}));
+    } else {
+      dispatch(productActions.getProductList({...searchQuery, page:1, name: ''}));
+    }
+  }, [query,currentPage]);
+
+
 
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected + 1)
@@ -40,6 +46,13 @@ const ProductAll = () => {
         <div>
           <Alert variant="danger" className="error-message">
             {error}
+          </Alert>
+        </div>
+      )}
+      {productList.length === 0 && (
+        <div>
+          <Alert variant="danger" className="error-message">
+            조회된 상품이 없습니다.
           </Alert>
         </div>
       )}

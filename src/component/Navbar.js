@@ -21,7 +21,6 @@ const Navbar = ({ user }) => {
   const dispatch = useDispatch();
   const { cartItemCount } = useSelector((state) => state.cart);
   let [loginStatus, setLoginStatus] = useState(true);
-  let [mainPageStatus, setMainPageStatus] = useState(true);
   const [showSearchBox, setShowSearchBox] = useState(false);
   useEffect(() => {
     if(!user && location.pathname === '/login' || location.pathname === '/register') {
@@ -29,13 +28,7 @@ const Navbar = ({ user }) => {
     } else {
       setLoginStatus(true);
     }
-
-    if(location.pathname === '/') {
-      setMainPageStatus(false)
-    } else {
-      setMainPageStatus(true)
-    }
-  }, [location.pathname, navigate]);
+  }, [user, location.pathname]);
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
   const menuList = [
     "여성",
