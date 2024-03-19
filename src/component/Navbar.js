@@ -46,69 +46,72 @@ const Navbar = ({ user }) => {
   return (
     <div>
       {loginStatus && ( 
-      <div>
-        <div className="side-menu" style={{ width: width }}>
-          <button className="closebtn" onClick={() => setWidth(0)}>
-            &times;
-          </button>
-            <SearchBox placeholder="제품명 검색" field="name"/>
+        <div>
+          <div className="side-menu" style={{ width: width }}>
+            <button className="closebtn" onClick={() => setWidth(0)}>
+              &times;
+            </button>
+            <div className="mt-2 main-search-box">
+              <SearchBox placeholder="상품명 검색" field="name"/>
+            </div>
             <div className="side-menu-list" id="menu-list">
               {menuList.map((menu, index) => (
                 <button key={index}>{menu}</button>
               ))}
-          </div>
-        </div>
-        <div className="nav-header">
-          <div className="burger-menu">
-            <FontAwesomeIcon icon={faBars} onClick={() => setWidth(250)} />
-          </div>
-          <div>
-            <div className="display-flex">
-              {user && user.level === "admin" && (
-                <div onClick={() => navigate("/admin/product?page=1")} className="nav-icon">
-                  <FontAwesomeIcon icon={faUser} />
-                  {!isMobile && (
-                    <span style={{ cursor: "pointer" }}>관리자</span>
-                  )}
-                </div>
-              )}
-              {user ? 
-                <div onClick={logout} className="nav-icon">
-                  <FontAwesomeIcon icon={faRightFromBracket} />
-                  {!isMobile && (
-                    <span style={{ cursor: "pointer" }}>로그아웃</span>
-                  )}
-                </div>
-                : 
-                <div onClick={() => navigate("/login")} className="nav-icon">
-                  <FontAwesomeIcon icon={faRightToBracket} />
-                  {!isMobile && <span style={{ cursor: "pointer" }}>로그인</span>}
-                </div>
-              }             
-              <div onClick={() => navigate("/cart")} className="nav-icon">
-                <FontAwesomeIcon icon={faShoppingBag} />
-                {!isMobile && (
-                  <span style={{ cursor: "pointer" }}>{`쇼핑백(${
-                    cartItemCount || 0
-                  })`}</span>
-                )}
-              </div>
-              <div
-                onClick={() => navigate("/account/purchase")}
-                className="nav-icon"
-              >
-                <FontAwesomeIcon icon={faBox} />
-                {!isMobile && <span style={{ cursor: "pointer" }}>내 주문</span>}
-              </div>
-              {isMobile && (
-                <div className="nav-icon" onClick={() => setWidth(250)}>
-                  <FontAwesomeIcon icon={faSearch} />
-                </div>
-              )}
             </div>
           </div>
-        </div>
-      </div>  
+          <div className="nav-header">
+            <div className="burger-menu">
+              <FontAwesomeIcon icon={faBars} onClick={() => setWidth(250)} />
+            </div>
+            <div>
+              <div className="display-flex">
+                <div className="nav-function" onClick={() => setWidth(250)}>
+                  <FontAwesomeIcon icon={faSearch} />
+                  {!isMobile && (
+                      <span style={{ cursor: "pointer" }}>상품 검색</span>
+                  )}
+                </div>
+                {user && user.level === "admin" && (
+                  <div onClick={() => navigate("/admin/product?page=1")} className="nav-function">
+                    <FontAwesomeIcon icon={faUser} />
+                    {!isMobile && (
+                      <span style={{ cursor: "pointer" }}>관리자</span>
+                    )}
+                  </div>
+                )}
+                {user ? 
+                  <div onClick={logout} className="nav-function">
+                    <FontAwesomeIcon icon={faRightFromBracket} />
+                    {!isMobile && (
+                      <span style={{ cursor: "pointer" }}>로그아웃</span>
+                    )}
+                  </div>
+                  : 
+                  <div onClick={() => navigate("/login")} className="nav-function">
+                    <FontAwesomeIcon icon={faRightToBracket} />
+                    {!isMobile && <span style={{ cursor: "pointer" }}>로그인</span>}
+                  </div>
+                }             
+                <div onClick={() => navigate("/cart")} className="nav-function">
+                  <FontAwesomeIcon icon={faShoppingBag} />
+                  {!isMobile && (
+                    <span style={{ cursor: "pointer" }}>{`쇼핑백(${
+                      cartItemCount || 0
+                    })`}</span>
+                  )}
+                </div>
+                <div
+                  onClick={() => navigate("/account/purchase")}
+                  className="nav-function"
+                >
+                  <FontAwesomeIcon icon={faBox} />
+                  {!isMobile && <span style={{ cursor: "pointer" }}>내 주문</span>}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>  
       )}
       <div className={`nav-logo ${loginStatus? '' : 'login-false'}`}>
         <Link to="/">
@@ -124,12 +127,8 @@ const Navbar = ({ user }) => {
               </li>
             ))}
           </ul>
-          {!isMobile && ( // admin페이지에서 같은 search-box스타일을 쓰고있음 그래서 여기서 서치박스 안보이는것 처리를 해줌
-            <SearchBox placeholder="제품명 검색" field="name"/>
-          )}
         </div>
       )}
-      
     </div>
   );
 };

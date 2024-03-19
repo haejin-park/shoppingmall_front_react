@@ -55,7 +55,7 @@ const AdminOrderPage = () => {
   return (
     <div className="locate-center">
       <Container>
-        <div className="mt-2 display-center mb-2">
+        <div className="mt-2 mb-2 display-center">
           <SearchBox
             placeholder="오더번호"
             field="ordernum"

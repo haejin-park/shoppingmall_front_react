@@ -100,7 +100,7 @@ const AdminProduct = () => {
             </Alert>
           </div>
         )}
-        <div className="mt-2">
+        <div className="mt-2 admin-search-box">
           <SearchBox placeholder="제품명 검색" field="name"/>
         </div>
         <Button className="mt-2 mb-2" onClick={handleClickNewItem}>
