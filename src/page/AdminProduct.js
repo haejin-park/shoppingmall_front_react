@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Alert, Button, Container, Spinner } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import NewItemDialog from "../component/NewItemDialog";
 import ProductTable from "../component/ProductTable";
 import SearchBox from "../component/SearchBox";
+import { commonFnActions } from "../redux/actions/commonFnAction";
 import { productActions } from "../redux/actions/productAction";
 
 const AdminProduct = () => {
@@ -17,14 +18,14 @@ const AdminProduct = () => {
    */
   const dispatch = useDispatch();
   const {loading, error, productList, totalPageNum} = useSelector((state) => state.product);
+  const {searchQuery, page} = useSelector((state) => state.fn);
   const navigate = useNavigate();
+  const location = useLocation();
   const [query, setQuery] = useSearchParams();
   const [showDialog, setShowDialog] = useState(false);
-  const [searchQuery, setSearchQuery] = useState({
-    page: query.get("page") || 1,
-    name: query.get("name") || "",
-  }); //검색 조건들을 저장하는 객체
   const [mode, setMode] = useState("new");
+  const [latestStatus, setLatestStatus] = useState(false);
+
   const tableHeader = [
     "#",
     "Sku",
@@ -35,17 +36,23 @@ const AdminProduct = () => {
     "Status",
     "",
   ];
+
+  useEffect(() => {
+    if(location.pathname === '/admin/product') {
+      setLatestStatus(true);
+    } else {
+      setLatestStatus(false);
+    }
+  }, [location.pathname]);
   
   useEffect(() => { 
     //url쿼리 읽어오기(query) => 쿼리 값에 맞춰서 상품리스트 가져오기
-    dispatch(productActions.getProductList({...searchQuery}));
-  }, [query, searchQuery, dispatch]);
+    dispatch(productActions.getProductList({...searchQuery, page}, latestStatus));
+  }, [query, page, searchQuery, dispatch, latestStatus]);
 
   //상품리스트 가져오기 (url쿼리 맞춰서)
   useEffect(() => {
-    //검색어 없으면 url에서도 삭제해서 첫 페이지로 돌아갈 수 있도록
-    if(!searchQuery.name) delete searchQuery.name;
-    //검색어나 페이지가 바뀌면 => 검색어를 파라미터 형태로 => url바꿔주기 
+    //검색어나 페이지는 파라미터 형태로 => url바꿔주기 
     const params = new URLSearchParams(searchQuery);
     const queryString =  decodeURIComponent(params.toString());
     navigate("?" + queryString)
@@ -53,7 +60,7 @@ const AdminProduct = () => {
 
   const deleteItem = (id) => {
     //아이템 삭제하기 후 미들웨어에서 다시 조회 함수 호출
-    dispatch(productActions.deleteProduct(id,{...searchQuery}));
+    dispatch(productActions.deleteProduct(id,{...searchQuery}, latestStatus));
   };
 
   const openEditForm = (product) => {
@@ -73,7 +80,7 @@ const AdminProduct = () => {
 
   const handlePageClick = ({ selected }) => {
     //  쿼리에 페이지값 바꿔주기
-    setSearchQuery({ ...searchQuery, page: selected + 1 });
+    dispatch(commonFnActions.changePage(selected + 1))
   };
 
   return (
@@ -94,12 +101,7 @@ const AdminProduct = () => {
           </div>
         )}
         <div className="mt-2">
-          <SearchBox
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            placeholder="제품 이름으로 검색"
-            field="name"
-          />
+          <SearchBox placeholder="제품명 검색" field="name"/>
         </div>
         <Button className="mt-2 mb-2" onClick={handleClickNewItem}>
           Add New Item +
@@ -107,7 +109,7 @@ const AdminProduct = () => {
 
         <ProductTable
           header={tableHeader}
-          data={productList}
+          productList={productList}
           deleteItem={deleteItem}
           openEditForm={openEditForm}
         />
@@ -116,7 +118,7 @@ const AdminProduct = () => {
           onPageChange={handlePageClick}
           pageRangeDisplayed={8}
           pageCount={totalPageNum}
-          forcePage={searchQuery.page - 1} // 1페이지면 여긴 2가됨 (한개씩 +1 되므로 -1해줘야함)
+          forcePage={page - 1} // 1페이지면 여긴 2가됨 (한개씩 +1 되므로 -1해줘야함)
           previousLabel="< previous"
           renderOnZeroPageCount={null}
           pageClassName="page-item"
@@ -133,12 +135,13 @@ const AdminProduct = () => {
           className="display-center list-style-none"
         />
       </Container>
-
       <NewItemDialog
         mode={mode}
         showDialog={showDialog}
         setShowDialog={setShowDialog}
         searchQuery={searchQuery}
+        page={page}
+        latestStatus={latestStatus}
       />
     </div>
   );

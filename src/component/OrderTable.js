@@ -1,21 +1,21 @@
 import React from "react";
-import { Table, Badge } from "react-bootstrap";
+import { Table, Badge, Alert } from "react-bootstrap";
 import { badgeBg } from "../constants/order.constants";
 import { currencyFormat } from "../utils/number";
-const OrderTable = ({ header, data, openEditForm }) => {
+const OrderTable = ({ header, orderList, openEditForm }) => {
   return (
     <div className="overflow-x">
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            {header.map((title) => (
-              <th>{title}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data.length > 0 ? (
-            data.map((item, index) => (
+      {orderList.length > 0 ? (
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              {header.map((title) => (
+                <th>{title}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {orderList.map((item, index) => (
               <tr onClick={() => openEditForm(item)}>
                 <th>{index}</th>
                 <th>{item.orderNum}</th>
@@ -29,20 +29,22 @@ const OrderTable = ({ header, data, openEditForm }) => {
                 ) : (
                   <th></th>
                 )}
-
                 <th>{item.shipTo.address + " " + item.shipTo.city}</th>
-
                 <th>{currencyFormat(item.totalPrice)}</th>
                 <th>
                   <Badge bg={badgeBg[item.status]}>{item.status}</Badge>
                 </th>
               </tr>
-            ))
-          ) : (
-            <tr><th>No Data to show</th></tr>
-          )}
-        </tbody>
-      </Table>
+            ))}
+          </tbody>
+        </Table>
+        ) : (
+        <div>
+          <Alert variant="danger" className="error-message">
+            조회된 주문이 없습니다
+          </Alert>
+        </div> 
+        )}
     </div>
   );
 };

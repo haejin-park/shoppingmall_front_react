@@ -1,26 +1,40 @@
-import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { useSearchParams } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { commonFnActions } from "../redux/actions/commonFnAction";
+import { useLocation } from "react-router";
 
-const SearchBox = ({ searchQuery, setSearchQuery, placeholder, field }) => {
-  const [query] = useSearchParams();
-  const [keyword, setKeyword] = useState(query.get(field) || "");
+const SearchBox = ({ placeholder, field }) => {
+  let [mainPageStatus, setMainPageStatus] = useState(true);
+  let location = useLocation();
+
+  useEffect(() => {
+    if(location.pathname === '/') {
+      setMainPageStatus(true);
+    } else {
+      setMainPageStatus(false);
+    }
+  }, [location.pathname]);
+
+  const dispatch = useDispatch();
 
   const onCheckEnter = (event) => {
     if (event.key === "Enter") {
-      setSearchQuery({ ...searchQuery, page: 1, [field]: event.target.value });
+      if (event.target.value === "") {
+        dispatch(commonFnActions.searchKeyword());
+      } else {
+        dispatch(commonFnActions.searchKeyword({[field]: event.target.value}));
+      }
     }
   };
   return (
-    <div className="search-box">
+    <div className={`${mainPageStatus? 'main-search-box': ''} search-box`}>
       <FontAwesomeIcon icon={faSearch} />
       <input
         type="text"
         placeholder={placeholder}
         onKeyPress={onCheckEnter}
-        onChange={(event) => setKeyword(event.target.value)}
-        value={keyword}
       />
     </div>
   );

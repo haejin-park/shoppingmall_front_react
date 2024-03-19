@@ -3,23 +3,21 @@ import { Container } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { orderActions } from "../redux/actions/orderAction";
 import OrderDetailDialog from "../component/OrderDetailDialog";
 import OrderTable from "../component/OrderTable";
 import SearchBox from "../component/SearchBox";
 import * as types from "../constants/order.constants";
+import { commonFnActions } from "../redux/actions/commonFnAction";
+import { orderActions } from "../redux/actions/orderAction";
 
 const AdminOrderPage = () => {
   const navigate = useNavigate();
   const [query, setQuery] = useSearchParams();
   const dispatch = useDispatch();
-  const orderList = useSelector((state) => state.order.orderList);
-  const [searchQuery, setSearchQuery] = useState({
-    page: query.get("page") || 1,
-    ordernum: query.get("ordernum") || "",
-  });
+  const {orderList, totalPageNum} = useSelector((state) => state.order);
+  const {searchQuery, page} = useSelector((state) => state.fn);
   const [open, setOpen] = useState(false);
-  const totalPageNum = useSelector((state) => state.order.totalPageNum);
+
   const tableHeader = [
     "#",
     "Order#",
@@ -32,18 +30,14 @@ const AdminOrderPage = () => {
   ];
 
   useEffect(() => {
-    dispatch(orderActions.getOrderList({ ...searchQuery }));
-  }, [query]);
+    dispatch(orderActions.getOrderList({ ...searchQuery, page}));
+  }, [query, page, searchQuery, dispatch]);
 
   useEffect(() => {
-    if (searchQuery.ordernum === "") {
-      delete searchQuery.ordernum;
-    }
     const params = new URLSearchParams(searchQuery);
     const queryString = params.toString();
-
     navigate("?" + queryString);
-  }, [searchQuery]);
+  }, [searchQuery, navigate]);
 
   const openEditForm = (order) => {
     setOpen(true);
@@ -51,7 +45,7 @@ const AdminOrderPage = () => {
   };
 
   const handlePageClick = ({ selected }) => {
-    setSearchQuery({ ...searchQuery, page: selected + 1 });
+    dispatch(commonFnActions.changePage(selected + 1))
   };
 
   const handleClose = () => {
@@ -63,16 +57,13 @@ const AdminOrderPage = () => {
       <Container>
         <div className="mt-2 display-center mb-2">
           <SearchBox
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
             placeholder="오더번호"
             field="ordernum"
           />
         </div>
-
         <OrderTable
           header={tableHeader}
-          data={orderList}
+          orderList={orderList}
           openEditForm={openEditForm}
         />
         <ReactPaginate
@@ -80,7 +71,7 @@ const AdminOrderPage = () => {
           onPageChange={handlePageClick}
           pageRangeDisplayed={8}
           pageCount={totalPageNum}
-          forcePage={searchQuery.page - 1}
+          forcePage={page - 1}
           previousLabel="< previous"
           renderOnZeroPageCount={null}
           pageClassName="page-item"

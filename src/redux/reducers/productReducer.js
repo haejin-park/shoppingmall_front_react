@@ -6,7 +6,6 @@ const initialState = {
   productList: [],
   product: {},
   selectedProduct: {},
-  searchQuery: {},
   totalPageNum: 1,
 };
 
@@ -15,7 +14,6 @@ function productReducer(state = initialState, action) {
   switch(type) {
     case types.CREATE_PRODUCT_REQUEST:
     case types.GET_PRODUCT_LIST_REQUEST:
-    case types.SEARCH_PRODUCT_REQUEST:
     case types.SELECT_PRODUCT_REQUEST:
     case types.GET_PRODUCT_DETAIL_REQUEST:
     case types.UPDATE_PRODUCT_REQUEST:
@@ -28,7 +26,6 @@ function productReducer(state = initialState, action) {
 
     case types.CREATE_PRODUCT_FAIL:
     case types.GET_PRODUCT_LIST_FAIL:
-    case types.SEARCH_PRODUCT_FAIL:
     case types.SELECT_PRODUCT_FAIL:
     case types.GET_PRODUCT_DETAIL_FAIL:
     case types.UPDATE_PRODUCT_FAIL:
@@ -57,14 +54,6 @@ function productReducer(state = initialState, action) {
         totalPageNum: payload.totalPageNum
       }
 
-    case types.SEARCH_PRODUCT_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        error: '',
-        searchQuery: payload
-      }
-
     case types.SELECT_PRODUCT_SUCCESS:
       return {
         ...state,
@@ -80,7 +69,7 @@ function productReducer(state = initialState, action) {
         error: '',
         product: payload.product
       }  
-     
+
     default: 
       return state;  
   }

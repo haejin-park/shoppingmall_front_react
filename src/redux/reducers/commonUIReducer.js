@@ -1,4 +1,5 @@
 import * as types from "../../constants/commonUI.constants";
+
 const initialState = {
   toastMessage: { message: "", status: "" },
 };

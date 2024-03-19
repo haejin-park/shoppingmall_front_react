@@ -47,13 +47,13 @@ body{
   visibility: hidden;
 }
 
-.landing-search-box{
-  right: 20px;
-  position: absolute;
-}
-
 .sidebar{
   max-width: 500px;
+}
+
+.main-search-box{
+  right: 2%;
+  position: absolute;
 }
 
 .search-box{
@@ -62,67 +62,14 @@ body{
   padding: 5px;
 }
 
-.side-search-box {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.side-search-box input {
-  border: none;
-  background-color: beige;
-  height: 30px;
-  width: 80%;
-  font-size: 16px;
-  margin-left: 3%;
-}
-
-.side-search-box input:focus {
-  outline:none;
-}
-
 .search-box input{
   border:none;
   margin-left:5px;
-  background-color: #FAF9F8;
+  background-color: transparent;
 }
 
 .search-box input:focus {
   outline:none
-}
-
-.mobile-search-box{
- position: relative;
- top:10px;
- left:10px;
-}
-
-.search{
-  align-items: center;
-
-}
-
-.search-icon{
-  margin-left: 10px;
-}
-
-.search input{
-  border: none;
-  background-color: #FAF9F8;
-  padding-left: 20px;
-}
-
-.search input:focus{
-  outline:none
-}
-
-.mobile-search-box .closebtn{
-  font-size: 36px;
-  border: none;
-  background: none;
-  padding-right: 30px;
 }
 
 .card{
@@ -222,6 +169,7 @@ body{
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 25%;
 }
 
 .side-menu-list button:hover {
@@ -288,8 +236,6 @@ body{
     margin-bottom:10px;
   }
   .nav-logo{
-    z-index: 2;
-    position: relative;
     margin-bottom: 0px;
   }
   .sidebar-toggle{
@@ -306,6 +252,25 @@ body{
   .mobile-sidebar{
     max-height: 104px;
   }
+  .main-search-box {
+    right: 11%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .main-search-box input {
+    height: 30px;
+    width: 100%;
+    font-size: 16px;
+    margin-left: 20%;
+  }
+  .main-search-box input::placeholder {
+    color: rgb(54, 50, 50); /* placeholder의 색상을 검정색으로 설정 */
+  }
+
 }
 
 @media screen and (max-width: 768px) {
@@ -313,6 +278,7 @@ body{
     margin-bottom: 20px;
   }
 }
+
 .display-flex{
   display:flex;
   align-items: center;
@@ -320,10 +286,6 @@ body{
 
 .admin-layout{
   display: flex;
-}
-
-.landing-search-box input{
-  background-color: #FAF9F8;
 }
 
 .link-area{
