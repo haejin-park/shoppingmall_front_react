@@ -53,6 +53,18 @@ const Navbar = ({ user }) => {
     setWidth(0);
     setOverlayStatus(false)
   }
+
+  useEffect(() => {
+    const handleEscapeKeyPress = (event) => {
+      if (event.key === 'Escape') handlClose();
+    };
+    document.addEventListener('keydown', handleEscapeKeyPress);
+  
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKeyPress);
+    };
+  }, []); 
+  
   return (
     <div>
       {loginStatus && ( 
