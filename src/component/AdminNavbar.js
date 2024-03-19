@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Offcanvas, Navbar, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
-const Sidebar = () => {
+const AdminNavbar = () => {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [windowSize, setWidnowSize] = useState(window.innerWidth <= 992);
@@ -27,20 +27,20 @@ const Sidebar = () => {
 
   const NavbarContent = () => {
     return (
-      <div className="sidebar-content">
+      <div className="admin-side-navbar-content">
         <Link to="/">
           <img width={100} src="/image/hm-logo.png" alt="hm-logo.png" />
         </Link>
-        <div className="sidebar-item">Admin Account</div>
-        <ul className="sidebar-area">
+        <div className="admin-side-navbar-item">Admin Account</div>
+        <ul className="side-navbar-area">
           <li
-            className="sidebar-item"
+            className="admin-side-navbar-item"
             onClick={() => handleSelectMenu("/admin/product?page=1")}
           >
             product
           </li>
           <li
-            className="sidebar-item"
+            className="admin-side-navbar-item"
             onClick={() => handleSelectMenu("/admin/order?page=1")}
           >
             order
@@ -51,9 +51,8 @@ const Sidebar = () => {
   };
   return (
     <>
-      <div className="sidebar-box">{NavbarContent()}</div>
-
-      <Navbar bg="light" expand={false} className="mobile-sidebar-toggle">
+      <div className="admin-side-navbar-box">{NavbarContent()}</div>
+      <Navbar bg="light" expand={false} className="admin-side-navbar-toggle">
         <Container fluid>
           <Link to="/">
             <img width={80} src="/image/hm-logo.png" alt="hm-logo.png" />
@@ -66,7 +65,7 @@ const Sidebar = () => {
             id={`offcanvasNavbar-expand`}
             aria-labelledby={`offcanvasNavbarLabel-expand`}
             placement="start"
-            className="mobile-sidebar"
+            className="admin-side-navbar"
             show={show}
             onHide={() => setShow(false)}
           >
@@ -79,4 +78,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default AdminNavbar;

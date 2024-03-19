@@ -3,7 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import Navbar from "../component/Navbar";
-import Sidebar from "../component/Sidebar";
+import AdminNavbar from "../component/AdminNavbar";
 import ToastMessage from "../component/ToastMessage";
 import { userActions } from "../redux/actions/userAction";
 
@@ -22,8 +22,8 @@ const AppLayout = ({ children }) => {
       <ToastMessage />
       {location.pathname.includes("admin") ? (
         <Row className="vh-100">
-          <Col lg="3" className="sidebar-col">
-            <Sidebar />
+          <Col lg="3" className="admin-navbar-col">
+            <AdminNavbar />
           </Col>
           <Col lg="9">
             {children}

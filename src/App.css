@@ -215,35 +215,35 @@ body{
   color: black;
 } 
 
-.sidebar-item{
+.admin-side-navbar-item{
   color:black;
   font-weight: bold;
   padding: 20px 10px;
   list-style-type: none;
 }
 
-.sidebar-item:hover{
+.admin-side-navbar-item:hover{
   color:white;
   background-color: red;
   font-weight: bold;
 }
 
-.sidebar-area{
+.side-navbar-area{
   padding-left: 0;
 }
 
-.sidebar-col {
+.admin-navbar-col {
   max-width: 300px;
   padding:40px;
   background-color: rgb(248,249,250);
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
 
-.mobile-sidebar-toggle{
+.admin-side-navbar-toggle{
   display:none;
 }
 
-.mobile-sidebar {
+.admin-side-navbar {
   display:none;
 }
 
@@ -264,20 +264,20 @@ body{
   .nav-logo{
     margin-bottom: 0px;
   }
-  .sidebar-col {
+  .admin-navbar-col {
     max-width: 100%;
     padding:0px; 
   }
 
-  .sidebar-box{
+  .admin-side-navbar-box{
     display: none;
   }
 
-  .mobile-sidebar-toggle{
+  .admin-side-navbar-toggle{
     display:block;
   }
 
-  .mobile-sidebar {
+  .admin-side-navbar {
     display:block;
     width: 300px;
   }
