@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 const AdminNavbar = () => {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
-  const [windowSize, setWidnowSize] = useState(window.innerWidth <= 992);
+  const [tabletSize, setTabletwSize] = useState(window.innerWidth <= 992);
 
   const handleSelectMenu = (url) => {
     setShow(false);
@@ -14,8 +14,8 @@ const AdminNavbar = () => {
 
     useEffect(() => {
       const handleResize = () => {
-        setWidnowSize(window.innerWidth <= 992);
-        if (!windowSize && show) {
+        setTabletwSize(window.innerWidth <= 992);
+        if (!tabletSize && show) {
           setShow(false);
         }
       }
@@ -23,7 +23,7 @@ const AdminNavbar = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [windowSize, show]);
+  }, [tabletSize, show]);
 
   const NavbarContent = () => {
     return (
