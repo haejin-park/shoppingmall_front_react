@@ -28,14 +28,14 @@ const getProductDetail = (id) => async (dispatch) => {
   }
 };
 
-const createProduct = (formData) => async (dispatch) => {
+const createProduct = (formData, query) => async (dispatch) => {
   try {
     dispatch({type:types.CREATE_PRODUCT_REQUEST});
     const response = await api.post("/product", formData);
     if(response.status !== 200) throw new Error(response.message);
     dispatch({type:types.CREATE_PRODUCT_SUCCESS});
     dispatch(commonUiActions.showToastMessage("상품 생성을 완료했습니다.", "success"));
-    await dispatch(productActions.getProductList({page:1, name:""}));
+    await dispatch(productActions.getProductList(query));
   } catch(error) {
     dispatch({type:types.CREATE_PRODUCT_FAIL, payload:error.message});
     dispatch(commonUiActions.showToastMessage(error.message, "error"));

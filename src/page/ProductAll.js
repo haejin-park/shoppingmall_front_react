@@ -14,19 +14,14 @@ const ProductAll = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
+      dispatch(productActions.getProductList({...searchQuery, page:currentPage}));
+  }, [query, currentPage, searchQuery, dispatch]);
+
+  useEffect(() => {
     const params = new URLSearchParams(searchQuery); 
     const queryString = decodeURIComponent(params.toString());
     navigate("?"+queryString);
   }, [searchQuery, navigate]);
-
-  useEffect(() => {
-    if(searchQuery?.name !== '') {
-      dispatch(productActions.getProductList({...searchQuery, page:currentPage}));
-    } else {
-      dispatch(productActions.getProductList({...searchQuery, page:1, name: ''}));
-    }
-  }, [query,currentPage]);
-
 
 
   const handlePageClick = ({ selected }) => {
@@ -70,7 +65,7 @@ const ProductAll = () => {
             onPageChange={handlePageClick}
             pageRangeDisplayed={8}
             pageCount={totalPageNum}
-            forcePage={currentPage - 1}  // 1페이지면 여긴 2가됨 (한개씩 +1 되므로 -1해줘야함)
+            forcePage={currentPage - 1}
             previousLabel="< previous"
             renderOnZeroPageCount={null}
             pageClassName="page-item"

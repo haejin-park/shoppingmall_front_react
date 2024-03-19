@@ -41,7 +41,6 @@ const Navbar = ({ user }) => {
     "지속가능성",
   ];
   let [width, setWidth] = useState(0);
-  //넘겨야할거 => 검색어 => state등록
   const onCheckEnter = (event) => {
     if (event.key === "Enter") {
       if (event.target.value === "") {

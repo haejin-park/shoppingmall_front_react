@@ -35,11 +35,11 @@ const AdminProduct = () => {
     "Status",
     "",
   ];
-
+  
   useEffect(() => { 
     //url쿼리 읽어오기(query) => 쿼리 값에 맞춰서 상품리스트 가져오기
     dispatch(productActions.getProductList({...searchQuery}));
-  }, [query]);
+  }, [query, searchQuery, dispatch]);
 
   //상품리스트 가져오기 (url쿼리 맞춰서)
   useEffect(() => {
@@ -49,7 +49,7 @@ const AdminProduct = () => {
     const params = new URLSearchParams(searchQuery);
     const queryString =  decodeURIComponent(params.toString());
     navigate("?" + queryString)
-  }, [searchQuery, showDialog]);
+  }, [searchQuery, navigate]);
 
   const deleteItem = (id) => {
     //아이템 삭제하기 후 미들웨어에서 다시 조회 함수 호출
