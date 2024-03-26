@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
-import { Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
-import Navbar from "../component/Navbar";
 import AdminNavbar from "../component/AdminNavbar";
+import Navbar from "../component/Navbar";
 import ToastMessage from "../component/ToastMessage";
 import { userActions } from "../redux/actions/userAction";
 
@@ -21,17 +20,17 @@ const AppLayout = ({ children }) => {
     <div>
       <ToastMessage />
       {location.pathname.includes("admin") ? (
-        <Row className="vh-100">
-          <Col lg="3" className="admin-navbar-col">
+        <div className="admin-navbar-row">
+          <div className="admin-navbar-col">
             <AdminNavbar />
-          </Col>
-          <Col lg="9">
+          </div>
+          <div className="admin-children-col">
             {children}
-          </Col>
-        </Row>
+          </div>
+        </div>
       ) : (
       <>
-        <Navbar user={user} />
+        <Navbar user={user}  />
         {children}
       </>
       )}

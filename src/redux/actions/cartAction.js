@@ -21,10 +21,21 @@ const deleteCartItem = (id) => async (dispatch) => {};
 
 const updateQty = (id, value) => async (dispatch) => {};
 const getCartQty = () => async (dispatch) => {};
+
+const changePage = (currentPage) => async(dispatch) => {
+  try {
+    dispatch({type:types.CHANGE_PAGE_OF_CART_REQUEST});
+    dispatch({type:types.CHANGE_PAGE_OF_CART_SUCCESS, payload:currentPage});
+  } catch(error) {
+    dispatch({type:types.CHANGE_PAGE_OF_CART_FAIL, payload:error.message});
+  }
+}
+
 export const cartActions = {
   addToCart,
   getCartList,
   deleteCartItem,
   updateQty,
   getCartQty,
+  changePage,
 };

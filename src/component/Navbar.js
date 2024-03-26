@@ -1,4 +1,3 @@
-
 import {
   faBars,
   faBox,
@@ -9,18 +8,26 @@ import {
   faUser
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { adminProductActions } from "../redux/actions/adminProductAction";
+import { cartActions } from "../redux/actions/cartAction";
+import { mainProductActions } from "../redux/actions/mainProductAction";
+import { myOrderActions } from "../redux/actions/myOrderAction";
 import { userActions } from "../redux/actions/userAction";
 import SearchBox from "./SearchBox";
 
 const Navbar = ({ user }) => {
-  let location = useLocation();
-  let navigate = useNavigate();
+  const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { cartItemCount } = useSelector((state) => state.cart);
-  let [loginStatus, setLoginStatus] = useState(true);
+  const [loginStatus, setLoginStatus] = useState(true);
+  const [searchValue, setSearchValue] = useState("");
+  let [width, setWidth] = useState(0);
+  let [overlayStatus, setOverlayStatus] = useState(false);
+
   useEffect(() => {
     if(!user && (location.pathname === '/login' || location.pathname === '/register')) {
       setLoginStatus(false);
@@ -28,6 +35,7 @@ const Navbar = ({ user }) => {
       setLoginStatus(true);
     }
   }, [user, location.pathname]);
+  
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
   const menuList = [
     "여성",
@@ -39,24 +47,10 @@ const Navbar = ({ user }) => {
     "Sale",
     "지속가능성",
   ];
-  let [width, setWidth] = useState(0);
-  let [overlayStatus, setOverlayStatus] = useState(false);
-  const logout = () => {
-    dispatch(userActions.logout());  
-  };
-  const handleOpen = (width) => {
-    setWidth(width);
-    setOverlayStatus(true)
-  }
-
-  const handlClose = () => {
-    setWidth(0);
-    setOverlayStatus(false)
-  }
 
   useEffect(() => {
     const handleEscapeKeyPress = (event) => {
-      if (event.key === 'Escape') handlClose();
+      if (event.key === 'Escape') handleClose();
     };
     document.addEventListener('keydown', handleEscapeKeyPress);
   
@@ -64,17 +58,57 @@ const Navbar = ({ user }) => {
       document.removeEventListener('keydown', handleEscapeKeyPress);
     };
   }, []); 
-  
+
+  const handleOpen = (width) => {
+    setWidth(width);
+    setOverlayStatus(true)
+  }
+
+  const handleClose = () => {
+    setWidth(0);
+    setOverlayStatus(false)
+  }
+
+  const goAdminProduct = (firstPage) => {
+    setSearchValue('')
+    dispatch(adminProductActions.changePage(firstPage));
+    navigate(`/admin/product?currentPage=${firstPage}`);
+  }
+
+  const goCart = (firstPage) => {
+    setSearchValue('')
+    dispatch(cartActions.changePage(firstPage));
+    navigate(`/cart?currentPage=${firstPage}`);
+  }
+
+  const goMyOrder = (firstPage) => {
+    setSearchValue('')
+    dispatch(myOrderActions.changePage(firstPage));
+    navigate(`/order?currentPage=${firstPage}`);
+  }
+
+  const goMainProduct = (firstPage) => {
+    setSearchValue('')
+    dispatch(mainProductActions.changePage(firstPage));
+    navigate(`/?currentPage=${firstPage}`);
+  }
+
   return (
     <div>
       {loginStatus && ( 
         <div>
           <div className="side-menu" style={{ width }}>
-            <button className="closebtn" onClick={() => handlClose()}>
+            <button className="closebtn" onClick={() => handleClose()}>
               &times;
             </button>
             <div className="mt-2 main-search-box">
-              <SearchBox placeholder="상품명 검색" field="name"/>
+              <SearchBox 
+              placeholder="상품명 검색" 
+              handleClose={handleClose} 
+              width={width} 
+              searchValue={searchValue} 
+              setSearchValue={setSearchValue}
+            />
             </div>
             <div className="side-menu-list" id="menu-list">
               {menuList.map((menu, index) => (
@@ -96,7 +130,7 @@ const Navbar = ({ user }) => {
                   )}
                 </div>
                 {user && user.level === "admin" && (
-                  <div onClick={() => navigate("/admin/product?page=1")} className="nav-function">
+                  <div onClick={() => goAdminProduct(1)} className="nav-function">
                     <FontAwesomeIcon icon={faUser} />
                     {!isMobile && (
                       <span style={{ cursor: "pointer" }}>관리자</span>
@@ -104,7 +138,7 @@ const Navbar = ({ user }) => {
                   </div>
                 )}
                 {user ? 
-                  <div onClick={logout} className="nav-function">
+                  <div onClick={() => dispatch(userActions.logout())} className="nav-function">
                     <FontAwesomeIcon icon={faRightFromBracket} />
                     {!isMobile && (
                       <span style={{ cursor: "pointer" }}>로그아웃</span>
@@ -116,7 +150,7 @@ const Navbar = ({ user }) => {
                     {!isMobile && <span style={{ cursor: "pointer" }}>로그인</span>}
                   </div>
                 }             
-                <div onClick={() => navigate("/cart")} className="nav-function">
+                <div onClick={() => goCart(1)} className="nav-function">
                   <FontAwesomeIcon icon={faShoppingBag} />
                   {!isMobile && (
                     <span style={{ cursor: "pointer" }}>{`쇼핑백(${
@@ -125,7 +159,7 @@ const Navbar = ({ user }) => {
                   )}
                 </div>
                 <div
-                  onClick={() => navigate("/account/purchase")}
+                  onClick={() => goMyOrder(1)}
                   className="nav-function"
                 >
                   <FontAwesomeIcon icon={faBox} />
@@ -137,9 +171,9 @@ const Navbar = ({ user }) => {
         </div>  
       )}
       <div className={`nav-logo ${loginStatus? '' : 'login-false'}`}>
-        <Link to="/">
+        <div onClick={() => goMainProduct(1)}>
           <img width={100} src="/image/hm-logo.png" alt="hm-logo.png" />
-        </Link>
+        </div>
       </div>
       {loginStatus && (
         <div className="nav-menu-area">

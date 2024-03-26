@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Alert, Button, Col, Form, Image, Modal, Row, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { CATEGORY, SIZE, STATUS } from "../constants/product.constants";
-import { productActions } from "../redux/actions/productAction";
+import { adminProductActions } from "../redux/actions/adminProductAction";
 import "../style/adminProduct.style.css";
 import CloudinaryUploadWidget from "../utils/CloudinaryUploadWidget";
 
@@ -16,8 +16,8 @@ const InitialFormData = {
   status: "active",
   price: "",
 };
-const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery, page, latestStatus }) => {
-  const { loading, error, selectedProduct } = useSelector((state) => state.product);
+const NewItemDialog = ({ mode, showDialog, setShowDialog, searchKeyword, currentPage, sortBy }) => {
+  const { loading, error, selectedProduct } = useSelector((state) => state.commonProduct);
   const [formData, setFormData] = useState(
     mode === "new" ? { ...InitialFormData } : {...selectedProduct }
   );
@@ -136,10 +136,10 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchQuery, page, lat
 
     if (mode === "new") {
       //새 상품 만들기 후 미들웨어에서 다시 조회 함수 호출
-      dispatch(productActions.createProduct({...formData, stock:stockObj}, latestStatus));
+      dispatch(adminProductActions.createProduct({...formData, stock:stockObj}, sortBy));
     } else {
-      // 상품 수정하기
-      dispatch(productActions.updateProduct({...formData, stock:stockObj}, {...searchQuery, page}, latestStatus));
+      // 상품 수정하기 미들웨어에서 다시 조회 함수 호출
+      dispatch(adminProductActions.updateProduct({...formData, stock:stockObj}, {searchKeyword, currentPage}, sortBy));
     }
     handleClose();
   };

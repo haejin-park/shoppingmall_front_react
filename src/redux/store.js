@@ -1,19 +1,25 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./reducers/userReducer";
-import productReducer from "./reducers/productReducer";
+import mainProductReducer from "./reducers/mainProductReducer";
+import adminProductReducer from "./reducers/adminProductReducer";
+import commonProductReducer from "./reducers/commonProductReducer";
 import cartReducer from "./reducers/cartReducer";
 import commonUiReducer from "./reducers/commonUIReducer";
-import orderReducer from "./reducers/orderReducer";
-import commonFnReducer from "./reducers/commonFnReducer";
+import myOrderReducer from "./reducers/myOrderReducer";
+import adminOrderReducer from "./reducers/adminOrderReducer";
+import commonOrderReducer from "./reducers/commonOrderReducer";
 
 const store = configureStore({
   reducer: {
     user: userReducer,
-    product: productReducer,
+    mainProduct: mainProductReducer,
+    adminProduct: adminProductReducer,
+    commonProduct: commonProductReducer,
     cart: cartReducer,
     ui: commonUiReducer,
-    fn: commonFnReducer,
-    order: orderReducer,
+    myOrder: myOrderReducer,
+    adminOrder: adminOrderReducer,
+    commonOrder: commonOrderReducer,
   },
 });
 export default store;

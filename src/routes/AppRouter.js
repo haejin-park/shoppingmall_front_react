@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router";
-import AdminOrderPage from "../page/AdminOrderPage";
+import AdminOrder from "../page/AdminOrder";
 import AdminProduct from "../page/AdminProduct";
-import CartPage from "../page/CartPage";
+import Cart from "../page/Cart";
 import Login from "../page/Login";
-import MyPage from "../page/MyPage";
-import OrderCompletePage from "../page/OrderCompletePage";
-import PaymentPage from "../page/PaymentPage";
-import ProductAll from "../page/ProductAll";
+import MyOrder from "../page/MyOrder";
+import OrderComplete from "../page/OrderComplete";
+import Payment from "../page/Payment";
+import MainProduct from "../page/MainProduct";
 import ProductDetail from "../page/ProductDetail";
-import RegisterPage from "../page/RegisterPage";
+import Register from "../page/Register";
 import PrivateRoute from "./PrivateRoute";
 
 const AppRouter = ({user}) => {
@@ -23,19 +23,19 @@ const AppRouter = ({user}) => {
   }, [user, location.pathname, navigate]);
   return (
     <Routes>
-      <Route path="/" element={<ProductAll />} />
+      <Route path="/" element={<MainProduct />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/register" element={<Register />} />
       <Route path="/product/:id" element={<ProductDetail />} />
       <Route element={<PrivateRoute permissionLevel={user?.level === "customer"} />}>
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/payment" element={<PaymentPage />} />
-        <Route path="/payment/success" element={<OrderCompletePage />} />
-        <Route path="/account/purchase" element={<MyPage />} />
+        <Route path="/cart" element={<Cart/>} />
+        <Route path="/payment" element={<Payment />} />
+        <Route path="/order/complete" element={<OrderComplete />} />
+        <Route path="/order" element={<MyOrder />} />
       </Route>
       <Route element={<PrivateRoute permissionLevel={user?.level === "admin"} />}>
         <Route path="/admin/product" element={<AdminProduct />} />
-        <Route path="/admin/order" element={<AdminOrderPage />} />
+        <Route path="/admin/order" element={<AdminOrder />} />
       </Route>
     </Routes>
   );

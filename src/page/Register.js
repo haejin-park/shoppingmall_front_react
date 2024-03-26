@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import { userActions } from "../redux/actions/userAction";
 import "../style/register.style.css";
 import { Link } from "react-router-dom";
-const RegisterPage = () => {
+const Register = () => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: "",
@@ -137,4 +137,4 @@ return (
   );
 };
 
-export default RegisterPage;
+export default Register;

@@ -3,10 +3,9 @@ import { Alert } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 const ProductTable = ({ header, productList, deleteItem, openEditForm }) => {
-  console.log('productList',productList);
   return (
     <div className="overflow-x">
-      {productList.length > 0 ? (
+      {productList?.length > 0 ? (
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -15,7 +14,7 @@ const ProductTable = ({ header, productList, deleteItem, openEditForm }) => {
               ))}
             </tr>
           </thead>
-            {productList.map((item, index) => (
+            {productList?.map((item, index) => (
               <tbody key={index}>
                 <tr>
                   <th>{index}</th>

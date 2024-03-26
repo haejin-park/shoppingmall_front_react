@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import "../style/paymentPage.style.css";
 
-const PaymentPage = () => {
+const Payment = () => {
   const dispatch = useDispatch();
 
   const [cardValue, setCardValue] = useState({
@@ -139,4 +139,4 @@ const PaymentPage = () => {
   );
 };
 
-export default PaymentPage;
+export default Payment;

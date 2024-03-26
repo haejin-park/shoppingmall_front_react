@@ -1,22 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Container } from "react-bootstrap";
+import { Alert, Container, Spinner } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import OrderDetailDialog from "../component/OrderDetailDialog";
 import OrderTable from "../component/OrderTable";
-import SearchBox from "../component/SearchBox";
 import * as types from "../constants/order.constants";
-import { commonFnActions } from "../redux/actions/commonFnAction";
-import { orderActions } from "../redux/actions/orderAction";
+import { adminOrderActions } from "../redux/actions/adminOrderAction";
 
-const AdminOrderPage = () => {
-  const navigate = useNavigate();
-  const [query, setQuery] = useSearchParams();
+const AdminOrder = () => {
   const dispatch = useDispatch();
-  const {orderList, totalPageNum} = useSelector((state) => state.order);
-  const {searchQuery, page} = useSelector((state) => state.fn);
+  const navigate = useNavigate();
+  const {loading, error, orderList, totalPageNum, currentPage} = useSelector((state) => state.adminOrder);
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useSearchParams();
+  const searchKeyword = query.get("searchKeyword");
 
   const tableHeader = [
     "#",
@@ -30,14 +28,16 @@ const AdminOrderPage = () => {
   ];
 
   useEffect(() => {
-    dispatch(orderActions.getOrderList({ ...searchQuery, page}));
-  }, [query, page, searchQuery, dispatch]);
+    dispatch(adminOrderActions.getOrderList({searchKeyword, currentPage}));
+  }, [query, searchKeyword, currentPage, dispatch]);
 
   useEffect(() => {
-    const params = new URLSearchParams(searchQuery);
+    const params = searchKeyword 
+    ? new URLSearchParams({searchKeyword, currentPage}) 
+    : new URLSearchParams({currentPage});
     const queryString = params.toString();
-    navigate("?" + queryString);
-  }, [searchQuery, navigate]);
+    navigate(`?${queryString}`)
+  }, [searchKeyword, currentPage, navigate]);
 
   const openEditForm = (order) => {
     setOpen(true);
@@ -45,7 +45,7 @@ const AdminOrderPage = () => {
   };
 
   const handlePageClick = ({ selected }) => {
-    dispatch(commonFnActions.changePage(selected + 1))
+    dispatch(adminOrderActions.changePage(selected + 1));
   };
 
   const handleClose = () => {
@@ -55,12 +55,20 @@ const AdminOrderPage = () => {
   return (
     <div className="locate-center">
       <Container>
-        <div className="mt-2 mb-2 display-center">
-          <SearchBox
-            placeholder="오더번호"
-            field="ordernum"
-          />
+      {loading && (
+          <div className="spinner-box">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden loading-message">Loading...</span>
+          </Spinner>
         </div>
+        )}
+        {error && (
+          <div>
+            <Alert variant="danger" className="error-message">
+              {error}
+            </Alert>
+          </div>
+        )}
         <OrderTable
           header={tableHeader}
           orderList={orderList}
@@ -71,7 +79,7 @@ const AdminOrderPage = () => {
           onPageChange={handlePageClick}
           pageRangeDisplayed={8}
           pageCount={totalPageNum}
-          forcePage={page - 1}
+          forcePage={currentPage - 1}
           previousLabel="< previous"
           renderOnZeroPageCount={null}
           pageClassName="page-item"
@@ -88,10 +96,9 @@ const AdminOrderPage = () => {
           className="display-center list-style-none"
         />
       </Container>
-
       {open && <OrderDetailDialog open={open} handleClose={handleClose} />}
     </div>
   );
 };
 
-export default AdminOrderPage;
+export default AdminOrder;

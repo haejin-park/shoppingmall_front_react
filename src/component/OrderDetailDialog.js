@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 
 import "../style/adminOrder.style.css";
 import { ORDER_STATUS } from "../constants/order.constants";
-import { orderActions } from "../redux/actions/orderAction";
+import { commonOrderActions } from "../redux/actions/commonOrderAction";
 import { currencyFormat } from "../utils/number";
 
 const OrderDetailDialog = ({ open, handleClose }) => {
-  const selectedOrder = useSelector((state) => state.order.selectedOrder);
+  const {selectedOrder} = useSelector((state) => state.commonOrder);
   const [orderStatus, setOrderStatus] = useState(selectedOrder.status);
   const dispatch = useDispatch();
 
@@ -16,7 +16,7 @@ const OrderDetailDialog = ({ open, handleClose }) => {
     setOrderStatus(event.target.value);
   };
   const submitStatus = () => {
-    dispatch(orderActions.updateOrder(selectedOrder._id, orderStatus));
+    dispatch(commonOrderActions.updateOrder(selectedOrder._id, orderStatus));
     handleClose();
   };
 

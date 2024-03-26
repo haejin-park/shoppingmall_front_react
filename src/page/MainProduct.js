@@ -1,33 +1,39 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, Col, Container, Row, Spinner } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useNavigationType, useSearchParams } from "react-router-dom";
 import ProductCard from "../component/ProductCard";
-import { commonFnActions } from "../redux/actions/commonFnAction";
-import { productActions } from "../redux/actions/productAction";
-import "../style/productAll.style.css";
-const ProductAll = () => {
+import { mainProductActions } from "../redux/actions/mainProductAction";
+import '../style/mainProduct.style.css';
+
+const MainProduct = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {loading, error, productList, totalPageNum, currentPage} = useSelector((state) => state.mainProduct);
+  const [sortBy, setSortBy] = useState("orderOfPurchase");
   const [query, setQuery] = useSearchParams();
-  const {loading, error, productList, totalPageNum} = useSelector((state) => state.product);
-  const {searchQuery, page} = useSelector((state) => state.fn);
-
+  const navigationType = useNavigationType();
+  const searchKeyword = query.get("searchKeyword") || "";
+  
   useEffect(() => { 
-    dispatch(productActions.getProductList({...searchQuery, page}));
-  }, [query, page, searchQuery, dispatch]);
+      dispatch(mainProductActions.getProductList({searchKeyword, currentPage}, sortBy));
+    }, [query, searchKeyword, currentPage, dispatch, sortBy]);
 
+  // 페이지가 변경되도록
   useEffect(() => {
-    const params = new URLSearchParams(searchQuery); 
-    const queryString = decodeURIComponent(params.toString());
-    navigate("?"+queryString);
-  }, [searchQuery, navigate]);
+    const params = searchKeyword 
+    ? new URLSearchParams({searchKeyword, currentPage}) 
+    : new URLSearchParams({currentPage});
+    const queryString = params.toString();
+    navigate(`?${queryString}`); 
+
+  }, [searchKeyword, currentPage, navigate, navigationType]);
 
   const handlePageClick = ({ selected }) => {
-    dispatch(commonFnActions.changePage(selected + 1));
+    dispatch(mainProductActions.changePage(selected + 1));
   };
-
+  
   return (
     <div>
       <Container>
@@ -60,13 +66,13 @@ const ProductAll = () => {
           ))
         )}
         </Row>
-        <Row className="productall-paginate-row">
+        <Row className="paginate-row">
           <ReactPaginate
               nextLabel="next >"
               onPageChange={handlePageClick}
               pageRangeDisplayed={8}
               pageCount={totalPageNum}
-              forcePage={page - 1}
+              forcePage={currentPage - 1}
               previousLabel="< previous"
               renderOnZeroPageCount={null}
               pageClassName="page-item"
@@ -85,8 +91,7 @@ const ProductAll = () => {
         </Row>
       </Container>
     </div>
-    
-  );
-};
+  )
+}
 
-export default ProductAll;
+export default MainProduct

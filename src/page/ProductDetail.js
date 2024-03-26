@@ -2,20 +2,20 @@ import React, { useEffect, useState } from "react";
 import { Alert, Button, Col, Container, Dropdown, Form, Row, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import "../style/productDetail.style.css";
-import { productActions } from "../redux/actions/productAction";
 import { cartActions } from "../redux/actions/cartAction";
 import { commonUiActions } from "../redux/actions/commonUiAction";
+import { commonProductActions } from "../redux/actions/commonProductAction";
+import "../style/productDetail.style.css";
 
 const ProductDetail = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.user);
-  const { product, loading, error } = useSelector((state) => state.product);
+  const navigate = useNavigate();
   const { id } = useParams();
-
+  const { user } = useSelector((state) => state.user);
+  const { product, loading, error } = useSelector((state) => state.commonProduct);
   const [ selectedOption, setSelectedOption ] = useState([]);
   const [ sizeError, setSizeError ] = useState(false);
-  const navigate = useNavigate();
+
   const addItemToCart = () => {
     //선택한 옵션(사이즈)이 없다면 에러
     if(selectedOption.length === 0) {
@@ -78,7 +78,7 @@ const ProductDetail = () => {
 
   useEffect(() => {
     //상품 디테일 정보 가져오기
-    dispatch(productActions.getProductDetail(id));
+    dispatch(commonProductActions.getProductDetail(id));
   }, [id]);
 
   return (
