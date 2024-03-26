@@ -2,11 +2,12 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useNavigationType } from "react-router";
 import { adminOrderActions } from "../redux/actions/adminOrderAction";
 import { adminProductActions } from "../redux/actions/adminProductAction";
 import { mainProductActions } from "../redux/actions/mainProductAction";
 import { myOrderActions } from "../redux/actions/myOrderAction";
+import { useSearchParams } from "react-router-dom";
 const SearchBox = ({ placeholder, handleClose, width, show, searchValue, setSearchValue }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -16,10 +17,17 @@ const SearchBox = ({ placeholder, handleClose, width, show, searchValue, setSear
   const myOrderPath ='/order';
   const mainProductPath = '/';
   const inputRef = useRef(null);
+  const navigationType = useNavigationType();
+  const [query, setQuery] = useSearchParams();
+  const searchKeyword = query.get("searchKeyword") || "";
 
   const onChangeHandler = (event) => {
     setSearchValue(event.target.value);
   }
+
+  useEffect(() => {
+    if(navigationType === "POP") setSearchValue(searchKeyword)
+  }, [navigationType, setSearchValue, searchKeyword]);
 
   // 검색창 열릴 때 입력필드 포커스
   useEffect(() => {
