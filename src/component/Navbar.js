@@ -8,7 +8,7 @@ import {
   faUser
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { adminProductActions } from "../redux/actions/adminProductAction";
@@ -18,6 +18,7 @@ import { myOrderActions } from "../redux/actions/myOrderAction";
 import { userActions } from "../redux/actions/userAction";
 import SearchBox from "./SearchBox";
 
+
 const Navbar = ({ user }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -25,17 +26,22 @@ const Navbar = ({ user }) => {
   const { cartItemCount } = useSelector((state) => state.cart);
   const [loginStatus, setLoginStatus] = useState(true);
   const [searchValue, setSearchValue] = useState("");
-  let [width, setWidth] = useState(0);
-  let [overlayStatus, setOverlayStatus] = useState(false);
+  const [width, setWidth] = useState(0);
+  const [overlayStatus, setOverlayStatus] = useState(false);
+  const currentPath = location.pathname;
+  const adminProductPath = '/admin/product';
+  const myOrderPath ='/order';
+  const cartPath = '/cart';
+  const mainProductPath = '/';
 
   useEffect(() => {
-    if(!user && (location.pathname === '/login' || location.pathname === '/register')) {
+    if(!user && (currentPath === '/login' || currentPath === '/register')) {
       setLoginStatus(false);
     } else {
       setLoginStatus(true);
     }
-  }, [user, location.pathname]);
-  
+  }, [user, currentPath]);
+
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
   const menuList = [
     "여성",
@@ -72,25 +78,25 @@ const Navbar = ({ user }) => {
   const goAdminProduct = (firstPage) => {
     setSearchValue('')
     dispatch(adminProductActions.changePage(firstPage));
-    navigate(`/admin/product?currentPage=${firstPage}`);
+    navigate(`${adminProductPath}?currentPage=${firstPage}`);
   }
 
   const goCart = (firstPage) => {
     setSearchValue('')
     dispatch(cartActions.changePage(firstPage));
-    navigate(`/cart?currentPage=${firstPage}`);
+    navigate(`${cartPath}?currentPage=${firstPage}`);
   }
 
   const goMyOrder = (firstPage) => {
     setSearchValue('')
     dispatch(myOrderActions.changePage(firstPage));
-    navigate(`/order?currentPage=${firstPage}`);
+    navigate(`${myOrderPath}?currentPage=${firstPage}`);
   }
 
   const goMainProduct = (firstPage) => {
     setSearchValue('')
     dispatch(mainProductActions.changePage(firstPage));
-    navigate(`/?currentPage=${firstPage}`);
+    navigate(`${mainProductPath}?currentPage=${firstPage}`);
   }
 
   return (

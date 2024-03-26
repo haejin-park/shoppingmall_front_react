@@ -14,6 +14,10 @@ const AdminNavbar = () => {
   const [tabletSize, setTabletwSize] = useState(window.innerWidth <= 992);
   const [searchValue, setSearchValue] = useState("");
   const [placeholder, setPlacehorder] = useState('상품명 검색');
+  const adminOrderPath ='/admin/order';
+  const adminProductPath = '/admin/product';
+  const mainProductPath = '/';
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -31,7 +35,7 @@ const AdminNavbar = () => {
   const goMainProduct = (firstPage) => {
     setSearchValue('')
     dispatch(mainProductActions.changePage(firstPage));
-    navigate(`/?currentPage=${firstPage}`);
+    navigate(`${mainProductPath}?currentPage=${firstPage}`);
   }
 
   const goAdminProduct = (firstPage) => {
@@ -39,7 +43,7 @@ const AdminNavbar = () => {
     setSearchValue('')
     setPlacehorder('상품명 검색')
     dispatch(adminProductActions.changePage(firstPage));
-    navigate(`/admin/product?currentPage=${firstPage}`);
+    navigate(`${adminProductPath}?currentPage=${firstPage}`);
   };
 
   const goAdminOrder = (firstPage) => {
@@ -47,7 +51,7 @@ const AdminNavbar = () => {
     setSearchValue('')
     setPlacehorder('주문 번호 검색')
     dispatch(adminOrderActions.changePage(firstPage));
-    navigate(`/admin/order?currentPage=${firstPage}`);
+    navigate(`${adminOrderPath}?currentPage=${firstPage}`);
   };
 
   const NavbarContent = () => {

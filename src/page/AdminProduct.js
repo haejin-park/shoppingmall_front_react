@@ -16,7 +16,7 @@ const AdminProduct = () => {
   const [mode, setMode] = useState("new");
   const [sortBy, setSortBy] = useState("latest");
   const [query, setQuery] = useSearchParams();
-  const searchKeyword = query.get("searchKeyword");
+  const searchKeyword = query.get("searchKeyword") || "";
 
   const tableHeader = [
     "#",

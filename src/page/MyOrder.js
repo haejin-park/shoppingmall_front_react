@@ -11,7 +11,7 @@ const MyOrder = () => {
   const navigate = useNavigate();
   const {loading, error, orderList, totalPageNum, currentPage} = useSelector((state) => state.adminOrder);
   const [query, setQuery] = useSearchParams(); 
-  const searchKeyword = query.get("searchKeyword");
+  const searchKeyword = query.get("searchKeyword") || ''; 
 
   //오더리스트 들고오기
   useEffect(() => {
