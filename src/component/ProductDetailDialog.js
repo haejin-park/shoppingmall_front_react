@@ -16,7 +16,7 @@ const InitialFormData = {
   status: "active",
   price: "",
 };
-const NewItemDialog = ({ mode, showDialog, setShowDialog, searchKeyword, currentPage, sortBy }) => {
+const ProductDetailDialog = ({ mode, showDialog, setShowDialog, searchKeyword, currentPage, sortBy }) => {
   const { loading, error, selectedProduct } = useSelector((state) => state.commonProduct);
   const [formData, setFormData] = useState(
     mode === "new" ? { ...InitialFormData } : {...selectedProduct }
@@ -336,4 +336,4 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, searchKeyword, current
   );
 };
 
-export default NewItemDialog;
+export default ProductDetailDialog;

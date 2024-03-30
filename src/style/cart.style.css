@@ -1,21 +1,20 @@
 .product-card-cart{
+    display: flex;
+    background-color: hsl(0, 2%, 94%);
+    padding:10px;
     margin-bottom: 10px;
 }
+
+
 .qty-dropdown{
     max-width:400px;
 }
+
 .trash-button{
-    background-color: white;
-    border: 1px solid gray;
+    border:none;
+    background-color: transparent;
 }
-.product-card-cart{
-    background-color: ghostwhite;
-    padding:10px;
-}
-.receipt-container{
-    border: 1px solid gray;
-    padding: 32px 24px;
-}
+
 .receipt-list{
     list-style-type: none;
     padding: 0;
@@ -26,19 +25,90 @@
     padding-bottom: 10px;
 }
 
-.receipt-title{
+.receipt-title, .receipt-list, .receipt-total-box, .payment-button {
     margin-bottom: 20px;
+}
+
+.receipt-list-box, .receipt-total-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .payment-button{
    width: 100%;
    padding: 16px;
-   margin-bottom: 20px;
 }
-.text-align-center{
-    text-align: center;
-}
+
 .empty-bag{
     background-color: white;
     padding: 20px;
+    text-align: center;
+}
+
+.cart-img-col{
+    display: flex;
+    align-items: center;
+}
+
+.cart-product-info-col{
+    margin-left: 12px;
+    flex-grow: 1;
+}
+ 
+@media (min-width: 992px) {
+  .cart-row {
+    display: flex;
+  }
+  .product-list-col {
+    width: 60%;
+  }   
+  .order-receipt-col {
+    width: 40%;
+  }
+}
+@media (min-width: 768px) {
+    .receipt-container{
+        position: sticky;  
+        top:0;   
+    }
+}
+
+@media (max-width: 767px) {
+    .receipt-container{
+        margin-top: 12px;
+    }
+}
+
+.receipt-container{
+    border: 1px solid gray;
+    padding: 32px 24px;
+}
+
+.item-checkbox {
+    margin-right: 10px;
+}
+
+.cart-btn-row {
+    margin: 20px 0px 30px;
+}
+
+.cart-cancel-btn, .cart-complete-btn {
+    width: 100%;
+}
+
+.cart-complete-btn:hover {
+    background-color: hsl(0, 0%, 27%);
+    color: rgb(255, 255, 255);
+    border: 1px solid hsl(0, 0%, 27%);
+}
+
+.cart-search-box{
+    border-bottom: 1px solid rgb(0, 0, 0);
+    margin-bottom: 5%;  
+}
+  
+.cart-search-box input {
+    margin-left:5px;
+    padding: 5px;
 }

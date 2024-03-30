@@ -1,68 +1,106 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
-import { Col, Form, Row } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { Button, Form } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import CartProductUpdateDialog from "./CartProductUpdateDialog";
+import { useNavigate } from "react-router";
+import { cartActions } from "../redux/actions/cartAction";
 
-const CartProductCard = ({ item }) => {
+/*
+카트에서 사이즈 변경 가능하게 셀렉트 박스로 변경
+수량은 인풋 박스로 변경
+
+변경 시 카트 업데이트 
+*/ 
+
+const CartProductCard = ({ 
+  item,  
+  setCheckedItemTotalPrice, 
+  checkedItemList, 
+  setCheckedItemList
+}) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { searchKeyword, currentPage } = useSelector((state) => state.cart);
+  const [totalPrice, setTotalPrice] = useState(item.productData[0]?.price * item.items.qty);
+  const [showDialog, setShowDialog] = useState(false);
+  const [mode, setMode] = useState("");
 
-  const handleQtyChange = () => {
-    //아이템 수량을 수정한다
+  useEffect(() => {
+    setTotalPrice(item.productData[0]?.price * item.items.qty)
+  },[item.productData, item.items.qty]);
+
+  //아이템을 지운다
+  const deleteCartItem = (_id) => {
+    dispatch(cartActions.deleteCartItem(_id, {searchKeyword, currentPage}));
   };
+/*
+  아이템 체크시 선택된 아이템 배열에 추가 
+  선택된 아이템 금액 합계 배열에 선택된 아이템 합계 추가 
 
-  const deleteCart = (id) => {
-    //아이템을 지운다
+  이미 선택된 아이템인지 확인 some
+  선택된 아이템이 맞다면 
+  => 체크된 아이템이 아닌것만 filter
+  => 체크된 아이템 금액 빼기 
+*/
+  const onCheckItem = (item) => {
+    let totalPrice = item.productData[0]?.price * item.items.qty;
+    const isChecked = checkedItemList.some(checkedItem => checkedItem === item);
+    if(isChecked) {
+      const updatedCheckedItemList = checkedItemList.filter(checkedItem => checkedItem !== item);
+      setCheckedItemList(updatedCheckedItemList);
+      setCheckedItemTotalPrice(prevTotalPrice => prevTotalPrice - totalPrice);
+    } else {  
+      setCheckedItemTotalPrice(prevTotalPrice => prevTotalPrice + totalPrice);
+      setCheckedItemList([...checkedItemList, item]);
+    }
+  }
+
+  const openEditForm = (item) => {
+    dispatch(cartActions.selectCartProduct(item));
+    setMode('edit');
+    setShowDialog(true);
   };
 
   return (
     <div className="product-card-cart">
-      <Row>
-        <Col md={2} xs={12}>
-          <img
-            src="https://lp2.hm.com/hmgoepprod?set=quality%5B79%5D%2Csource%5B%2Fb3%2F10%2Fb310d46e8f33571ea44cc4facf3cd224a90ef3d4.jpg%5D%2Corigin%5Bdam%5D%2Ccategory%5B%5D%2Ctype%5BLOOKBOOK%5D%2Cres%5Bm%5D%2Chmver%5B1%5D&call=url[file:/product/main]"
-            width={112}
-          />
-        </Col>
-        <Col md={10} xs={12}>
-          <div className="display-flex space-between">
-            <h3>리넨셔츠</h3>
-            <button className="trash-button">
-              <FontAwesomeIcon
-                icon={faTrash}
-                width={24}
-                onClick={() => deleteCart("hard_code")}
-              />
-            </button>
-          </div>
-
-          <div>
-            <strong>₩ 45,000</strong>
-          </div>
-          <div>Size: Menu</div>
-          <div>Total: ₩ 45,000</div>
-          <div>
-            Quantity:
-            <Form.Select
-              onChange={(event) => handleQtyChange()}
-              required
-              defaultValue={1}
-              className="qty-dropdown"
-            >
-              <option value={1}>1</option>
-              <option value={2}>2</option>
-              <option value={3}>3</option>
-              <option value={4}>4</option>
-              <option value={5}>5</option>
-              <option value={6}>6</option>
-              <option value={7}>7</option>
-              <option value={8}>8</option>
-              <option value={9}>9</option>
-              <option value={10}>10</option>
-            </Form.Select>
-          </div>
-        </Col>
-      </Row>
+      <div className="cart-img-col">
+        <Form.Check className="item-checkbox" onClick={() => onCheckItem(item)}/>
+        <img
+          src={item.productData[0]?.image}
+          alt={item.productData[0]?.name}
+          width={112}
+        />
+      </div>
+      <div className="cart-product-info-col">
+        <div className="display-flex space-between">
+          <h5>{item.productData[0]?.name}</h5>
+          <button className="trash-button">
+            <FontAwesomeIcon
+              icon={faTrash}
+              width={24}
+              onClick={() => deleteCartItem(item.items._id)}
+            />
+          </button>
+        </div>
+        <div>
+          <strong>₩ {item.productData[0]?.price}</strong>
+        </div>
+        <div>Size: {item.items.size}</div>
+        <div>Quantity:{item.items.qty}</div>
+        <div>Total: {totalPrice}</div>
+        <Button variant="dark" className="mt-1" size="sm" onClick={() => openEditForm(item)}>
+          옵션 변경
+        </Button>
+      </div>
+      <CartProductUpdateDialog
+        mode={mode}
+        setMode={setMode}
+        showDialog={showDialog}
+        setShowDialog={setShowDialog}
+        cartProductId={item.items.productId}
+      />
     </div>
   );
 };

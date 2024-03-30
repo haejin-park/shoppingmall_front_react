@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Alert, Col, Container, Row, Spinner } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useNavigationType, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ProductCard from "../component/ProductCard";
 import { mainProductActions } from "../redux/actions/mainProductAction";
 import '../style/mainProduct.style.css';
@@ -13,7 +13,6 @@ const MainProduct = () => {
   const {loading, error, productList, totalPageNum, currentPage} = useSelector((state) => state.mainProduct);
   const [sortBy, setSortBy] = useState("orderOfPurchase");
   const [query, setQuery] = useSearchParams();
-  const navigationType = useNavigationType();
   const searchKeyword = query.get("searchKeyword") || "";
   
   useEffect(() => { 
@@ -28,7 +27,7 @@ const MainProduct = () => {
     const queryString = params.toString();
     navigate(`?${queryString}`); 
 
-  }, [searchKeyword, currentPage, navigate, navigationType]);
+  }, [searchKeyword, currentPage, navigate]);
 
   const handlePageClick = ({ selected }) => {
     dispatch(mainProductActions.changePage(selected + 1));

@@ -8,6 +8,7 @@ import { adminProductActions } from "../redux/actions/adminProductAction";
 import { mainProductActions } from "../redux/actions/mainProductAction";
 import { myOrderActions } from "../redux/actions/myOrderAction";
 import { useSearchParams } from "react-router-dom";
+import { cartActions } from "../redux/actions/cartAction";
 const SearchBox = ({ placeholder, handleClose, width, show, searchValue, setSearchValue }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const SearchBox = ({ placeholder, handleClose, width, show, searchValue, setSear
   const adminProductPath = '/admin/product';
   const adminOrderPath ='/admin/order';
   const myOrderPath ='/order';
+  const cartPath ='/cart';
   const mainProductPath = '/';
   const inputRef = useRef(null);
   const navigationType = useNavigationType();
@@ -50,6 +52,9 @@ const SearchBox = ({ placeholder, handleClose, width, show, searchValue, setSear
         navigate(`${currentPath}?searchKeyword=${searchKeyword}&currentPage=${1}`);
       } else if(currentPath === myOrderPath) {
         dispatch(myOrderActions.changePage(1));
+        navigate(`${currentPath}?searchKeyword=${searchKeyword}&currentPage=${1}`);
+      } else if(currentPath === cartPath) {
+        dispatch(cartActions.changePage(1));
         navigate(`${currentPath}?searchKeyword=${searchKeyword}&currentPage=${1}`);
       } else {
         dispatch(mainProductActions.changePage(1));
