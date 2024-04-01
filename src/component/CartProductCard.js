@@ -74,6 +74,10 @@ const CartProductCard = ({ item }) => {
     setShowDialog(true);
   };
 
+  const goProductDetail = (id) => {
+    navigate(`/product/${id}`)
+  }
+
   return (
     <div className={`product-card-cart ${item.productData[0]?.isDeleted && 'deleted-product'} `}>
       <div className="cart-img-col">
@@ -83,6 +87,7 @@ const CartProductCard = ({ item }) => {
           checked={checkedItemList.includes(item)} 
         />
         <img
+          onClick={() => goProductDetail(item.items.productId)}
           src={item.productData[0]?.image}
           alt={item.productData[0]?.name}
           width={112}
