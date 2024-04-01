@@ -14,7 +14,7 @@ const AppLayout = ({ children }) => {
   useEffect(() => {
     const storedToken = sessionStorage.getItem('token');
     if(storedToken) dispatch(userActions.loginWithToken());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div>

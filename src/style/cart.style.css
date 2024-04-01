@@ -78,6 +78,11 @@
     .receipt-container{
         margin-top: 12px;
     }
+
+    .deleted-product-message {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 .receipt-container{
@@ -105,10 +110,38 @@
 
 .cart-search-box{
     border-bottom: 1px solid rgb(0, 0, 0);
-    margin-bottom: 5%;  
+    margin-bottom: 1%;  
 }
   
 .cart-search-box input {
     margin-left:5px;
     padding: 5px;
+}
+
+.deleted-product {
+    background-color: rgb(216, 216, 216);
+}
+
+.deleted-product-message-and-btn {
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    background-color: rgb(216, 216, 216);
+    padding: 10px 15px;
+}
+
+.deleted-product-message {
+    font-size: 18px;
+}
+
+.delete-cart-item-btn {
+    min-width: 50px;
+    height: 30px;
+}
+
+.select-and-delete-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
 }

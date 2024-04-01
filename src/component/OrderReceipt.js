@@ -1,9 +1,13 @@
 import React from "react";
 import { Button } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
 
-const OrderReceipt = ({checkedItemTotalPrice, checkedItemList}) => {
+//결제 하기 클릭시 productData[0].isDeleted인 상품은 결제할 수 없도록
+
+const OrderReceipt = () => {
+  const { checkedItemList, checkedItemTotalPrice } = useSelector((state) => state.cart);
   const location = useLocation();
   const navigate = useNavigate();
   

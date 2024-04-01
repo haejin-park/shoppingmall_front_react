@@ -355,3 +355,8 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+.category-menu-btn {
+  border: none;
+  background-color: transparent;
+}

@@ -10,7 +10,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { adminProductActions } from "../redux/actions/adminProductAction";
 import { cartActions } from "../redux/actions/cartAction";
 import { mainProductActions } from "../redux/actions/mainProductAction";
@@ -42,8 +42,15 @@ const Navbar = ({ user }) => {
     }
   }, [user, currentPath]);
 
+  useEffect(() => {
+    if(user) {
+      dispatch(cartActions.getCartItemCount())
+    }
+  },[user,dispatch]);
+
+
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
-  const menuList = [
+  const categoryMenuList = [
     "여성",
     "Divided",
     "남성",
@@ -77,26 +84,36 @@ const Navbar = ({ user }) => {
 
   const goAdminProduct = (firstPage) => {
     setSearchValue('')
+    dispatch(cartActions.checkedCartItem([], 0, false));
     dispatch(adminProductActions.changePage(firstPage));
     navigate(`${adminProductPath}?currentPage=${firstPage}`);
   }
 
   const goCart = (firstPage) => {
     setSearchValue('')
+    dispatch(cartActions.checkedCartItem([], 0, false));
     dispatch(cartActions.changePage(firstPage));
     navigate(`${cartPath}?currentPage=${firstPage}`);
   }
 
   const goMyOrder = (firstPage) => {
     setSearchValue('')
+    dispatch(cartActions.checkedCartItem([], 0, false));
     dispatch(myOrderActions.changePage(firstPage));
     navigate(`${myOrderPath}?currentPage=${firstPage}`);
   }
 
   const goMainProduct = (firstPage) => {
     setSearchValue('')
+    dispatch(cartActions.checkedCartItem([], 0, false));
     dispatch(mainProductActions.changePage(firstPage));
     navigate(`${mainProductPath}?currentPage=${firstPage}`);
+  }
+
+  const goCategory = ()=> {
+    setSearchValue('')
+    dispatch(cartActions.checkedCartItem([], 0, false));
+    //카테고리에 따라 리스트 조회할 수 있도록 dispatch 추가, navigate추가 하기
   }
 
   return (
@@ -117,8 +134,8 @@ const Navbar = ({ user }) => {
             />
             </div>
             <div className="side-menu-list" id="menu-list">
-              {menuList.map((menu, index) => (
-                <button key={index}>{menu}</button>
+              {categoryMenuList.map((category, index) => (
+                <button key={index} onClick={() => goCategory()}>{category}</button>
               ))}
             </div>
           </div>
@@ -184,9 +201,9 @@ const Navbar = ({ user }) => {
       {loginStatus && (
         <div className="nav-menu-area">
           <ul className="menu">
-            {menuList.map((menu, index) => (
+            {categoryMenuList.map((category, index) => (
               <li key={index}>
-                <a href="#">{menu}</a>
+                <button key={index} className="category-menu-btn" onClick={() => goCategory()}>{category}</button>
               </li>
             ))}
           </ul>

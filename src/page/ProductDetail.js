@@ -176,14 +176,13 @@ todo
           dispatch(cartActions.addToCart(cartProductId, updatedOptionObj, {searchKeyword, currentPage}, mode));
         }
       });
-
+      setShowDialog(false);
+      setMode("");
     }
     
     //추가 후 초기화
     setSelectedOption([]);
     setTotalPrice(0);
-    setShowDialog(false);
-    setMode("");
   };
 
   const handleSelectSize = (value) => {
