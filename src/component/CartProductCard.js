@@ -7,35 +7,18 @@ import { useNavigate } from "react-router";
 import { cartActions } from "../redux/actions/cartAction";
 import CartProductUpdateDialog from "./CartProductUpdateDialog";
 
-/*
-카트에서 사이즈 변경 가능하게 셀렉트 박스로 변경
-수량은 인풋 박스로 변경
-
-변경 시 카트 업데이트 
-*/ 
-
 const CartProductCard = ({ item }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {cartList, checkedItemList, checkedItemTotalPrice, searchKeyword, currentPage } = useSelector((state) => state.cart);
+  const {checkedItemList, checkedItemTotalPrice, searchKeyword, currentPage } = useSelector((state) => state.cart);
   const [totalPrice, setTotalPrice] = useState(item.productData[0]?.price * item.items.qty);
   const [showDialog, setShowDialog] = useState(false);
   const [mode, setMode] = useState("");
-  console.log('checkedItemList',checkedItemList);
 
   useEffect(() => {
     setTotalPrice(item.productData[0]?.price * item.items.qty)
   },[item.productData, item.items.qty]);
 
-  // 개별로 전체 선택 했을 때도 전체 선택 체크 되도록
-  useEffect(() => {
-    if(checkedItemList.length === cartList.length) {
-      const totalPrice = checkedItemList.reduce((total, item) => {
-        return total + item.productData[0]?.price * item.items.qty;
-      },0);
-      dispatch(cartActions.checkedCartItem(cartList, totalPrice, true));
-    }
-   },[checkedItemList, cartList, dispatch]); 
 
   //아이템을 지운다
   const deleteCartItem = (_id) => {
@@ -47,7 +30,6 @@ const CartProductCard = ({ item }) => {
     dispatch(cartActions.checkedCartItem(updatedCheckedItemList, totalPrice));
   };
 
-  
   /*
     체크한 아이템이 checkedItemList에 있으면 
     => 체크된 아이템이 아닌것만 filter 해서 checkedItemList 디스패치
@@ -62,7 +44,7 @@ const CartProductCard = ({ item }) => {
     const isChecked = checkedItemList.includes(item);
     if(isChecked) {
       const updatedCheckedItemList = checkedItemList.filter(checkedItem => checkedItem !== item);
-      dispatch(cartActions.checkedCartItem(updatedCheckedItemList, checkedItemTotalPrice - totalPrice, false))
+      dispatch(cartActions.checkedCartItem(updatedCheckedItemList, checkedItemTotalPrice - totalPrice))
     } else {  
       dispatch(cartActions.checkedCartItem([...checkedItemList, item], checkedItemTotalPrice + totalPrice))
     }

@@ -25,6 +25,7 @@ function cartReducer(state = initialState, action) {
     case types.UPDATE_CART_ITEM_QTY_REQUEST:
     case types.GET_CART_ITEM_COUNT_REQUEST:
     case types.CHECKED_CART_ITEM_REQUEST:
+    case types.CHECKED_ALL_REQUEST:
       return {
         ...state,
         loading: true,
@@ -40,6 +41,7 @@ function cartReducer(state = initialState, action) {
     case types.UPDATE_CART_ITEM_QTY_FAIL:
     case types.GET_CART_ITEM_COUNT_FAIL:
     case types.CHECKED_CART_ITEM_FAIL:
+    case types.CHECKED_ALL_FAIL:
     return {
       ...state,
       loading: true,
@@ -90,8 +92,16 @@ function cartReducer(state = initialState, action) {
         loading: false,
         error: '',
         checkedItemList: payload.checkedItemList,
-        checkedItemTotalPrice: payload.checkedItemTotalPrice,
-        checkedAll: payload.checkedAll
+        checkedItemTotalPrice: payload.checkedItemTotalPrice
+      }  
+
+    case types.CHECKED_ALL_SUCCESS:
+      console.log('payload.checkedAll',payload.checkedAll);
+      return {
+        ...state,
+        loading: false,
+        error: '',
+        checkedAll: payload
       }  
 
     default: 

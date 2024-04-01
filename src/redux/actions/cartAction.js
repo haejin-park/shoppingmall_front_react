@@ -109,12 +109,22 @@ const changePage = (currentPage) => async(dispatch) => {
   }
 }
 
-const checkedCartItem = (checkedItemList, checkedItemTotalPrice, checkedAll) => async(dispatch) => {
+const checkedCartItem = (checkedItemList, checkedItemTotalPrice) => async(dispatch) => {
   try {
     dispatch({type:types.CHECKED_CART_ITEM_REQUEST});
-    dispatch({type:types.CHECKED_CART_ITEM_SUCCESS, payload:{checkedItemList, checkedItemTotalPrice, checkedAll}});
+    dispatch({type:types.CHECKED_CART_ITEM_SUCCESS, payload:{checkedItemList, checkedItemTotalPrice}});
   } catch(error) {
     dispatch({type:types.CHECKED_CART_ITEM_FAIL, payload:error.message});
+  }
+}
+
+const checkedAll = (checkedAll) => async(dispatch) => {
+  try {
+    console.log('checkedAll',checkedAll);
+    dispatch({type:types.CHECKED_ALL_REQUEST});
+    dispatch({type:types.CHECKED_ALL_SUCCESS, payload:checkedAll});
+  } catch(error) {
+    dispatch({type:types.CHECKED_ALL_FAIL, payload:error.message});
   }
 }
 
@@ -128,4 +138,5 @@ export const cartActions = {
   getCartItemCount,
   changePage,
   checkedCartItem,
+  checkedAll,
 };

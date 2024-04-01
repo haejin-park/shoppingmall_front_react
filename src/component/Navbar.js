@@ -10,7 +10,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { adminProductActions } from "../redux/actions/adminProductAction";
 import { cartActions } from "../redux/actions/cartAction";
 import { mainProductActions } from "../redux/actions/mainProductAction";
@@ -19,10 +19,11 @@ import { userActions } from "../redux/actions/userAction";
 import SearchBox from "./SearchBox";
 
 
-const Navbar = ({ user }) => {
+const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
   const { cartItemCount } = useSelector((state) => state.cart);
   const [loginStatus, setLoginStatus] = useState(true);
   const [searchValue, setSearchValue] = useState("");
@@ -172,22 +173,26 @@ const Navbar = ({ user }) => {
                     <FontAwesomeIcon icon={faRightToBracket} />
                     {!isMobile && <span style={{ cursor: "pointer" }}>로그인</span>}
                   </div>
-                }             
-                <div onClick={() => goCart(1)} className="nav-function">
-                  <FontAwesomeIcon icon={faShoppingBag} />
-                  {!isMobile && (
-                    <span style={{ cursor: "pointer" }}>{`쇼핑백(${
-                      cartItemCount || 0
-                    })`}</span>
-                  )}
-                </div>
-                <div
-                  onClick={() => goMyOrder(1)}
-                  className="nav-function"
-                >
-                  <FontAwesomeIcon icon={faBox} />
-                  {!isMobile && <span style={{ cursor: "pointer" }}>내 주문</span>}
-                </div>
+                }        
+                {user?.level === "customer" &&
+                <div className="customer-navbar-menu">
+                  <div onClick={() => goCart(1)} className="nav-function">
+                    <FontAwesomeIcon icon={faShoppingBag} />
+                    {!isMobile && (
+                      <span style={{ cursor: "pointer" }}>{`쇼핑백(${
+                        cartItemCount || 0
+                      })`}</span>
+                    )}
+                  </div>
+                  <div
+                    onClick={() => goMyOrder(1)}
+                    className="nav-function"
+                  >
+                    <FontAwesomeIcon icon={faBox} />
+                    {!isMobile && <span style={{ cursor: "pointer" }}>내 주문</span>}
+                  </div>
+                </div>          
+                }     
               </div>
             </div>
           </div>

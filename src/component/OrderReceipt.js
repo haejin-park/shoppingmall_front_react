@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
 
 const OrderReceipt = () => {
-  const { checkedItemList, checkedItemTotalPrice } = useSelector((state) => state.cart);
+  const { cartList, checkedItemList, checkedItemTotalPrice } = useSelector((state) => state.cart);
   const location = useLocation();
   const navigate = useNavigate();
   const [goPaymentError, setGoPaymentError] = useState(false);
@@ -59,7 +59,8 @@ const OrderReceipt = () => {
             <div>₩ {checkedItemTotalPrice}</div>
           </div>
         </div>
-        {location.pathname.includes("/cart") && (
+        {location.pathname.includes("/cart") && cartList.length > 0 &&
+        (
           <Button
             variant="dark"
             className="payment-button"

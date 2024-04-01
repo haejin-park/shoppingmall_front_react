@@ -1,16 +1,14 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useSelector } from "react-redux";
 import "./App.css";
 import AppLayout from "./Layout/AppLayout";
 import AppRouter from "./routes/AppRouter";
 import "./style/common.style.css";
 
 function App() {
-  const {user} = useSelector((state) => state.user);
   return (
     <div>
       <AppLayout>
-        <AppRouter user={user}/>
+        <AppRouter/>
       </AppLayout>
     </div>
   );

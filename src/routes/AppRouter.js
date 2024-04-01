@@ -11,15 +11,17 @@ import MainProduct from "../page/MainProduct";
 import ProductDetail from "../page/ProductDetail";
 import Register from "../page/Register";
 import PrivateRoute from "./PrivateRoute";
+import { useSelector } from "react-redux";
 
-const AppRouter = ({user}) => {
+const AppRouter = () => {
   let location = useLocation();
   let navigate = useNavigate();
-  // 
+  const {user} = useSelector((state) => state.user);
+
   useEffect(() => {
     if(user && (location.pathname === '/login' || location.pathname === '/register')) {
       navigate(-1); //이전 페이지 이동
-    }
+    } 
   }, [user, location.pathname, navigate]);
   return (
     <Routes>

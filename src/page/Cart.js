@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,6 +28,22 @@ const CartPage = () => {
   const [placeholder, setPlacehorder] = useState('상품명 검색');
   const [deletedStatus, setDeletedStatus] = useState(false);
   const [deletedItemIdList, setDeletedItemIdList] = useState([]);
+  const [deleteAllError, setDeleteAllError] = useState(false);
+
+  // 개별로 전체 선택 했을 때도 전체 선택 체크 되도록
+  useEffect(() => {
+    if(checkedItemList.length === cartList.length) {
+      dispatch(cartActions.checkedAll(true));
+    } else {
+      dispatch(cartActions.checkedAll(false));
+    }
+    },[checkedItemList, cartList, dispatch]); 
+  
+  useEffect(() => {
+    if(checkedItemList.length > 0) {
+      setDeleteAllError(false);
+    }
+  }, [checkedItemList]);
 
   useEffect(() => { 
     //url쿼리 읽어오기(query) => 쿼리 값에 맞춰서 상품리스트 가져오기
@@ -61,6 +77,10 @@ const CartPage = () => {
   };
 
   const deleteCartItemList = (checkedItemIdList) => {
+    if(checkedItemIdList.length <= 0) {
+      setDeleteAllError(true);
+      return; 
+    }
     if(checkedItemIdList) { //체크된 상품 삭제
       dispatch(cartActions.deleteCartItemList(checkedItemIdList ,{searchKeyword, currentPage}));
       const updatedCheckedItemList = checkedItemList.filter((checkedItem) => {
@@ -88,12 +108,12 @@ cartList전체 합으로 totalPrice를 구해서 checkedItemTotalPrice를 계산
 
   const onCheckAllItem = () =>  {
     if(checkedItemList.length === cartList.length) {
-      dispatch(cartActions.checkedCartItem([], 0, false));
+      dispatch(cartActions.checkedCartItem([], 0));
     } else {
       const totalPrice = cartList.reduce((total, item) => {
         return total + item.productData[0]?.price * item.items.qty;
       },0);
-      dispatch(cartActions.checkedCartItem([...cartList], totalPrice, true));
+      dispatch(cartActions.checkedCartItem([...cartList], totalPrice));
     }
   };
 
@@ -126,6 +146,11 @@ cartList전체 합으로 totalPrice를 구해서 checkedItemTotalPrice를 계산
             </div>
             {cartList.length > 0 ?
               <>
+                {deleteAllError && (
+                  <Alert variant="danger" className="error-message">
+                    삭제할 상품을 선택해주세요
+                  </Alert>
+                )}
                 <div className="select-and-delete-box">
                   <Form.Check 
                     label="전체 선택" 
@@ -147,13 +172,13 @@ cartList전체 합으로 totalPrice를 구해서 checkedItemTotalPrice를 계산
                         삭제
                       </Button>
                     </div>
-                      {cartList.map((item) => (
-                        item.productData[0].isDeleted && 
-                        <CartProductCard 
-                          key={item.items._id} 
-                          item={item}
-                        />
-                      ))}
+                    {cartList.map((item) => (
+                      item.productData[0].isDeleted && 
+                      <CartProductCard 
+                        key={item.items._id} 
+                        item={item}
+                      />
+                    ))}
                   </div>
                 }
                 {cartList.map((item) => (

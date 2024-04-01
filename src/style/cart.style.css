@@ -110,7 +110,7 @@
 
 .cart-search-box{
     border-bottom: 1px solid rgb(0, 0, 0);
-    margin-bottom: 1%;  
+    margin-bottom: 3%;  
 }
   
 .cart-search-box input {
@@ -143,5 +143,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 15px;
+    padding: 0px 15px 20px;
+}
+
+.customer-navbar-menu {
+    display: flex;
 }
