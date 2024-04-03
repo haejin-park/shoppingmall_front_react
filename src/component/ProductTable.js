@@ -1,5 +1,4 @@
 import React from "react";
-import { Alert } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 const ProductTable = ({ header, productList, deleteItem, openEditForm }) => {
@@ -50,11 +49,9 @@ const ProductTable = ({ header, productList, deleteItem, openEditForm }) => {
             ))}
         </Table>
         ) : (
-        <div>
-          <Alert variant="danger" className="error-message">
-            조회된 상품이 없습니다
-          </Alert>
-        </div> 
+        <div className="empty">
+          <h3>조회된 상품이 없습니다.</h3>
+        </div>
         )}
     </div>
   );

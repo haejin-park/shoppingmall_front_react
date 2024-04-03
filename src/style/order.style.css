@@ -33,6 +33,10 @@
     display:none;
 }
 
+.go-my-order {
+    text-align: center;
+}
+
 @media screen and (max-width: 1200px) {
     .form-area{
         margin-top: 20px;

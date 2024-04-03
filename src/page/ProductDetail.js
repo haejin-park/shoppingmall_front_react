@@ -151,7 +151,13 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
     }
   }
 
-  const addItemToCart = async() => {
+  const initialState = () => {
+    setDeletedProductError(false);
+    setSelectedOption([]);
+    setTotalPrice(0);
+  }
+
+  const addCartItem = async() => {
     try {
       await checkProductAndOptionAndUser()
 
@@ -159,9 +165,24 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
       let selectedOptionObj =  Object.fromEntries(selectedOption);
   
       // 카트에 아이템 추가하기
-      if(id && !mode) {
-        dispatch(cartActions.addToCart(id, selectedOptionObj));
-      } else if (cartProductId && mode ==="edit") {
+      if(id) dispatch(cartActions.addToCart(id, selectedOptionObj));
+      
+      //추가 후 초기화
+      initialState();
+    } catch(error) {
+      //checkProductAndOptionAndUser에서 promise반환 시 로그가 남기지 않기 위해 에러로그 제외
+    }
+  };
+
+  const updateCartItem = async() => {
+    try {
+      await checkProductAndOptionAndUser()
+
+      // 선택한 옵션을 배열에서 객체로 변경 => ex) [['S',1], ['M',2]] 에서 {S:1, M:2}로
+      let selectedOptionObj =  Object.fromEntries(selectedOption);
+  
+      // 카트에 아이템 추가하기
+      if(cartProductId) {
         let cartItemInitialOptionObj =  Object.fromEntries(cartItemInitialOption);
         
         // 두 객체의 키를 모두 포함한 배열 생성
@@ -180,7 +201,7 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
             }
           
           } else if (initialValue && !selectedValue) { // 기존 옵션에만 있는 경우: 삭제   
-            dispatch(cartActions.deleteCartItem(selectedItem.items._id, {searchKeyword, currentPage}));
+            dispatch(cartActions.deleteCartItem(selectedItem.items._id, {searchKeyword, currentPage}, mode));
   
           } else if (!initialValue && selectedValue) {  // 선택한 옵션에만 있는 경우: 추가 
             let updatedOptionObj = {};
@@ -193,9 +214,7 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
       }
       
       //추가 후 초기화
-      setDeletedProductError(false);
-      setSelectedOption([]);
-      setTotalPrice(0);
+      initialState();
     } catch(error) {
       //checkProductAndOptionAndUser에서 promise반환 시 로그가 남기지 않기 위해 에러로그 제외
     }
@@ -211,7 +230,7 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
       for(const size of Object.keys(selectedOptionObj)){ 
         orderList = [{items:{productId:id, size, qty:selectedOptionObj[size]},productData}];
       }
-      dispatch(myOrderActions.saveOrderItem(orderList, totalPrice, true));
+      dispatch(myOrderActions.saveOrderItem(orderList, totalPrice, false));
       //초기화
       setDeletedProductError(false);
       setSelectedOption([]);
@@ -379,15 +398,15 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
               </Button>
             </Col>
             <Col>
-              <Button className="cart-complete-btn" variant="dark" onClick={addItemToCart} disabled={!optionChangeStatus && !deletedProductError}>
+              <Button className="cart-complete-btn" variant="dark" onClick={updateCartItem} disabled={!optionChangeStatus && !deletedProductError}>
                 수정 완료
               </Button>
             </Col>
           </Row>
-          ): (
+          ) : (
           <Row className="product-detail-btn-row">
             <Col>
-              <Button className="add-button" variant="dark" onClick={addItemToCart}>
+              <Button className="add-button" variant="dark" onClick={addCartItem}>
                 장바구니
               </Button>     
             </Col>

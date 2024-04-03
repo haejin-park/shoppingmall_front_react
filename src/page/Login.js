@@ -1,10 +1,10 @@
+import { GoogleLogin } from '@react-oauth/google';
 import React, { useState } from "react";
 import { Alert, Button, Container, Form, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import "../style/login.style.css";
 import { userActions } from "../redux/actions/userAction";
-import { GoogleLogin } from '@react-oauth/google';
+import "../style/login.style.css";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -70,7 +70,7 @@ const Login = () => {
           </div>
         </div>
 
-        <div className="text-align-center mt-2">
+        <div className="diffrent-account-login">
           <p>-외부 계정으로 로그인하기-</p>
           <div className="display-center">
             <GoogleLogin

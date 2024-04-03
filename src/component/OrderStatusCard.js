@@ -1,32 +1,31 @@
 import React from "react";
-import { Badge, Col, Row } from "react-bootstrap";
+import { Badge } from "react-bootstrap";
+import { dateFormat } from "../utils/date";
 
-const OrderStatusCard = () => {
+const OrderStatusCard = ({item}) => {
   return (
-    <div>
-      <Row className="status-card">
-        <Col xs={2}>
+    <div className="status-card">
+      <div className="order-img-and-col">
+        <div className="order-img-col">
           <img
-            src="https://lp2.hm.com/hmgoepprod?set=quality%5B79%5D%2Csource%5B%2Fb3%2F10%2Fb310d46e8f33571ea44cc4facf3cd224a90ef3d4.jpg%5D%2Corigin%5Bdam%5D%2Ccategory%5B%5D%2Ctype%5BLOOKBOOK%5D%2Cres%5Bm%5D%2Chmver%5B1%5D&call=url[file:/product/main]"
-            alt=""
+            src={item.productData[0].image}
+            alt={item.productData[0].name}
             height={96}
           />
-        </Col>
-        <Col xs={8} className="order-info">
+        </div>
+        <div className="order-info-col">
           <div>
-            <strong>주문번호: "hard_code"</strong>
+            <strong>주문번호: {item.items.orderNum}</strong>
           </div>
-
-          <div className="text-12">2023-03-31</div>
-
-          <div>리넨셔츠 외 1개</div>
-          <div>₩ 45,000</div>
-        </Col>
-        <Col md={2} className="vertical-middle">
-          <div className="text-align-center text-12">주문상태</div>
-          <Badge bg="warning">preparing</Badge>
-        </Col>
-      </Row>
+          <div>주문 일시: {dateFormat(item.items.itemCreatedAt)}</div>
+          <div>상품명: {item.productData[0].name}</div>
+          <div>총 주문 금액: ₩ {item.items.price}</div>
+        </div>
+      </div>
+      <div className="order-status-col">
+        <div className="order-status">주문상태</div>
+        <Badge bg="warning">{item.items.status}</Badge>
+      </div>
     </div>
   );
 };

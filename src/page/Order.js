@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import OrderReceipt from "../component/OrderReceipt";
 import PaymentForm from "../component/PaymentForm";
 import { myOrderActions } from "../redux/actions/myOrderAction";
-import { cc_expires_format } from "../utils/number";
+import { ccExpiresFormat } from "../utils/number";
 import "../style/order.style.css";
 
 const Order = () => {
@@ -45,7 +45,7 @@ const Order = () => {
     //카드정보 넣어주기
     const {name, value} = event.target;
     if(name === "expiry"){
-      let newValue = cc_expires_format(value)
+      let newValue = ccExpiresFormat(value)
       setCardValue((prev) => ({...prev, [name]:newValue}));
       return; 
     }
@@ -62,11 +62,11 @@ const Order = () => {
     event.preventDefault();
     const {lastName,firstName,contact,address,city,zip} = shipInfo;
     const orderData = {
-      totalPrice, 
-      shipTo:{address,city,zip},
-      contact:{lastName,firstName,contact},
       orderList: orderList.map(item => {
         return {
+          totalPrice, 
+          shipTo:{address,city,zip},
+          contact:{lastName,firstName,contact},
           productId: item.items.productId,
           price: item.productData[0].price,
           qty: item.items.qty,

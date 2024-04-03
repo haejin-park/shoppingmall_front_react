@@ -51,19 +51,17 @@ const MainProduct = () => {
           </div>
         )}
         <Row>
-        {productList.length === 0 ?(
-          <div>
-            <Alert variant="danger" className="error-message">
-              조회된 상품이 없습니다.
-            </Alert>
-          </div>
-        ) : (
-          productList?.map((item) => (
-            <Col md={3} sm={12} key={item._id}>
-              <ProductCard item={item} /> 
-            </Col>
-          ))
-        )}
+          {productList.length === 0 ?(
+            <div className="empty">
+              <h3>조회된 상품이 없습니다.</h3>
+            </div>
+          ) : (
+            productList?.map((item) => (
+              <Col md={3} sm={12} key={item._id}>
+                <ProductCard item={item} /> 
+              </Col>
+            ))
+          )}
         </Row>
         <Row className="paginate-row">
           <ReactPaginate

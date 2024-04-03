@@ -1,5 +1,6 @@
 import * as types from '../../constants/order.constants';
 import api from '../../utils/api';
+import { cartActions } from './cartAction';
 import { commonUiActions } from './commonUiAction';
 
 const saveOrderItem = (orderList, totalPrice, cartOrderStatus) => async(dispatch) => {
@@ -16,13 +17,25 @@ const createOrder = (orderData, cartOrderStatus, navigate) => async (dispatch) =
     const response = await api.post('/order', {orderData, cartOrderStatus})
     if(response.status !== 200) throw new Error(response.message);
     dispatch({type:types.CREATE_ORDER_SUCCESS, payload:response.data});
+    dispatch(cartActions.getCartItemCount(response.data.cartItemCount));
     navigate('/order/complete');
   } catch(error) {
     dispatch({type:types.CREATE_ORDER_FAIL, payload:error.message});
     dispatch(commonUiActions.showToastMessage(error.message, "error"));
   }
 };
-const getOrderList = (query) => async (dispatch) => {};
+const getOrderList = (query) => async (dispatch) => {
+  try {
+    dispatch({type:types.GET_ORDER_LIST_REQUEST});
+    const options = {params: {...query}};
+    const response = await api.get("/order", options);
+    if(response.status !== 200) throw new Error(response.message);
+    dispatch({type:types.GET_ORDER_LIST_SUCCESS, payload: response.data});
+  } catch(error) {
+    dispatch({type:types.GET_ORDER_LIST_FAIL, payload: error.message});
+    dispatch(commonUiActions.showToastMessage(error.message, "error"));
+  }
+};
 const changePage = (currentPage) => async(dispatch) => {
   try {
     dispatch({type:types.CHANGE_PAGE_OF_MY_ORDER_REQUEST});

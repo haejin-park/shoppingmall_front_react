@@ -39,12 +39,6 @@
    padding: 16px;
 }
 
-.empty-bag{
-    background-color: white;
-    padding: 20px;
-    text-align: center;
-}
-
 .cart-img-col{
     display: flex;
     align-items: center;
@@ -76,16 +70,6 @@
     background-color: hsl(0, 0%, 27%);
     color: rgb(255, 255, 255);
     border: 1px solid hsl(0, 0%, 27%);
-}
-
-.cart-search-box{
-    border-bottom: 1px solid rgb(0, 0, 0);
-    margin-bottom: 3%;  
-}
-  
-.cart-search-box input {
-    margin-left:5px;
-    padding: 5px;
 }
 
 .deleted-product {

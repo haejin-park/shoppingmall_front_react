@@ -6,10 +6,16 @@
     width: 100%;
       
   }
-  .login-area{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    max-width: 550px;
-  }
+
+.login-area{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 550px;
+}
+
+.diffrent-account-login {
+  margin-top: 20px;
+  text-align: center;
+}

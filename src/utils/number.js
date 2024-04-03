@@ -3,7 +3,7 @@ export const currencyFormat = (value) => {
   return number.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
 };
 
-export const cc_expires_format = (string) => {
+export const ccExpiresFormat = (string) => {
   return string
     .replace(
       /[^0-9]/g,

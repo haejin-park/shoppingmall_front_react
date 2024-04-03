@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Badge, Alert } from "react-bootstrap";
+import { Badge, Table } from "react-bootstrap";
 import { badgeBg } from "../constants/order.constants";
 import { currencyFormat } from "../utils/number";
 const OrderTable = ({ header, orderList, openEditForm }) => {
@@ -39,11 +39,9 @@ const OrderTable = ({ header, orderList, openEditForm }) => {
           </tbody>
         </Table>
         ) : (
-        <div>
-          <Alert variant="danger" className="error-message">
-            조회된 주문이 없습니다
-          </Alert>
-        </div> 
+        <div className="empty">
+          <h3>조회된 주문이 없습니다</h3>
+        </div>
         )}
     </div>
   );

@@ -57,7 +57,7 @@ function cartReducer(state = initialState, action) {
         ...state,
         loading: true,
         error: '',
-        cartItemCount: payload.cartItemCount
+        cartItemCount: payload
       }
     
     case types.CHANGE_PAGE_OF_CART_SUCCESS:

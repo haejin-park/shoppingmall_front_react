@@ -30,6 +30,11 @@ const Cart = () => {
   const [deletedItemIdList, setDeletedItemIdList] = useState([]);
   const [deleteAllError, setDeleteAllError] = useState(false);
 
+  useEffect(() => { 
+    //url쿼리 읽어오기(query) => 쿼리 값에 맞춰서 상품리스트 가져오기
+    dispatch(cartActions.getCartList({searchKeyword, currentPage}));
+  }, [query, searchKeyword, currentPage, dispatch]);
+
   // 개별로 전체 선택 했을 때도 전체 선택 체크 되도록
   useEffect(() => {
     if(checkedItemList.length === cartList.length) {
@@ -44,11 +49,6 @@ const Cart = () => {
       setDeleteAllError(false);
     }
   }, [checkedItemList]);
-
-  useEffect(() => { 
-    //url쿼리 읽어오기(query) => 쿼리 값에 맞춰서 상품리스트 가져오기
-    dispatch(cartActions.getCartList({searchKeyword, currentPage}));
-}, [query, searchKeyword, currentPage, dispatch]);
 
   // 페이지가 변경되도록
   useEffect(() => {
@@ -74,25 +74,35 @@ const Cart = () => {
     dispatch(cartActions.changePage(selected + 1));
   };
 
+
+  //삭제 후 체크된 상품 필터링
+  const filteredCheckedItemList = (deleteItemIdList) => {
+    const updatedCheckedItemList = checkedItemList.filter((checkedItem) => {
+      return !deleteItemIdList.includes(checkedItem.items._id);
+    });
+    const totalPrice = updatedCheckedItemList.reduce((total, item) => {
+      return total + item.productData[0]?.price * item.items.qty;
+    },0);
+    dispatch(cartActions.checkedCartItem(updatedCheckedItemList, totalPrice));
+  }
+
+  //선택한 상품 삭제
   const deleteCartItemList = (checkedItemIdList) => {
     if(checkedItemIdList.length <= 0) {
       setDeleteAllError(true);
       return; 
     }
     if(checkedItemIdList) { //체크된 상품 삭제
-      dispatch(cartActions.deleteCartItemList(checkedItemIdList ,{searchKeyword, currentPage}));
-      const updatedCheckedItemList = checkedItemList.filter((checkedItem) => {
-        const filteredItemList = checkedItemIdList.map(id => checkedItem.items._id !== id);
-        return filteredItemList;
-      });
+      dispatch(cartActions.deleteCartItemList(checkedItemIdList,{searchKeyword, currentPage}));
+      filteredCheckedItemList(checkedItemIdList);
+    } 
+  }
 
-      const totalPrice = updatedCheckedItemList.reduce((total, item) => {
-        return total + item.productData[0]?.price * item.items.qty;
-      },0);
-
-      dispatch(cartActions.checkedCartItem(updatedCheckedItemList, totalPrice));
-    } else { //더이상 판매하지 않는 삭제된 상품 삭제
+  //더이상 판매하지 않는 삭제된 상품 삭제
+  const deleteDeletedProductList = () => { 
+    if(deleteCartItemList) {
       dispatch(cartActions.deleteCartItemList(deletedItemIdList,{searchKeyword, currentPage}));
+      filteredCheckedItemList(deletedItemIdList); 
     }
   }
 
@@ -135,7 +145,7 @@ cartList전체 합으로 totalPrice를 구해서 checkedItemTotalPrice를 계산
             </div>
           )}
           <Col xs={12} className="product-list-col">
-            <div className="cart-search-box">
+            <div className="common-search-box">
               <SearchBox 
                 placeholder={placeholder}
                 searchValue={searchValue} 
@@ -166,15 +176,16 @@ cartList전체 합으로 totalPrice를 구해서 checkedItemTotalPrice를 계산
                         <strong>더이상 판매하지 않는 상품입니다. </strong>
                         <strong>해당 상품을 삭제하시겠습니까?</strong>
                       </div>
-                      <Button className="delete-cart-item-btn" variant="dark" size="sm" onClick={() => deleteCartItemList()}>
+                      <Button className="delete-cart-item-btn" variant="dark" size="sm" onClick={() => deleteDeletedProductList(checkedItemList.map(item => item.items._id))}>
                         삭제
                       </Button>
                     </div>
-                    {cartList.map((item) => (
+                    {cartList.map((item,index) => (
                       item.productData[0].isDeleted && 
                       <CartProductCard 
-                        key={item.items._id} 
+                        key={`${item.items.productId}_${item.items.size}`} 
                         item={item}
+                        checkedAll={checkedAll}
                       />
                     ))}
                   </div>
@@ -184,12 +195,13 @@ cartList전체 합으로 totalPrice를 구해서 checkedItemTotalPrice를 계산
                   <CartProductCard 
                     key={item.items._id} 
                     item={item} 
+                    checkedAll={checkedAll}
                   />
                 ))}
               </>
             : 
-            <div className="empty-bag">
-              <h2>카트가 비어있습니다.</h2>
+            <div className="empty">
+              <h3>카트가 비어있습니다.</h3>
               <div>상품을 담아주세요!</div>
             </div>
             }
@@ -199,7 +211,7 @@ cartList전체 합으로 totalPrice를 구해서 checkedItemTotalPrice를 계산
           </Col>
         </Row>
         <Row>
-        <ReactPaginate
+          <ReactPaginate
             nextLabel="next >"
             onPageChange={handlePageClick}
             pageRangeDisplayed={8}

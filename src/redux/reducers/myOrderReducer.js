@@ -17,6 +17,7 @@ function myOrderReducer(state = initialState, action) {
     case types.CHANGE_PAGE_OF_MY_ORDER_REQUEST:
     case types.SAVE_ORDER_ITEM_REQUEST:
     case types.CREATE_ORDER_REQUEST:
+    case types.GET_ORDER_LIST_REQUEST:
       return {
         ...state,
         loading: true,
@@ -26,6 +27,7 @@ function myOrderReducer(state = initialState, action) {
     case types.CHANGE_PAGE_OF_MY_ORDER_FAIL:
     case types.SAVE_ORDER_ITEM_FAIL:
     case types.CREATE_ORDER_FAIL:
+    case types.GET_ORDER_LIST_FAIL:
       return {
         ...state,
         loading: false,
@@ -58,6 +60,15 @@ function myOrderReducer(state = initialState, action) {
         orderNum: payload.orderNum,
       }    
   
+    case types.GET_ORDER_LIST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: '',
+        orderList: payload.orderList,
+        totalPageNum: payload.totalPageNum,
+        currentPage: payload.currentPage
+      }      
     default: 
       return state; 
   }

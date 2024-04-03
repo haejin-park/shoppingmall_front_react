@@ -7,7 +7,7 @@ import { useNavigate } from "react-router";
 import { cartActions } from "../redux/actions/cartAction";
 import CartProductUpdateDialog from "./CartProductUpdateDialog";
 
-const CartProductCard = ({ item }) => {
+const CartProductCard = ({ item, checkedAll }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {checkedItemList, checkedItemTotalPrice, searchKeyword, currentPage } = useSelector((state) => state.cart);
@@ -66,7 +66,7 @@ const CartProductCard = ({ item }) => {
         <Form.Check 
           className="item-checkbox" 
           onChange={() => onCheckItem(item)}
-          checked={checkedItemList.includes(item)} 
+          checked={checkedItemList.includes(item) || checkedAll} 
         />
         <img
           onClick={() => goProductDetail(item.items.productId)}
