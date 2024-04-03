@@ -112,19 +112,14 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
 
   2. 객체로 변경(선택한건 원래 바꾸게 되어있었으니까 기존 옵션만 추가로 객체로 바꿔주면 됨)
 
-  3. 
-  방식1) 변경 사항만 보낼 경우 (프론트에서 작업해서 백엔드 addItemToCart 재사용)
-  두 객체의 키를 모두 포함한 배열 생성
-  각 키에 대한 비교 
-  => 각각 키가 있는 경우 => 수량 다른 경우 update
-  => 기존 옵션만 키가 있는 경우 => 삭제
-  => 선택한 옵션만 키가 있는 경우 => 추가 
-
-  방식2) 선택한 옵션을 그대로 백엔드에 보낼 경우
-  => userId로 카트 전체 상품 조회(바꿀 아이템 기존 옵션과 다른 경우 => 상품 아이디와 사이즈로 일치 여부 비교후 수량 증가 또는 추가하기 위해 조회)
-  => userId와 카트 아이템 id로 일치하는 아이템 조회(기존 아이템과 비교하기 위해 조회)
-  1. 기존 사이즈가 다른 경우 => 추가
-  2. 기존 수량과 다른 경우 => 수량 비교후 기존 수량보다 많으면 증가, 적으면 감소
+  3. 백엔드에 수정할 상품 아이디, 초기옵션, 선택 옵션  보내서 비교하여 처리
+  => userId로 카트 전체 상품 조회(상품 아이디와 사이즈로 일치하는 상품 존재 여부 확인 및 업데이트하기 위해 조회)
+  => 초기옵션, 선택 옵션 키를 모두 포함한 배열 생성
+  => 배열 반복 돌려 선택 옵션 수량, 초기옵션 수량 만들기, 상품 아이디와 사이즈로 장바구니내 상품과 일치하는 상품 존재 여부
+  => 선택한 옵션에만 수량이 있고 초기 옵션에는 수량이 없을 경우 => 기존에 장바구니에 아이템이 있는 경우 : 수량 추가 / 없는 경우: 아이템 추가
+  => 선택한 옵션 수량이 있고, 선택 옵션과 초기 옵션 수량이 다른 경우: 수량 수정
+  => 선택한 옵션에는 수량이 없고 초기 옵션에는 수량이 있을 경우: 삭제
+  => 기존 장바구니 아이템에 업데이트된 아이템 추가 후 저장
 */ 
   const checkProductAndOptionAndUser = async() => {
     //삭제된 상품이라면 return
@@ -179,36 +174,12 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
       await checkProductAndOptionAndUser()
 
       // 선택한 옵션을 배열에서 객체로 변경 => ex) [['S',1], ['M',2]] 에서 {S:1, M:2}로
-      let selectedOptionObj =  Object.fromEntries(selectedOption);
-  
+      let cartItemInitialOptionObj = Object.fromEntries(cartItemInitialOption);
+      let selectedOptionObj = Object.fromEntries(selectedOption);
+
       // 카트에 아이템 추가하기
       if(cartProductId) {
-        let cartItemInitialOptionObj =  Object.fromEntries(cartItemInitialOption);
-        
-        // 두 객체의 키를 모두 포함한 배열 생성
-        const allKeys = Array.from(new Set([...Object.keys(cartItemInitialOptionObj), ...Object.keys(selectedOptionObj)]));
-  
-        // 각 키에 대해 비교 작업 수행
-        allKeys.forEach((key) => {
-          const initialValue = cartItemInitialOptionObj[key];
-          const selectedValue = selectedOptionObj[key];
-  
-          if (initialValue && selectedValue) { // 둘 다 있는 경우: 수량 비교
-            if (initialValue !== selectedValue) { //초기값과 다른 경우 : 수량 변경 update
-              let updatedOptionObj = {};
-              updatedOptionObj[key] = selectedValue;
-              dispatch(cartActions.updateCartItemQty(cartProductId, updatedOptionObj, {searchKeyword, currentPage}));
-            }
-          
-          } else if (initialValue && !selectedValue) { // 기존 옵션에만 있는 경우: 삭제   
-            dispatch(cartActions.deleteCartItem(selectedItem.items._id, {searchKeyword, currentPage}, mode));
-  
-          } else if (!initialValue && selectedValue) {  // 선택한 옵션에만 있는 경우: 추가 
-            let updatedOptionObj = {};
-            updatedOptionObj[key] = selectedValue;
-            dispatch(cartActions.addToCart(cartProductId, updatedOptionObj, {searchKeyword, currentPage}, mode));
-          }
-        });
+        dispatch(cartActions.updateCartItemQty(cartProductId, cartItemInitialOptionObj, selectedOptionObj, {searchKeyword, currentPage}));
         setShowDialog(false);
         setMode("");
       }
