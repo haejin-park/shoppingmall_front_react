@@ -89,6 +89,12 @@ const Navbar = () => {
     navigate(`${adminProductPath}?currentPage=${firstPage}`);
   }
 
+  const goLogout = () => {
+    setSearchValue('')
+    sessionStorage.setItem('prevUserEmail', user.email);
+    dispatch(userActions.logout());
+  }
+
   const goCart = (firstPage) => {
     setSearchValue('')
     dispatch(cartActions.checkedCartItem([], 0));
@@ -165,7 +171,7 @@ const Navbar = () => {
                   </div>
                 )}
                 {user ? 
-                  <div onClick={() => dispatch(userActions.logout())} className="nav-function">
+                  <div onClick={() => goLogout()} className="nav-function">
                     <FontAwesomeIcon icon={faRightFromBracket} />
                     {!isMobile && (
                       <span style={{ cursor: "pointer" }}>로그아웃</span>

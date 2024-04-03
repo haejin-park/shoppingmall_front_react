@@ -18,10 +18,11 @@ const loginWithEmail = (email, password, navigate) => async (dispatch) => {
     dispatch({type:types.LOGIN_REQUEST});
     const response = await api.post('/auth/login', {email, password});
     if(response.status !== 200) throw new Error(response.message);
+    const prevUserEmail = sessionStorage.getItem("prevUserEmail");
+    email === prevUserEmail? navigate(-1) : navigate('/');
     dispatch({type: types.LOGIN_SUCCESS, payload: response.data});
     sessionStorage.setItem("token", response.data.token);
     api.defaults.headers.authorization = `Bearer ${response.data.token}`;
-    if(response.data.user) navigate('/');
     dispatch(commonUiActions.showToastMessage("로그인 되었습니다.", "success"));
   } catch(error) {
     dispatch({type: types.LOGIN_FAIL, payload: error.message});
@@ -40,10 +41,11 @@ const loginWithGoogle = ({googleToken}, navigate) => async (dispatch) => {
     dispatch({type: types.GOOGLE_LOGIN_REQUEST});
     const response = await api.post('/auth/google', {googleToken});
     if(response.status !== 200) throw new Error(response.message);
+    const prevUserEmail = sessionStorage.getItem("prevUserEmail");
+    response.data.user.email === prevUserEmail ? navigate(-1) : navigate('/');
     dispatch({type: types.GOOGLE_LOGIN_SUCCESS, payload: response.data});
     sessionStorage.setItem('token', response.data.token);
     api.defaults.headers.authorization = `Bearer ${response.data.token}`;
-    if(response.data.user) navigate('/');
     dispatch(commonUiActions.showToastMessage("로그인 되었습니다.", "success"));
   } catch (error) {
     dispatch({type: types.GOOGLE_LOGIN_FAIL, payload: error.message});
