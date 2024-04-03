@@ -96,7 +96,6 @@ function cartReducer(state = initialState, action) {
       }  
 
     case types.CHECKED_ALL_SUCCESS:
-      console.log('payload.checkedAll',payload.checkedAll);
       return {
         ...state,
         loading: false,

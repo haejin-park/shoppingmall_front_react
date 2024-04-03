@@ -4,7 +4,6 @@ import { commonUiActions } from './commonUiAction';
 
 const getProductList = (query,sortBy) => async (dispatch) => {
   try {
-    // console.log('mainProductAction query',query);
     dispatch({type:types.GET_MAIN_PRODUCT_LIST_REQUEST});
     let options = {params: {...query}};
     if(sortBy === 'latest') options.params.sortBy = 'latest';

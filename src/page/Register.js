@@ -36,7 +36,7 @@ const Register = () => {
       setPasswordError("");
       setPolicyError(false);
       // FormData에 있는 값을 가지고 백엔드로 넘겨주기
-      dispatch(userActions.registerUser({email, name, password},navigate));      
+      dispatch(userActions.registerUser(email, name, password, navigate));      
   };
 
   const handleChange = (event) => {

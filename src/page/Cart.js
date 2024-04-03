@@ -18,7 +18,7 @@ import "../style/cart.style.css";
 삭제
 */
 
-const CartPage = () => {
+const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {loading, error, cartList, checkedItemList, checkedAll, totalPageNum, currentPage} = useSelector((state) => state.cart);
@@ -68,9 +68,7 @@ const CartPage = () => {
       .map(item => item.items._id);
 
     setDeletedItemIdList(deletedItemIdList);
-  },[cartList, setDeletedStatus])
-
-
+  },[cartList, setDeletedStatus]);
     
   const handlePageClick = ({ selected }) => {
     dispatch(cartActions.changePage(selected + 1));
@@ -120,7 +118,7 @@ cartList전체 합으로 totalPrice를 구해서 checkedItemTotalPrice를 계산
   
   return (
     <div>
-      <Container>
+      <Container className="cart-page-container">
         <Row className="cart-row">
           {loading && (
             <div className="spinner-box">
@@ -197,7 +195,7 @@ cartList전체 합으로 totalPrice를 구해서 checkedItemTotalPrice를 계산
             }
           </Col>
           <Col xs={12} className="order-receipt-col">
-            <OrderReceipt />
+            <OrderReceipt cartOrderStatus={true}/>
           </Col>
         </Row>
         <Row>
@@ -228,4 +226,4 @@ cartList전체 합으로 totalPrice를 구해서 checkedItemTotalPrice를 계산
   );
 };
 
-export default CartPage;
+export default Cart;

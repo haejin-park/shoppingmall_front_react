@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import "../style/paymentPage.style.css";
+import { Link, useNavigate } from "react-router-dom";
+import "../style/order.style.css";
+import { useSelector } from "react-redux";
 
 const OrderComplete = () => {
-  //만약 주문번호가 없는상태로 이페이지에 왔다면 다시 메인페이지로 돌아가기
+  const {orderNum} = useSelector((state) => state.myOrder);
+  const navigate = useNavigate();
+  //만약 주문번호가 없는상태로 주문 완료 페이지에 왔다면 다시 이전페이지로 돌아가기
+  useEffect(() => {
+    if(!orderNum) navigate(-1);
+  },[orderNum, navigate])
   return (
     <Container className="confirmation-page">
       <img
@@ -13,12 +19,12 @@ const OrderComplete = () => {
         className="check-image"
         alt="greenCheck.png"
       />
-      <h2>예약이 완료됬습니다!</h2>
-      <div>예약번호:"hard_code"</div>
+      <h2>주문이 완료됬습니다!</h2>
+      <div>주문번호:{orderNum}</div>
       <div>
-        예약 확인은 내 예약 메뉴에서 확인해주세요
+        주문 확인은 내 주문에서 확인해주세요
         <div className="text-align-center">
-          <Link to={"/order"}>내 예약 바로가기</Link>
+          <Link to={"/order"}>내 주문 바로가기</Link>
         </div>
       </div>
     </Container>

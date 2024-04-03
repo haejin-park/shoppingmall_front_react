@@ -43,7 +43,6 @@ const AdminNavbar = () => {
     setShow(false);
     setSearchValue('')
     setPlacehorder('상품명 검색')
-    dispatch(cartActions.checkedCartItem([], 0, false));
     dispatch(adminProductActions.changePage(firstPage));
     navigate(`${adminProductPath}?currentPage=${firstPage}`);
   };

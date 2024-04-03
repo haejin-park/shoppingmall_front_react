@@ -31,7 +31,7 @@ const Navbar = () => {
   const [overlayStatus, setOverlayStatus] = useState(false);
   const currentPath = location.pathname;
   const adminProductPath = '/admin/product';
-  const myOrderPath ='/order';
+  const myOrderPath ='/my/order';
   const cartPath = '/cart';
   const mainProductPath = '/';
 
@@ -85,35 +85,38 @@ const Navbar = () => {
 
   const goAdminProduct = (firstPage) => {
     setSearchValue('')
-    dispatch(cartActions.checkedCartItem([], 0, false));
     dispatch(adminProductActions.changePage(firstPage));
     navigate(`${adminProductPath}?currentPage=${firstPage}`);
   }
 
   const goCart = (firstPage) => {
     setSearchValue('')
-    dispatch(cartActions.checkedCartItem([], 0, false));
+    dispatch(cartActions.checkedCartItem([], 0));
+    dispatch(myOrderActions.saveOrderItem([], 0, true));
     dispatch(cartActions.changePage(firstPage));
     navigate(`${cartPath}?currentPage=${firstPage}`);
   }
 
   const goMyOrder = (firstPage) => {
     setSearchValue('')
-    dispatch(cartActions.checkedCartItem([], 0, false));
+    dispatch(cartActions.checkedCartItem([], 0));
+    dispatch(myOrderActions.saveOrderItem([], 0, false));
     dispatch(myOrderActions.changePage(firstPage));
     navigate(`${myOrderPath}?currentPage=${firstPage}`);
   }
 
   const goMainProduct = (firstPage) => {
     setSearchValue('')
-    dispatch(cartActions.checkedCartItem([], 0, false));
+    dispatch(cartActions.checkedCartItem([], 0));
+    dispatch(myOrderActions.saveOrderItem([], 0, false));
     dispatch(mainProductActions.changePage(firstPage));
     navigate(`${mainProductPath}?currentPage=${firstPage}`);
   }
 
   const goCategory = ()=> {
     setSearchValue('')
-    dispatch(cartActions.checkedCartItem([], 0, false));
+    dispatch(cartActions.checkedCartItem([], 0));
+    dispatch(myOrderActions.saveOrderItem([], 0, false));
     //카테고리에 따라 리스트 조회할 수 있도록 dispatch 추가, navigate추가 하기
   }
 
@@ -179,7 +182,7 @@ const Navbar = () => {
                   <div onClick={() => goCart(1)} className="nav-function">
                     <FontAwesomeIcon icon={faShoppingBag} />
                     {!isMobile && (
-                      <span style={{ cursor: "pointer" }}>{`쇼핑백(${
+                      <span style={{ cursor: "pointer" }}>{`장바구니(${
                         cartItemCount || 0
                       })`}</span>
                     )}

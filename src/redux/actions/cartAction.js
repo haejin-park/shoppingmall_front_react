@@ -4,10 +4,6 @@ import { commonUiActions } from './commonUiAction';
 
 const addToCart = ( productId, selectedOptionObj, query, mode ) => async (dispatch) => {
   try {
-    console.log('productId', productId);
-    console.log('selectedOptionObj', selectedOptionObj);
-    console.log('query', query);
-    console.log('mode', mode);
     dispatch({type:types.ADD_TO_CART_REQUEST})
     const response = await api.post("/cart", {productId, selectedOptionObj});
     if(response.status !== 200) throw new Error(response.message);
@@ -44,7 +40,6 @@ const selectCartProduct = (item) => async(dispatch) => {
 }
 const deleteCartItem = (_id, query) => async (dispatch) => {
   try {
-    console.log('query', query);
     if(!_id) throw new Error('삭제하려는 장바구니 항목의 ID가 존재하지 않습니다.');
     dispatch({type:types.DELETE_CART_ITEM_REQUEST});
     const response = await api.delete(`/cart/delete/${_id}`);
@@ -120,7 +115,6 @@ const checkedCartItem = (checkedItemList, checkedItemTotalPrice) => async(dispat
 
 const checkedAll = (checkedAll) => async(dispatch) => {
   try {
-    console.log('checkedAll',checkedAll);
     dispatch({type:types.CHECKED_ALL_REQUEST});
     dispatch({type:types.CHECKED_ALL_SUCCESS, payload:checkedAll});
   } catch(error) {

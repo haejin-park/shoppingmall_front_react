@@ -1,4 +1,5 @@
 
+
 .size-drop-down{
     width:100%;
 }
@@ -25,3 +26,15 @@
     text-align: center;
   }
 
+.deleted-product-error-message{
+    margin-top: 20px;
+}
+
+.product-detail-btn-row {
+    margin:10px 0px;
+}
+
+.add-button, .order-button{
+    width: 100%;
+  }
+  

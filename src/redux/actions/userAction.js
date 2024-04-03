@@ -13,7 +13,7 @@ const loginWithToken = () => async (dispatch) => {
   }
 };
 
-const loginWithEmail = ({email, password}, navigate) => async (dispatch) => {
+const loginWithEmail = (email, password, navigate) => async (dispatch) => {
   try {
     dispatch({type:types.LOGIN_REQUEST});
     const response = await api.post('/auth/login', {email, password});
@@ -51,7 +51,7 @@ const loginWithGoogle = ({googleToken}, navigate) => async (dispatch) => {
   }
 };
 
-const registerUser = ({ email, name, password }, navigate) => async (dispatch) => {
+const registerUser = (email, name, password, navigate) => async (dispatch) => {
   try {
     dispatch({type: types.REGISTER_USER_REQUEST});
     const response = await api.post('/user', {email, name, password});
