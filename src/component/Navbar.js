@@ -8,27 +8,30 @@ import {
   faUser
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useNavigationType, useSearchParams } from "react-router-dom";
 import { adminProductActions } from "../redux/actions/adminProductAction";
 import { cartActions } from "../redux/actions/cartAction";
 import { mainProductActions } from "../redux/actions/mainProductAction";
 import { myOrderActions } from "../redux/actions/myOrderAction";
 import { userActions } from "../redux/actions/userAction";
-import SearchBox from "./SearchBox";
 
 
 const Navbar = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const navigationType = useNavigationType();
+  const [query, setQuery] = useSearchParams();
+  const searchKeyword = query.get("searchKeyword") || "";
+  const inputRef = useRef(null);
   const { user } = useSelector((state) => state.user);
   const { cartItemCount } = useSelector((state) => state.cart);
   const [loginStatus, setLoginStatus] = useState(true);
   const [searchValue, setSearchValue] = useState("");
   const [width, setWidth] = useState(0);
   const [overlayStatus, setOverlayStatus] = useState(false);
+  const location = useLocation();
   const currentPath = location.pathname;
   const adminProductPath = '/admin/product';
   const myOrderPath ='/my/order';
@@ -49,6 +52,29 @@ const Navbar = () => {
     }
   },[user,dispatch]);
 
+
+  useEffect(() => {
+    if(navigationType === "POP") setSearchValue(searchKeyword)
+  }, [navigationType, setSearchValue, searchKeyword]);
+
+  // 검색창 열릴 때 입력필드 포커스
+  useEffect(() => {
+    if(inputRef.current)
+    inputRef.current.focus();
+  }, [width]);
+
+  const onChangeHandler = (event) => {
+    setSearchValue(event.target.value);
+  }
+
+  const onCheckEnter = (event) => {
+    if (event.key === "Enter") {
+      let searchKeyword = event.target.value;   
+      dispatch(mainProductActions.changePage(1));
+      navigate(`${mainProductPath}?searchKeyword=${searchKeyword}&currentPage=${1}`);
+      if(width > 0) handleClose();
+    }
+  };
 
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
   const categoryMenuList = [
@@ -126,6 +152,8 @@ const Navbar = () => {
     //카테고리에 따라 리스트 조회할 수 있도록 dispatch 추가, navigate추가 하기
   }
 
+  
+
   return (
     <div>
       {loginStatus && ( 
@@ -135,13 +163,17 @@ const Navbar = () => {
               &times;
             </button>
             <div className="mt-2 main-search-box">
-              <SearchBox 
-              placeholder="상품명 검색" 
-              handleClose={handleClose} 
-              width={width} 
-              searchValue={searchValue} 
-              setSearchValue={setSearchValue}
-            />
+              <div className="search-box">
+                <FontAwesomeIcon className="search-icon" icon={faSearch} />
+                <input
+                  ref={inputRef}
+                  type="text"
+                  placeholder="상품명 검색"
+                  onKeyPress={onCheckEnter}
+                  onChange={onChangeHandler}
+                  value={searchValue}
+                />
+              </div>
             </div>
             <div className="side-menu-list" id="menu-list">
               {categoryMenuList.map((category, index) => (
