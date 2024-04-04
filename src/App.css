@@ -230,6 +230,7 @@ body{
 }
 
 .admin-side-navbar-item:hover{
+  background-color:rgb(250, 46, 46);
   color:white;
   font-weight: bold;
 }
@@ -267,7 +268,7 @@ body{
 
 .admin-side-navbar-content {
   position:fixed;
-
+  width: 255px;
 }
 
 @media screen and (max-width: 992px) {
@@ -302,8 +303,6 @@ body{
 
   .admin-children-col {
     width: 100%;
-    /* border: 1px solid red; */
-
   }
 
   .admin-side-navbar-box{

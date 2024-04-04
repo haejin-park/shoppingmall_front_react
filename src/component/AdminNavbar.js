@@ -6,7 +6,6 @@ import { adminOrderActions } from "../redux/actions/adminOrderAction";
 import { adminProductActions } from "../redux/actions/adminProductAction";
 import { mainProductActions } from "../redux/actions/mainProductAction";
 import SearchBox from "./SearchBox";
-import { cartActions } from "../redux/actions/cartAction";
 
 const AdminNavbar = () => {
   const dispatch = useDispatch();
