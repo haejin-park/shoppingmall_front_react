@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import ProductDetailDialog from "../component/ProductDetailDialog";
 import ProductTable from "../component/ProductTable";
+import * as types from '../constants/product.constants';
 import { adminProductActions } from "../redux/actions/adminProductAction";
-import { commonProductActions } from "../redux/actions/commonProductAction";
 
 const AdminProduct = () => {
   const dispatch = useDispatch();
@@ -48,7 +48,7 @@ const AdminProduct = () => {
   };
 
   const openEditForm = (product) => {
-    dispatch(commonProductActions.selectProduct(product));
+    dispatch({type:types.SET_SELECTED_PRODUCT, payload:product});
     //edit모드로 설정하고
     setMode('edit');
     // 아이템 수정다이얼로그 열어주기
@@ -64,7 +64,7 @@ const AdminProduct = () => {
 
   const handlePageClick = ({ selected }) => {
     //  쿼리에 페이지값 바꿔주기
-    dispatch(adminProductActions.changePage(selected + 1));
+    dispatch({type:types.CHANGE_PAGE_OF_ADMIN_PRODUCT, payload:selected + 1});
   };
 
   return (

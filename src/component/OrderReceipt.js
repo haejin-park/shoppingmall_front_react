@@ -3,11 +3,11 @@ import { Alert, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
-import { myOrderActions } from "../redux/actions/myOrderAction";
+import * as types from '../constants/order.constants';
 
 const OrderReceipt = ({cartOrderStatus}) => {
   const { cartList, checkedItemList, checkedItemTotalPrice } = useSelector((state) => state.cart);
-  const { orderList, totalPrice } = useSelector((state) => state.myOrder);
+  const { orderItemList, totalPrice } = useSelector((state) => state.myOrder);
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const OrderReceipt = ({cartOrderStatus}) => {
       setDeletedProductError(true);
       return;
     }
-    dispatch(myOrderActions.saveOrderItem(checkedItemList, checkedItemTotalPrice, cartOrderStatus));
+    dispatch({type:types.SAVE_ORDER_ITEM, payload:{orderItemList:checkedItemList, totalPrice:checkedItemTotalPrice, cartOrderStatus}});
     navigate("/order");
     setDeletedProductError(false);
   }
@@ -50,7 +50,7 @@ const OrderReceipt = ({cartOrderStatus}) => {
               <div>
                 {checkedItemList.length > 0
                   ? checkedItemList.map((item) => (<div key={item.items._id}>{item.productData[0].name}</div>)) 
-                  : orderList.map((item, index) => (<div key={index}>{item.productData[0].name}</div>)) 
+                  : orderItemList.map((item, index) => (<div key={index}>{item.productData[0].name}</div>)) 
                 }
               </div>
             </div>

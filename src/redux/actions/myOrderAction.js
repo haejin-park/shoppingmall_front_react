@@ -3,18 +3,10 @@ import api from '../../utils/api';
 import { cartActions } from './cartAction';
 import { commonUiActions } from './commonUiAction';
 
-const saveOrderItem = (orderList, totalPrice, cartOrderStatus) => async(dispatch) => {
-  try {
-    dispatch({type:types.SAVE_ORDER_ITEM_REQUEST});
-    dispatch({type:types.SAVE_ORDER_ITEM_SUCCESS, payload:{orderList, totalPrice, cartOrderStatus}});
-  } catch(error) {
-    dispatch({type:types.SAVE_ORDER_ITEM_FAIL, payload:error.message});
-  }
-}
-const createOrder = (orderData, cartOrderStatus, navigate) => async (dispatch) => {
+const createOrder = (orderList, cartOrderStatus, navigate) => async (dispatch) => {
   try {
     dispatch({type:types.CREATE_ORDER_REQUEST});
-    const response = await api.post('/order', {orderData, cartOrderStatus})
+    const response = await api.post('/order', {orderList, cartOrderStatus})
     if(response.status !== 200) throw new Error(response.message);
     dispatch({type:types.CREATE_ORDER_SUCCESS, payload:response.data});
     dispatch(cartActions.getCartItemCount(response.data.cartItemCount));
@@ -26,27 +18,19 @@ const createOrder = (orderData, cartOrderStatus, navigate) => async (dispatch) =
 };
 const getOrderList = (query) => async (dispatch) => {
   try {
-    dispatch({type:types.GET_ORDER_LIST_REQUEST});
+    dispatch({type:types.GET_MY_ORDER_LIST_REQUEST});
     const options = {params: {...query}};
-    const response = await api.get("/order", options);
+    const response = await api.get("/order/my", options);
     if(response.status !== 200) throw new Error(response.message);
-    dispatch({type:types.GET_ORDER_LIST_SUCCESS, payload: response.data});
+    dispatch({type:types.GET_MY_ORDER_LIST_SUCCESS, payload: response.data});
   } catch(error) {
-    dispatch({type:types.GET_ORDER_LIST_FAIL, payload: error.message});
+    dispatch({type:types.GET_MY_ORDER_LIST_FAIL, payload: error.message});
     dispatch(commonUiActions.showToastMessage(error.message, "error"));
   }
 };
-const changePage = (currentPage) => async(dispatch) => {
-  try {
-    dispatch({type:types.CHANGE_PAGE_OF_MY_ORDER_REQUEST});
-    dispatch({type:types.CHANGE_PAGE_OF_MY_ORDER_SUCCESS, payload:currentPage});
-  } catch(error) {
-    dispatch({type:types.CHANGE_PAGE_OF_MY_ORDER_FAIL, payload:error.message});
-  }
-}
+
 export const myOrderActions = {
-  saveOrderItem,
   createOrder,
-  getOrderList,
-  changePage,
+  getOrderList
 };
+

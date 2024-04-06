@@ -10,7 +10,6 @@ const initialState = {
 function commonProductReducer(state = initialState, action) {
   const { type, payload } = action;
   switch(type) {
-    case types.SELECT_PRODUCT_REQUEST:
     case types.GET_PRODUCT_DETAIL_REQUEST:
       return {
         ...state,
@@ -18,7 +17,6 @@ function commonProductReducer(state = initialState, action) {
         error: ''
       }
 
-    case types.SELECT_PRODUCT_FAIL:
     case types.GET_PRODUCT_DETAIL_FAIL:
       return {
         ...state,
@@ -26,14 +24,14 @@ function commonProductReducer(state = initialState, action) {
         error: payload
       }       
 
-    case types.SELECT_PRODUCT_SUCCESS:
+    case types.SET_SELECTED_PRODUCT:
       return {
         ...state,
         loading: false,
         error: '',
         selectedProduct: payload
       }
-  
+      
     case types.GET_PRODUCT_DETAIL_SUCCESS:
       return {
         ...state,

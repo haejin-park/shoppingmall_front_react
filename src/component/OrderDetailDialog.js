@@ -5,10 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import "../style/adminOrder.style.css";
 import { ORDER_STATUS } from "../constants/order.constants";
 import { commonOrderActions } from "../redux/actions/commonOrderAction";
-import { currencyFormat } from "../utils/number";
 
 const OrderDetailDialog = ({ open, handleClose }) => {
   const {selectedOrder} = useSelector((state) => state.commonOrder);
+  console.log('selectedOrder',selectedOrder);
   const [orderStatus, setOrderStatus] = useState(selectedOrder.status);
   const dispatch = useDispatch();
 
@@ -29,17 +29,17 @@ const OrderDetailDialog = ({ open, handleClose }) => {
         <Modal.Title>Order Detail</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>예약번호: {selectedOrder.orderNum}</p>
-        <p>주문날짜: {selectedOrder.createdAt.slice(0, 10)}</p>
-        <p>이메일: {selectedOrder.userId.email}</p>
+        <p>예약번호: {selectedOrder.data.info.orderNum}</p>
+        <p>주문날짜: {selectedOrder.data.info.itemCreatedAt.slice(0, 10)}</p>
+        <p>이메일: {selectedOrder.data.userData.email}</p>
         <p>
-          주소:{selectedOrder.shipTo.address + " " + selectedOrder.shipTo.city}
+          주소: {selectedOrder.data.info.shipTo.address + " " + selectedOrder.data.info.shipTo.city}
         </p>
         <p>
-          연락처:
-          {`${
-            selectedOrder.contact.firstName + selectedOrder.contact.lastName
-          } ${selectedOrder.contact.contact}`}
+          연락처: {
+           `${selectedOrder.data.info.contact.lastName + selectedOrder.data.info.contact.firstName } 
+            ${selectedOrder.data.info.contact.contact}`
+          }
         </p>
         <p>주문내역</p>
         <div className="overflow-x">
@@ -47,26 +47,26 @@ const OrderDetailDialog = ({ open, handleClose }) => {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Name</th>
-                <th>Unit Price</th>
-                <th>Qty</th>
-                <th>Price</th>
+                <th>상품명</th>
+                <th>개별 금액</th>
+                <th>수량</th>
+                <th>총 금액</th>
               </tr>
             </thead>
             <tbody>
-              {selectedOrder.items.length > 0 &&
-                selectedOrder.items.map((item) => (
+              {selectedOrder.data.items.length > 0 &&
+                selectedOrder.data.items.map((item, index) => (
                   <tr key={item._id}>
                     <td>{item._id}</td>
-                    <td>{item.productId.name}</td>
-                    <td>{currencyFormat(item.price)}</td>
+                    <td>{item.productData.name}</td>
+                    <td>{(item.price).toLocaleString()}</td>
                     <td>{item.qty}</td>
-                    <td>{currencyFormat(item.price * item.qty)}</td>
+                    <td>{(item.price * item.qty).toLocaleString()}</td>
                   </tr>
                 ))}
               <tr>
                 <td colSpan={4}>총계:</td>
-                <td>{currencyFormat(selectedOrder.totalPrice)}</td>
+                <td>{(selectedOrder.data.info.totalPrice).toLocaleString()}</td>
               </tr>
             </tbody>
           </Table>

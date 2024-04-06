@@ -18,7 +18,7 @@ const AdminOrder = () => {
 
   const tableHeader = [
     "#",
-    "Order#",
+    "Order Number",
     "Order Date",
     "User",
     "Order Item",
@@ -45,7 +45,8 @@ const AdminOrder = () => {
   };
 
   const handlePageClick = ({ selected }) => {
-    dispatch(adminOrderActions.changePage(selected + 1));
+    dispatch({type:types.CHANGE_PAGE_OF_ADMIN_ORDER, payload:selected + 1});
+
   };
 
   const handleClose = () => {

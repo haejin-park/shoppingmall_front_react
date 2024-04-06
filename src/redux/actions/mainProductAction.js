@@ -17,16 +17,6 @@ const getProductList = (query,sortBy) => async (dispatch) => {
   }
 };
 
-const changePage = (currentPage) => async(dispatch) => {
-  try {
-    dispatch({type:types.CHANGE_PAGE_OF_MAIN_PRODUCT_REQUEST});
-    dispatch({type:types.CHANGE_PAGE_OF_MAIN_PRODUCT_SUCCESS, payload:currentPage});
-  } catch(error) {
-    dispatch({type:types.CHANGE_PAGE_OF_MAIN_PRODUCT_FAIL, payload:error.message});
-  }
-}
-
 export const mainProductActions = {
-  getProductList,
-  changePage
+  getProductList
 };

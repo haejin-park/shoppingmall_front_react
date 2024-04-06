@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import * as types from '../constants/cart.constants';
 import { cartActions } from "../redux/actions/cartAction";
 import CartProductUpdateDialog from "./CartProductUpdateDialog";
 
@@ -27,7 +28,13 @@ const CartProductCard = ({ item, checkedAll }) => {
     const totalPrice = updatedCheckedItemList.reduce((total, item) => {
       return total + item.productData[0]?.price * item.items.qty;
     },0);
-    dispatch(cartActions.checkedCartItem(updatedCheckedItemList, totalPrice));
+    dispatch({
+      type:types.CHECKED_CART_ITEM, 
+      payload:{
+        checkedItemList:updatedCheckedItemList, 
+        checkedItemTotalPrice:totalPrice
+      }
+    });
   };
 
   /*
@@ -44,14 +51,26 @@ const CartProductCard = ({ item, checkedAll }) => {
     const isChecked = checkedItemList.includes(item);
     if(isChecked) {
       const updatedCheckedItemList = checkedItemList.filter(checkedItem => checkedItem !== item);
-      dispatch(cartActions.checkedCartItem(updatedCheckedItemList, checkedItemTotalPrice - totalPrice))
+      dispatch({
+        type:types.CHECKED_CART_ITEM, 
+        payload:{
+          checkedItemList:updatedCheckedItemList, 
+          checkedItemTotalPrice: checkedItemTotalPrice - totalPrice
+        }
+      });
     } else {  
-      dispatch(cartActions.checkedCartItem([...checkedItemList, item], checkedItemTotalPrice + totalPrice))
+      dispatch({
+        type:types.CHECKED_CART_ITEM, 
+        payload:{
+          checkedItemList:[...checkedItemList, item], 
+          checkedItemTotalPrice:checkedItemTotalPrice + totalPrice
+        }
+      });    
     }
   }
 
   const openEditForm = (item) => {
-    dispatch(cartActions.selectCartProduct(item));
+    dispatch({type:types.SET_SELECTED_CART_ITEM, payload:item});
     setMode('edit');
     setShowDialog(true);
   };

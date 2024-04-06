@@ -4,6 +4,7 @@ const initialState = {
   loading: false,
   error: '',
   orderList: [],
+  totalPrice: 0,
   totalPageNum: 1,
   currentPage:1,
 };
@@ -11,21 +12,21 @@ const initialState = {
 function adminOrderReducer(state = initialState, action) {
   const { type, payload } = action;
   switch(type) {
-    case types.CHANGE_PAGE_OF_ADMIN_ORDER_REQUEST:
+    case types.GET_ADMIN_ORDER_LIST_REQUEST:
       return {
         ...state,
         loading: true,
         error: ''
       }
 
-    case types.CHANGE_PAGE_OF_ADMIN_ORDER_FAIL:
+    case types.GET_ADMIN_ORDER_LIST_FAIL:
       return {
         ...state,
         loading: false,
         error: payload
       }       
 
-    case types.CHANGE_PAGE_OF_ADMIN_ORDER_SUCCESS:
+    case types.CHANGE_PAGE_OF_ADMIN_ORDER:
       return {
         ...state,
         loading: false,
@@ -33,6 +34,15 @@ function adminOrderReducer(state = initialState, action) {
         currentPage: payload
       }    
   
+    case types.GET_ADMIN_ORDER_LIST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: '',
+        orderList: payload.orderList,
+        totalPageNum: payload.totalPageNum,
+        currentPage: payload.currentPage
+      }    
     default: 
       return state; 
   }

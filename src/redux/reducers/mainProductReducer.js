@@ -11,7 +11,6 @@ function mainProductReducer(state = initialState, action) {
   const { type, payload } = action;
   switch(type) {
     case types.GET_MAIN_PRODUCT_LIST_REQUEST:
-    case types.CHANGE_PAGE_OF_MAIN_PRODUCT_REQUEST:
       return {
         ...state,
         loading: true,
@@ -19,7 +18,6 @@ function mainProductReducer(state = initialState, action) {
       }
 
     case types.GET_MAIN_PRODUCT_LIST_FAIL:
-    case types.CHANGE_PAGE_OF_MAIN_PRODUCT_FAIL:
       return {
         ...state,
         loading: false,
@@ -36,7 +34,7 @@ function mainProductReducer(state = initialState, action) {
         currentPage: payload.currentPage
       }
 
-    case types.CHANGE_PAGE_OF_MAIN_PRODUCT_SUCCESS:
+    case types.CHANGE_PAGE_OF_MAIN_PRODUCT:
       return {
         ...state,
         loading: false,

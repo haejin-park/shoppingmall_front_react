@@ -24,8 +24,8 @@ const createProduct = (formData,latestStatus) => async (dispatch) => {
     if(response.status !== 200) throw new Error(response.message);
     dispatch({type:types.CREATE_PRODUCT_SUCCESS});
     dispatch(commonUiActions.showToastMessage("상품 생성을 완료했습니다.", "success"));
-    dispatch(adminProductActions.changePage(1));
-    await dispatch(adminProductActions.getProductList({searchKeyword: "", currentPage:1},latestStatus));
+    dispatch({type:types.CHANGE_PAGE_OF_ADMIN_PRODUCT, payload:1});    
+    dispatch(adminProductActions.getProductList({searchKeyword: "", currentPage:1},latestStatus));
   } catch(error) {
     dispatch({type:types.CREATE_PRODUCT_FAIL, payload:error.message});
     dispatch(commonUiActions.showToastMessage(error.message, "error"));
@@ -39,7 +39,7 @@ const deleteProduct = (id, query,latestStatus) => async (dispatch) => {
     await api.put(`/product/delete/${id}`);
     dispatch({type:types.DELETE_PRODUCT_SUCCESS});
     dispatch(commonUiActions.showToastMessage("상품 삭제를 완료했습니다.", "success"));
-    await dispatch(adminProductActions.getProductList(query,latestStatus));
+    dispatch(adminProductActions.getProductList(query,latestStatus));
   } catch(error) {
     dispatch({type:types.DELETE_PRODUCT_FAIL, payload:error.message});
     dispatch(commonUiActions.showToastMessage(error.message, "error"));
@@ -53,34 +53,16 @@ const updateProduct = (formData, query, latestStatus) => async (dispatch) => {
     if(response.status !== 200) throw new Error(response.message);
     dispatch({type:types.UPDATE_PRODUCT_SUCCESS});
     dispatch(commonUiActions.showToastMessage("상품 수정을 완료했습니다.", "success"));
-    await dispatch(adminProductActions.getProductList(query,latestStatus));
+    dispatch(adminProductActions.getProductList(query,latestStatus));
   } catch(error) {
     dispatch({type:types.UPDATE_PRODUCT_FAIL, payload:error.message});
     dispatch(commonUiActions.showToastMessage(error.message, "error"));
   }
 };
 
-const changePage = (currentPage) => async(dispatch) => {
-  try {
-    dispatch({type:types.CHANGE_PAGE_OF_ADMIN_PRODUCT_REQUEST});
-    dispatch({type:types.CHANGE_PAGE_OF_ADMIN_PRODUCT_SUCCESS, payload:currentPage});
-  } catch(error) {
-    dispatch({type:types.CHANGE_PAGE_OF_ADMIN_PRODUCT_FAIL, payload:error.message});
-  }
-}
-/* 
-각 페이지에서 페이지를 바꿔주는 미들웨어가 필요한건가? 
-조회시 controller에서 skip할 document수 보다 작으면 설정할 수 있고
-가져다 쓸 수 있게 페이지 상태를 스토어에서 관리하고 
-페이지 상태는 useState로 초기값에 넣어준다음 
-getProductLsit할 때만 업데이트해주면 되는거아닌가?
-=> 뒤로가기 했을 때 이전 상태를 다시 업데이트 해주려면 필요할거같음 
-*/
-
 export const adminProductActions = {
   getProductList,
   createProduct,
   deleteProduct,
-  updateProduct,
-  changePage,
+  updateProduct
 };

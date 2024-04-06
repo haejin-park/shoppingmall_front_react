@@ -15,7 +15,6 @@ function adminProductReducer(state = initialState, action) {
     case types.CREATE_PRODUCT_REQUEST:
     case types.UPDATE_PRODUCT_REQUEST:
     case types.DELETE_PRODUCT_REQUEST:
-    case types.CHANGE_PAGE_OF_ADMIN_PRODUCT_REQUEST:
       return {
         ...state,
         loading: true,
@@ -26,7 +25,6 @@ function adminProductReducer(state = initialState, action) {
     case types.CREATE_PRODUCT_FAIL:
     case types.UPDATE_PRODUCT_FAIL:
     case types.DELETE_PRODUCT_FAIL:
-    case types.CHANGE_PAGE_OF_ADMIN_PRODUCT_FAIL:
       return {
         ...state,
         loading: false,
@@ -52,7 +50,7 @@ function adminProductReducer(state = initialState, action) {
         currentPage: payload.currentPage
       }
 
-    case types.CHANGE_PAGE_OF_ADMIN_PRODUCT_SUCCESS:
+    case types.CHANGE_PAGE_OF_ADMIN_PRODUCT:
       return {
         ...state,
         loading: false,

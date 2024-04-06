@@ -11,12 +11,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useNavigationType, useSearchParams } from "react-router-dom";
-import { adminProductActions } from "../redux/actions/adminProductAction";
+import * as cartTypes from '../constants/cart.constants';
+import * as orderTypes from '../constants/order.constants';
+import * as productTypes from '../constants/product.constants';
 import { cartActions } from "../redux/actions/cartAction";
-import { mainProductActions } from "../redux/actions/mainProductAction";
-import { myOrderActions } from "../redux/actions/myOrderAction";
 import { userActions } from "../redux/actions/userAction";
-
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -37,7 +36,7 @@ const Navbar = () => {
   const myOrderPath ='/my/order';
   const cartPath = '/cart';
   const mainProductPath = '/';
-
+  
   useEffect(() => {
     if(!user && (currentPath === '/login' || currentPath === '/register')) {
       setLoginStatus(false);
@@ -47,7 +46,7 @@ const Navbar = () => {
   }, [user, currentPath]);
 
   useEffect(() => {
-    if(user) {
+    if(user && user.level === "customer") {
       dispatch(cartActions.getCartItemCount())
     }
   },[user,dispatch]);
@@ -70,8 +69,8 @@ const Navbar = () => {
   const onCheckEnter = (event) => {
     if (event.key === "Enter") {
       let searchKeyword = event.target.value;   
-      dispatch(mainProductActions.changePage(1));
-      navigate(`${mainProductPath}?searchKeyword=${searchKeyword}&currentPage=${1}`);
+      dispatch({type:productTypes.CHANGE_PAGE_OF_MAIN_PRODUCT, payload:1});
+      navigate(`${mainProductPath}?searchKeyword=${searchKeyword}`);
       if(width > 0) handleClose();
     }
   };
@@ -109,46 +108,44 @@ const Navbar = () => {
     setOverlayStatus(false)
   }
 
-  const goAdminProduct = (firstPage) => {
+  const goAdminProduct = () => {
     setSearchValue('')
-    dispatch(adminProductActions.changePage(firstPage));
-    navigate(`${adminProductPath}?currentPage=${firstPage}`);
+    dispatch({type:productTypes.CHANGE_PAGE_OF_ADMIN_PRODUCT, payload:1});
+    navigate(adminProductPath);
   }
 
   const goLogout = () => {
-    setSearchValue('')
-    sessionStorage.setItem('prevUserEmail', user.email);
-    dispatch(userActions.logout());
+    dispatch(userActions.logout(user.email, setSearchValue));
   }
 
-  const goCart = (firstPage) => {
+  const goCart = () => {
     setSearchValue('')
-    dispatch(cartActions.checkedCartItem([], 0));
-    dispatch(myOrderActions.saveOrderItem([], 0, true));
-    dispatch(cartActions.changePage(firstPage));
-    navigate(`${cartPath}?currentPage=${firstPage}`);
+    dispatch({type:cartTypes.CHECKED_CART_ITEM, payload:{checkedItemList:[], checkedItemTotalPrice:0}});
+    dispatch({type:orderTypes.SAVE_ORDER_ITEM, payload:{orderItemList:[], totalPrice:0, cartOrderStatus:true}});
+    dispatch({type:cartTypes.CHANGE_PAGE_OF_CART, payload:1});
+    navigate(cartPath);
   }
 
-  const goMyOrder = (firstPage) => {
+  const goMyOrder = () => {
     setSearchValue('')
-    dispatch(cartActions.checkedCartItem([], 0));
-    dispatch(myOrderActions.saveOrderItem([], 0, false));
-    dispatch(myOrderActions.changePage(firstPage));
-    navigate(`${myOrderPath}?currentPage=${firstPage}`);
+    dispatch({type:cartTypes.CHECKED_CART_ITEM, payload:{checkedItemList:[], checkedItemTotalPrice:0}});
+    dispatch({type:orderTypes.SAVE_ORDER_ITEM, payload:{orderItemList:[], totalPrice:0, cartOrderStatus:false}});
+    dispatch({type:orderTypes.CHANGE_PAGE_OF_MY_ORDER, payload:1});
+    navigate(myOrderPath);
   }
 
-  const goMainProduct = (firstPage) => {
+  const goMainProduct = () => {
     setSearchValue('')
-    dispatch(cartActions.checkedCartItem([], 0));
-    dispatch(myOrderActions.saveOrderItem([], 0, false));
-    dispatch(mainProductActions.changePage(firstPage));
-    navigate(`${mainProductPath}?currentPage=${firstPage}`);
+    dispatch({type:cartTypes.CHECKED_CART_ITEM, payload:{checkedItemList:[], checkedItemTotalPrice:0}});
+    dispatch({type:orderTypes.SAVE_ORDER_ITEM, payload:{orderItemList:[], totalPrice:0, cartOrderStatus:false}});
+    dispatch({type:productTypes.CHANGE_PAGE_OF_MAIN_PRODUCT, payload:1});
+    navigate(mainProductPath);
   }
 
   const goCategory = ()=> {
     setSearchValue('')
-    dispatch(cartActions.checkedCartItem([], 0));
-    dispatch(myOrderActions.saveOrderItem([], 0, false));
+    dispatch({type:cartTypes.CHECKED_CART_ITEM, payload:{checkedItemList:[], checkedItemTotalPrice:0}});
+    dispatch({type:orderTypes.SAVE_ORDER_ITEM, payload:{orderItemList:[], totalPrice:0, cartOrderStatus:false}});
     //카테고리에 따라 리스트 조회할 수 있도록 dispatch 추가, navigate추가 하기
   }
 
@@ -195,7 +192,7 @@ const Navbar = () => {
                   )}
                 </div>
                 {user && user.level === "admin" && (
-                  <div onClick={() => goAdminProduct(1)} className="nav-function">
+                  <div onClick={() => goAdminProduct()} className="nav-function">
                     <FontAwesomeIcon icon={faUser} />
                     {!isMobile && (
                       <span style={{ cursor: "pointer" }}>관리자</span>
@@ -217,16 +214,16 @@ const Navbar = () => {
                 }        
                 {user?.level === "customer" &&
                 <div className="customer-navbar-menu">
-                  <div onClick={() => goCart(1)} className="nav-function">
+                  <div onClick={() => goCart()} className="nav-function">
                     <FontAwesomeIcon icon={faShoppingBag} />
                     {!isMobile && (
                       <span style={{ cursor: "pointer" }}>{`장바구니(${
-                        cartItemCount || 0
+                        cartItemCount
                       })`}</span>
                     )}
                   </div>
                   <div
-                    onClick={() => goMyOrder(1)}
+                    onClick={() => goMyOrder()}
                     className="nav-function"
                   >
                     <FontAwesomeIcon icon={faBox} />
@@ -240,7 +237,7 @@ const Navbar = () => {
         </div>  
       )}
       <div className={`nav-logo ${loginStatus? '' : 'login-false'}`}>
-        <div onClick={() => goMainProduct(1)}>
+        <div onClick={() => goMainProduct()}>
           <img width={100} src="/image/hm-logo.png" alt="hm-logo.png" />
         </div>
       </div>

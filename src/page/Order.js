@@ -11,7 +11,7 @@ import "../style/order.style.css";
 const Order = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error, orderList, totalPrice, cartOrderStatus } = useSelector((state) => state.myOrder);
+  const { loading, error, orderItemList, totalPrice, cartOrderStatus } = useSelector((state) => state.myOrder);
   const [shipInfo, setShipInfo] = useState({
     lastName: "",
     firstName: "",
@@ -31,8 +31,8 @@ const Order = () => {
 
   // url로 결제 페이지에 오려할 때 주문리스트가 없으면 이전 페이지로 이동 하도록
   useEffect(() => {
-    if(orderList.length === 0) navigate(-1);
-  },[orderList, navigate]);
+    if(orderItemList.length === 0) navigate(-1);
+  },[orderItemList, navigate]);
   
   const handleFormChange = (event) => {
     //shipInfo에 값 넣어주기
@@ -56,26 +56,26 @@ const Order = () => {
     setCardValue((prev) => ({ ...prev, focus: e.target.name }));
   }; 
   
-  
-
    const handleSubmit = (event) => {
     event.preventDefault();
     const {lastName,firstName,contact,address,city,zip} = shipInfo;
-    const orderData = {
-      orderList: orderList.map(item => {
-        return {
-          totalPrice, 
-          shipTo:{address,city,zip},
-          contact:{lastName,firstName,contact},
-          productId: item.items.productId,
-          price: item.productData[0].price,
-          qty: item.items.qty,
-          size: item.items.size
-        }
-      })
-    }
+    const info = {
+      totalPrice, 
+      shipTo:{address,city,zip}, 
+      contact:{lastName,firstName,contact}
+    };
+    const items = orderItemList.map(item => {
+      return {
+        productId: item.items.productId,
+        price: item.productData[0].price,
+        size: item.items.size,
+        qty: item.items.qty
+      };          
+    })
+    const orderList = [{info,items}];
+    
     //오더 생성하고 주문 완료 페이지로 보내기.
-    dispatch(myOrderActions.createOrder(orderData, cartOrderStatus, navigate));
+    dispatch(myOrderActions.createOrder(orderList, cartOrderStatus, navigate));
 
   };
 

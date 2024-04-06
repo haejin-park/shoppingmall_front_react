@@ -4,10 +4,10 @@ import React, { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate, useNavigationType } from "react-router";
 import { useSearchParams } from "react-router-dom";
-import { adminOrderActions } from "../redux/actions/adminOrderAction";
-import { adminProductActions } from "../redux/actions/adminProductAction";
-import { cartActions } from "../redux/actions/cartAction";
-import { myOrderActions } from "../redux/actions/myOrderAction";
+import * as cartTypes from '../constants/cart.constants';
+import * as orderTypes from '../constants/order.constants';
+import * as productTypes from '../constants/product.constants';
+
 const SearchBox = ({ placeholder, show, searchValue, setSearchValue }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -43,17 +43,17 @@ const SearchBox = ({ placeholder, show, searchValue, setSearchValue }) => {
       let currentPath = location.pathname;
       let searchKeyword = event.target.value;   
       if(currentPath === adminProductPath) {
-        dispatch(adminProductActions.changePage(1));
-        navigate(`${currentPath}?searchKeyword=${searchKeyword}&currentPage=${1}`);
+        dispatch({type:productTypes.CHANGE_PAGE_OF_ADMIN_PRODUCT, payload:1});
+        navigate(`${currentPath}?searchKeyword=${searchKeyword}`);
       } else if(currentPath === adminOrderPath) {
-        dispatch(adminOrderActions.changePage(1));
-        navigate(`${currentPath}?searchKeyword=${searchKeyword}&currentPage=${1}`);
+        dispatch({type:orderTypes.CHANGE_PAGE_OF_ADMIN_ORDER, payload:1});
+        navigate(`${currentPath}?searchKeyword=${searchKeyword}`);
       } else if(currentPath === myOrderPath) {
-        dispatch(myOrderActions.changePage(1));
-        navigate(`${currentPath}?searchKeyword=${searchKeyword}&currentPage=${1}`);
+        dispatch({type:orderTypes.CHANGE_PAGE_OF_MY_ORDER, payload:1});
+        navigate(`${currentPath}?searchKeyword=${searchKeyword}`);
       } else if(currentPath === cartPath) {
-        dispatch(cartActions.changePage(1));
-        navigate(`${currentPath}?searchKeyword=${searchKeyword}&currentPage=${1}`);
+        dispatch({type:cartTypes.CHANGE_PAGE_OF_CART, payload:1});
+        navigate(`${currentPath}?searchKeyword=${searchKeyword}`);
       }   
     }
   };

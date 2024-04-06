@@ -4,6 +4,7 @@ const initialState = {
   loading: false,
   error: '',
   orderList: [],
+  orderItemList: [],
   totalPrice: 0,
   cartOrderStatus: false,
   orderNum: '',
@@ -14,27 +15,23 @@ const initialState = {
 function myOrderReducer(state = initialState, action) {
   const { type, payload } = action;
   switch(type) {
-    case types.CHANGE_PAGE_OF_MY_ORDER_REQUEST:
-    case types.SAVE_ORDER_ITEM_REQUEST:
     case types.CREATE_ORDER_REQUEST:
-    case types.GET_ORDER_LIST_REQUEST:
+    case types.GET_MY_ORDER_LIST_REQUEST:
       return {
         ...state,
         loading: true,
         error: ''
       }
 
-    case types.CHANGE_PAGE_OF_MY_ORDER_FAIL:
-    case types.SAVE_ORDER_ITEM_FAIL:
     case types.CREATE_ORDER_FAIL:
-    case types.GET_ORDER_LIST_FAIL:
+    case types.GET_MY_ORDER_LIST_FAIL:
       return {
         ...state,
         loading: false,
         error: payload
       }       
 
-    case types.CHANGE_PAGE_OF_MY_ORDER_SUCCESS:
+    case types.CHANGE_PAGE_OF_MY_ORDER:
       return {
         ...state,
         loading: false,
@@ -42,12 +39,12 @@ function myOrderReducer(state = initialState, action) {
         currentPage: payload
       }
       
-    case types.SAVE_ORDER_ITEM_SUCCESS:
+    case types.SAVE_ORDER_ITEM:
       return {
         ...state,
         loading: false,
         error: '',
-        orderList: payload.orderList,
+        orderItemList: payload.orderItemList,
         totalPrice: payload.totalPrice,
         cartOrderStatus: payload.cartOrderStatus
       }    
@@ -60,7 +57,7 @@ function myOrderReducer(state = initialState, action) {
         orderNum: payload.orderNum,
       }    
   
-    case types.GET_ORDER_LIST_SUCCESS:
+    case types.GET_MY_ORDER_LIST_SUCCESS:
       return {
         ...state,
         loading: false,

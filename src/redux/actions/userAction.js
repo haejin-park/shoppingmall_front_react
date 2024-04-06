@@ -18,19 +18,24 @@ const loginWithEmail = (email, password, navigate) => async (dispatch) => {
     dispatch({type:types.LOGIN_REQUEST});
     const response = await api.post('/auth/login', {email, password});
     if(response.status !== 200) throw new Error(response.message);
+    sessionStorage.setItem("currentUserEmail", email);
     const prevUserEmail = sessionStorage.getItem("prevUserEmail");
-    email === prevUserEmail? navigate(-1) : navigate('/');
+    email === prevUserEmail ? navigate(-1) : navigate('/');
     dispatch({type: types.LOGIN_SUCCESS, payload: response.data});
     sessionStorage.setItem("token", response.data.token);
     api.defaults.headers.authorization = `Bearer ${response.data.token}`;
     dispatch(commonUiActions.showToastMessage("로그인 되었습니다.", "success"));
+    sessionStorage.removeItem("prevUserEmail");
+    sessionStorage.removeItem("currentUserEmail");
   } catch(error) {
     dispatch({type: types.LOGIN_FAIL, payload: error.message});
     dispatch(commonUiActions.showToastMessage(error.message, "error"));
   }
 };
 
-const logout = () => async (dispatch) => {
+const logout = (email,setSearchValue) => async (dispatch) => {
+  setSearchValue('')
+  sessionStorage.setItem('prevUserEmail', email);
   sessionStorage.removeItem("token");
   dispatch(commonUiActions.showToastMessage("로그아웃 되었습니다.", "success"));
   dispatch({type: types.LOGOUT});
@@ -42,11 +47,14 @@ const loginWithGoogle = ({googleToken}, navigate) => async (dispatch) => {
     const response = await api.post('/auth/google', {googleToken});
     if(response.status !== 200) throw new Error(response.message);
     const prevUserEmail = sessionStorage.getItem("prevUserEmail");
+    sessionStorage.setItem("currentUserEmail", response.data.user.email);
     response.data.user.email === prevUserEmail ? navigate(-1) : navigate('/');
     dispatch({type: types.GOOGLE_LOGIN_SUCCESS, payload: response.data});
     sessionStorage.setItem('token', response.data.token);
     api.defaults.headers.authorization = `Bearer ${response.data.token}`;
     dispatch(commonUiActions.showToastMessage("로그인 되었습니다.", "success"));
+    sessionStorage.removeItem("prevUserEmail");
+    sessionStorage.removeItem("currentUserEmail");
   } catch (error) {
     dispatch({type: types.GOOGLE_LOGIN_FAIL, payload: error.message});
     dispatch(commonUiActions.showToastMessage(error.message, "error"));

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Alert, Button, Col, Container, Dropdown, Form, InputGroup, Row, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import * as types from '../constants/order.constants';
 import { cartActions } from "../redux/actions/cartAction";
-import { commonUiActions } from "../redux/actions/commonUiAction";
 import { commonProductActions } from "../redux/actions/commonProductAction";
-import { myOrderActions } from "../redux/actions/myOrderAction";
+import { commonUiActions } from "../redux/actions/commonUiAction";
 import "../style/productDetail.style.css";
 
 const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
@@ -81,8 +81,6 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
     }
   }, [cartItemInitialOption, selectedOption])
   
-
-
   useEffect(() => {
     if(selectedOption.length > 0) {
       const totalPrice = selectedOption.reduce((total, option) => {
@@ -97,7 +95,6 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
       setTotalPrice(totalPrice)
     } 
   },[product.price, selectedOption]);
-
 
 /*
   => cartItemInitialOption과 다른 변경 사항만 add되도록
@@ -196,12 +193,12 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
     try {
       await checkProductAndOptionAndUser()
       let selectedOptionObj =  Object.fromEntries(selectedOption);
-      let orderList = [];
+      let orderItemList = [];
       let productData = [product];
       for(const size of Object.keys(selectedOptionObj)){ 
-        orderList = [{items:{productId:id, size, qty:selectedOptionObj[size]},productData}];
+        orderItemList = [{items:{productId:id, size, qty:selectedOptionObj[size]},productData}];
       }
-      dispatch(myOrderActions.saveOrderItem(orderList, totalPrice, false));
+      dispatch({type:types.SAVE_ORDER_ITEM, payload:{orderItemList, totalPrice, cartOrderStatus:false}});
       //초기화
       setDeletedProductError(false);
       setSelectedOption([]);

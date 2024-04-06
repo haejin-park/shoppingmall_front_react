@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Container, Navbar, Offcanvas } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { adminOrderActions } from "../redux/actions/adminOrderAction";
-import { adminProductActions } from "../redux/actions/adminProductAction";
-import { mainProductActions } from "../redux/actions/mainProductAction";
+import * as orderTypes from '../constants/order.constants';
+import * as productTypes from '../constants/product.constants';
 import SearchBox from "./SearchBox";
 
 const AdminNavbar = () => {
@@ -32,32 +31,33 @@ const AdminNavbar = () => {
     };
   }, [tabletSize, show]);
 
-  const goMainProduct = (firstPage) => {
+  const goMainProduct = () => {
     setSearchValue('')
-    dispatch(mainProductActions.changePage(firstPage));
-    navigate(`${mainProductPath}?currentPage=${firstPage}`);
+    dispatch({type:productTypes.CHANGE_PAGE_OF_MAIN_PRODUCT, payload:1});
+    navigate(mainProductPath);
+    
   }
 
-  const goAdminProduct = (firstPage) => {
+  const goAdminProduct = () => {
     setShow(false);
     setSearchValue('')
     setPlacehorder('상품명 검색')
-    dispatch(adminProductActions.changePage(firstPage));
-    navigate(`${adminProductPath}?currentPage=${firstPage}`);
+    dispatch({type:productTypes.CHANGE_PAGE_OF_ADMIN_PRODUCT, payload:1});
+    navigate(adminProductPath);
   };
 
-  const goAdminOrder = (firstPage) => {
+  const goAdminOrder = () => {
     setShow(false);
     setSearchValue('')
     setPlacehorder('주문 번호 검색')
-    dispatch(adminOrderActions.changePage(firstPage));
-    navigate(`${adminOrderPath}?currentPage=${firstPage}`);
+    dispatch({type:orderTypes.CHANGE_PAGE_OF_ADMIN_ORDER, payload:1});
+    navigate(adminOrderPath);
   };
 
   const NavbarContent = () => {
     return (
       <div className="admin-side-navbar-content">
-        <div onClick={() => goMainProduct(1)}>
+        <div onClick={() => goMainProduct()}>
           <img width={100} src="/image/hm-logo.png" alt="hm-logo.png" />
         </div>
         <div className="mt-2 admin-search-box">
@@ -72,13 +72,13 @@ const AdminNavbar = () => {
         <ul className="side-navbar-area">
           <li
             className="admin-side-navbar-item"
-            onClick={() => goAdminProduct(1)}
+            onClick={() => goAdminProduct()}
           >
             product
           </li>
           <li
             className="admin-side-navbar-item"
-            onClick={() => goAdminOrder(1)}
+            onClick={() => goAdminOrder()}
           >
             order
           </li>
@@ -91,7 +91,7 @@ const AdminNavbar = () => {
       <div className="admin-side-navbar-box">{NavbarContent()}</div>
       <Navbar bg="light" expand={false} className="admin-side-navbar-toggle">
         <Container fluid>
-          <div onClick={() => goMainProduct(1)}>
+          <div onClick={() => goMainProduct()}>
             <img width={80} src="/image/hm-logo.png" alt="hm-logo.png" />
           </div>
           <Navbar.Toggle

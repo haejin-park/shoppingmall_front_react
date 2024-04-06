@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import OrderStatusCard from "../component/OrderStatusCard";
 import SearchBox from "../component/SearchBox";
+import * as types from '../constants/order.constants';
 import { myOrderActions } from "../redux/actions/myOrderAction";
 import "../style/orderStatus.style.css";
 
@@ -31,7 +32,7 @@ const MyOrder = () => {
   }, [searchKeyword, currentPage, navigate]);
 
   const handlePageClick = ({ selected }) => {
-    dispatch(myOrderActions.changePage(selected + 1));
+    dispatch({type:types.CHANGE_PAGE_OF_MY_ORDER, payload:selected + 1});    
   };
 
   // 오더리스트가 없다면? 주문한 상품이 없습니다 메세지 보여주기
@@ -66,7 +67,7 @@ const MyOrder = () => {
             <div className="empty">
               <h3>주문한 상품이 없습니다.</h3>
             </div>
-          : orderList?.map((item, index) => (<OrderStatusCard key={index} item={item}/>))
+          : orderList?.flatMap((order, index) => (<OrderStatusCard key={index} order={order}/>))
         }
       </Row>
       <Row>

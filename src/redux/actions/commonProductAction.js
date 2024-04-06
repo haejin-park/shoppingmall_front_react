@@ -14,16 +14,6 @@ const getProductDetail = (id) => async (dispatch) => {
   }
 };
 
-const selectProduct = (product) => async(dispatch) => {
-  try {
-    dispatch({type:types.SELECT_PRODUCT_REQUEST});
-    dispatch({type:types.SELECT_PRODUCT_SUCCESS, payload:product});
-  } catch(error) {
-    dispatch({type:types.SELECT_PRODUCT_FAIL, payload:error.message});
-  }
-}
-
 export const commonProductActions = {
-  getProductDetail,
-  selectProduct
+  getProductDetail
 };

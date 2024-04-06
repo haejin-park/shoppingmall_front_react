@@ -29,14 +29,6 @@ const getCartList = (query) => async (dispatch) => {
   }
 };
 
-const selectCartProduct = (item) => async(dispatch) => {
-  try {
-    dispatch({type:types.SELECT_CART_PRODUCT_REQUEST});
-    dispatch({type:types.SELECT_CART_PRODUCT_SUCCESS, payload:item});
-  } catch(error) {
-    dispatch({type:types.SELECT_CART_PRODUCT_FAIL, payload:error.message});
-  }
-}
 const deleteCartItem = (_id, query) => async (dispatch) => {
   try {
     if(!_id) throw new Error('삭제하려는 장바구니 항목의 ID가 존재하지 않습니다.');
@@ -97,42 +89,11 @@ const getCartItemCount = (cartItemCount) => async (dispatch) => {
   }
 };
 
-const changePage = (currentPage) => async(dispatch) => {
-  try {
-    dispatch({type:types.CHANGE_PAGE_OF_CART_REQUEST});
-    dispatch({type:types.CHANGE_PAGE_OF_CART_SUCCESS, payload:currentPage});
-  } catch(error) {
-    dispatch({type:types.CHANGE_PAGE_OF_CART_FAIL, payload:error.message});
-  }
-}
-
-const checkedCartItem = (checkedItemList, checkedItemTotalPrice) => async(dispatch) => {
-  try {
-    dispatch({type:types.CHECKED_CART_ITEM_REQUEST});
-    dispatch({type:types.CHECKED_CART_ITEM_SUCCESS, payload:{checkedItemList, checkedItemTotalPrice}});
-  } catch(error) {
-    dispatch({type:types.CHECKED_CART_ITEM_FAIL, payload:error.message});
-  }
-}
-
-const checkedAll = (checkedAll) => async(dispatch) => {
-  try {
-    dispatch({type:types.CHECKED_ALL_REQUEST});
-    dispatch({type:types.CHECKED_ALL_SUCCESS, payload:checkedAll});
-  } catch(error) {
-    dispatch({type:types.CHECKED_ALL_FAIL, payload:error.message});
-  }
-}
-
 export const cartActions = {
   addToCart,
   getCartList,
-  selectCartProduct,
   deleteCartItem,
   deleteCartItemList,
   updateCartItemQty,
   getCartItemCount,
-  changePage,
-  checkedCartItem,
-  checkedAll,
 };

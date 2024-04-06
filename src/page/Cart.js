@@ -3,6 +3,7 @@ import { Alert, Button, Col, Container, Form, Row, Spinner } from "react-bootstr
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import * as types from '../constants/cart.constants';
 import CartProductCard from "../component/CartProductCard";
 import OrderReceipt from "../component/OrderReceipt";
 import SearchBox from "../component/SearchBox";
@@ -38,9 +39,9 @@ const Cart = () => {
   // 개별로 전체 선택 했을 때도 전체 선택 체크 되도록
   useEffect(() => {
     if(checkedItemList.length === cartList.length) {
-      dispatch(cartActions.checkedAll(true));
+      dispatch({type:types.CHECKED_ALL, payload:true});
     } else {
-      dispatch(cartActions.checkedAll(false));
+      dispatch({type:types.CHECKED_ALL, payload:false});
     }
     },[checkedItemList, cartList, dispatch]); 
   
@@ -71,7 +72,7 @@ const Cart = () => {
   },[cartList, setDeletedStatus]);
     
   const handlePageClick = ({ selected }) => {
-    dispatch(cartActions.changePage(selected + 1));
+    dispatch({type:types.CHANGE_PAGE_OF_CART, payload:selected + 1});
   };
 
 
@@ -83,7 +84,7 @@ const Cart = () => {
     const totalPrice = updatedCheckedItemList.reduce((total, item) => {
       return total + item.productData[0]?.price * item.items.qty;
     },0);
-    dispatch(cartActions.checkedCartItem(updatedCheckedItemList, totalPrice));
+    dispatch({type:types.CHECKED_CART_ITEM, payload:{checkedItemList:updatedCheckedItemList, checkedItemTotalPrice:totalPrice}});
   }
 
   //선택한 상품 삭제
@@ -116,12 +117,14 @@ cartList전체 합으로 totalPrice를 구해서 checkedItemTotalPrice를 계산
 
   const onCheckAllItem = () =>  {
     if(checkedItemList.length === cartList.length) {
-      dispatch(cartActions.checkedCartItem([], 0));
+      dispatch({type:types.CHECKED_CART_ITEM, payload:{checkedItemList:[], checkedItemTotalPrice:0}});
+
     } else {
       const totalPrice = cartList.reduce((total, item) => {
         return total + item.productData[0]?.price * item.items.qty;
       },0);
-      dispatch(cartActions.checkedCartItem([...cartList], totalPrice));
+      dispatch({type:types.CHECKED_CART_ITEM, payload:{checkedItemList:[...cartList], checkedItemTotalPrice:totalPrice}});
+
     }
   };
 
