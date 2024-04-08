@@ -374,6 +374,7 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
             </Col>
           </Row>
           ) : (
+          user?.level === "customer" && (  
           <Row className="product-detail-btn-row">
             <Col>
               <Button className="add-button" variant="dark" onClick={addCartItem}>
@@ -386,6 +387,7 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
               </Button>
             </Col>
           </Row>
+          )
           )}
           {deletedProductError && (
           <div className="deleted-product-error-message">
