@@ -130,7 +130,7 @@ const Navbar = () => {
     setSearchValue('')
     dispatch({type:cartTypes.CHECKED_CART_ITEM, payload:{checkedItemList:[], checkedItemTotalPrice:0}});
     dispatch({type:orderTypes.SAVE_ORDER_ITEM, payload:{orderItemList:[], totalPrice:0, cartOrderStatus:false}});
-    dispatch({type:orderTypes.CHANGE_PAGE_OF_MY_ORDER, payload:1});
+    dispatch({type:orderTypes.CHANGE_PAGE_OF_ORDER, payload:1});
     navigate(myOrderPath);
   }
 

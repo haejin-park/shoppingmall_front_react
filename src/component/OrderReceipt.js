@@ -7,7 +7,7 @@ import * as types from '../constants/order.constants';
 
 const OrderReceipt = ({cartOrderStatus}) => {
   const { cartList, checkedItemList, checkedItemTotalPrice } = useSelector((state) => state.cart);
-  const { orderItemList, totalPrice } = useSelector((state) => state.myOrder);
+  const { orderItemList, totalPrice } = useSelector((state) => state.order);
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();

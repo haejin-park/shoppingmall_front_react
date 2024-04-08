@@ -50,7 +50,7 @@ const AdminNavbar = () => {
     setShow(false);
     setSearchValue('')
     setPlacehorder('주문 번호 검색')
-    dispatch({type:orderTypes.CHANGE_PAGE_OF_ADMIN_ORDER, payload:1});
+    dispatch({type:orderTypes.CHANGE_PAGE_OF_ORDER, payload:1});
     navigate(adminOrderPath);
   };
 

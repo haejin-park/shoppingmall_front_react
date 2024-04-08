@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Alert, Button, Col, Container, Dropdown, Form, InputGroup, Row, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import * as types from '../constants/order.constants';
 import { cartActions } from "../redux/actions/cartAction";
 import { commonProductActions } from "../redux/actions/commonProductAction";
@@ -12,9 +12,11 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
+  const [query, setQuery] = useSearchParams(); 
+  const searchKeyword = query.get("searchKeyword") || ''; 
   const { user } = useSelector((state) => state.user);
   const { product, loading, error } = useSelector((state) => state.commonProduct);
-  const { selectedItem, searchKeyword, currentPage } = useSelector((state) => state.cart);
+  const { selectedItem, currentPage } = useSelector((state) => state.cart);
   const [ cartItemInitialOption ] = useState([[selectedItem?.items?.size, selectedItem?.items?.qty]]);
   const [ selectedOption, setSelectedOption ] = useState(mode === "edit"? [[selectedItem?.items?.size, selectedItem?.items?.qty]] : []);
   const [ optionChangeStatus, setOptionChangeStatus ] = useState(false);

@@ -5,9 +5,7 @@ import adminProductReducer from "./reducers/adminProductReducer";
 import commonProductReducer from "./reducers/commonProductReducer";
 import cartReducer from "./reducers/cartReducer";
 import commonUiReducer from "./reducers/commonUIReducer";
-import myOrderReducer from "./reducers/myOrderReducer";
-import adminOrderReducer from "./reducers/adminOrderReducer";
-import commonOrderReducer from "./reducers/commonOrderReducer";
+import orderReducer from "./reducers/orderReducer";
 
 const store = configureStore({
   reducer: {
@@ -17,9 +15,7 @@ const store = configureStore({
     commonProduct: commonProductReducer,
     cart: cartReducer,
     ui: commonUiReducer,
-    myOrder: myOrderReducer,
-    adminOrder: adminOrderReducer,
-    commonOrder: commonOrderReducer,
+    order: orderReducer,
   },
 });
 export default store;

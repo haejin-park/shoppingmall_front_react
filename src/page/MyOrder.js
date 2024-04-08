@@ -3,24 +3,26 @@ import { Alert, Container, Row, Spinner } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import OrderDetailDialog from "../component/OrderDetailDialog";
 import OrderStatusCard from "../component/OrderStatusCard";
 import SearchBox from "../component/SearchBox";
 import * as types from '../constants/order.constants';
-import { myOrderActions } from "../redux/actions/myOrderAction";
-import "../style/orderStatus.style.css";
+import { orderActions } from "../redux/actions/orderAction";
+import "../style/myOrder.style.css";
 
 const MyOrder = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {loading, error, orderList, totalPageNum, currentPage} = useSelector((state) => state.myOrder);
+  const {loading, error, orderList, totalPageNum, currentPage} = useSelector((state) => state.order);
   const [query, setQuery] = useSearchParams(); 
   const searchKeyword = query.get("searchKeyword") || ''; 
   const [searchValue, setSearchValue] = useState("");
   const [placeholder, setPlacehorder] = useState('상품명 검색');
+  const [open, setOpen] = useState(false);
 
   //오더리스트 들고오기
   useEffect(() => {
-    dispatch(myOrderActions.getOrderList({searchKeyword, currentPage}));
+    dispatch(orderActions.getOrderList({searchKeyword, currentPage}, "customer"));
   }, [query, searchKeyword, currentPage, dispatch]);
 
   useEffect(() => {
@@ -32,7 +34,17 @@ const MyOrder = () => {
   }, [searchKeyword, currentPage, navigate]);
 
   const handlePageClick = ({ selected }) => {
-    dispatch({type:types.CHANGE_PAGE_OF_MY_ORDER, payload:selected + 1});    
+    dispatch({type:types.CHANGE_PAGE_OF_ORDER, payload:selected + 1});    
+  };
+
+  const openEditForm = (order) => {
+    setOpen(true);
+    dispatch({ type: types.SET_SELECTED_ORDER, payload: order });
+  };
+
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   // 오더리스트가 없다면? 주문한 상품이 없습니다 메세지 보여주기
@@ -67,7 +79,13 @@ const MyOrder = () => {
             <div className="empty">
               <h3>주문한 상품이 없습니다.</h3>
             </div>
-          : orderList?.flatMap((order, index) => (<OrderStatusCard key={index} order={order}/>))
+          : orderList?.flatMap((order, index) => (
+            <OrderStatusCard 
+              key={index} 
+              order={order}
+              openEditForm={openEditForm}
+            />
+          ))
         }
       </Row>
       <Row>
@@ -93,6 +111,7 @@ const MyOrder = () => {
           className="display-center list-style-none mt-2"
         />
       </Row>
+      {open && <OrderDetailDialog open={open} handleClose={handleClose} mode="customer" />}
     </Container>
   );
 };

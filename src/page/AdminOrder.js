@@ -6,12 +6,12 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import OrderDetailDialog from "../component/OrderDetailDialog";
 import OrderTable from "../component/OrderTable";
 import * as types from "../constants/order.constants";
-import { adminOrderActions } from "../redux/actions/adminOrderAction";
+import { orderActions } from "../redux/actions/orderAction";
 
 const AdminOrder = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {loading, error, orderList, totalPageNum, currentPage} = useSelector((state) => state.adminOrder);
+  const {loading, error, orderList, totalPageNum, currentPage} = useSelector((state) => state.order);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useSearchParams();
   const searchKeyword = query.get("searchKeyword") || "";
@@ -28,7 +28,7 @@ const AdminOrder = () => {
   ];
 
   useEffect(() => {
-    dispatch(adminOrderActions.getOrderList({searchKeyword, currentPage}));
+    dispatch(orderActions.getOrderList({searchKeyword, currentPage}, "admin"));
   }, [query, searchKeyword, currentPage, dispatch]);
 
   useEffect(() => {
@@ -39,14 +39,14 @@ const AdminOrder = () => {
     navigate(`?${queryString}`)
   }, [searchKeyword, currentPage, navigate]);
 
+  const handlePageClick = ({ selected }) => {
+    dispatch({type:types.CHANGE_PAGE_OF_ORDER, payload:selected + 1});
+
+  };
+
   const openEditForm = (order) => {
     setOpen(true);
     dispatch({ type: types.SET_SELECTED_ORDER, payload: order });
-  };
-
-  const handlePageClick = ({ selected }) => {
-    dispatch({type:types.CHANGE_PAGE_OF_ADMIN_ORDER, payload:selected + 1});
-
   };
 
   const handleClose = () => {
@@ -69,12 +69,22 @@ const AdminOrder = () => {
               {error}
             </Alert>
           </div>
-        )}
-        <OrderTable
-          header={tableHeader}
-          orderList={orderList}
-          openEditForm={openEditForm}
-        />
+        )} 
+        {orderList.length <= 0
+          ? 
+            <div className="empty">
+              <h3>주문한 상품이 없습니다.</h3>
+            </div>
+          : orderList?.flatMap((order, index) => (
+          <OrderTable
+            key={index} 
+            index={index}
+            order={order}
+            header={tableHeader}
+            openEditForm={openEditForm}
+          />
+          ))
+        }
         <ReactPaginate
           nextLabel="next >"
           onPageChange={handlePageClick}
@@ -97,7 +107,7 @@ const AdminOrder = () => {
           className="display-center list-style-none"
         />
       </Container>
-      {open && <OrderDetailDialog open={open} handleClose={handleClose} />}
+      {open && <OrderDetailDialog open={open} handleClose={handleClose} mode="admin" />}
     </div>
   );
 };

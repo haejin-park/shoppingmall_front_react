@@ -54,19 +54,3 @@
     margin-bottom: 5px;
     font-size: 12px;
 }
- 
-.order-button-area{
-    margin-top: 20px;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.order-button-area button{
-    margin-left: 20px;
-}
-
-.no-order-box{
-    background-color: white;
-    text-align: center;
-    padding:20px
-}

@@ -46,10 +46,10 @@ const SearchBox = ({ placeholder, show, searchValue, setSearchValue }) => {
         dispatch({type:productTypes.CHANGE_PAGE_OF_ADMIN_PRODUCT, payload:1});
         navigate(`${currentPath}?searchKeyword=${searchKeyword}`);
       } else if(currentPath === adminOrderPath) {
-        dispatch({type:orderTypes.CHANGE_PAGE_OF_ADMIN_ORDER, payload:1});
+        dispatch({type:orderTypes.CHANGE_PAGE_OF_ORDER, payload:1});
         navigate(`${currentPath}?searchKeyword=${searchKeyword}`);
       } else if(currentPath === myOrderPath) {
-        dispatch({type:orderTypes.CHANGE_PAGE_OF_MY_ORDER, payload:1});
+        dispatch({type:orderTypes.CHANGE_PAGE_OF_ORDER, payload:1});
         navigate(`${currentPath}?searchKeyword=${searchKeyword}`);
       } else if(currentPath === cartPath) {
         dispatch({type:cartTypes.CHANGE_PAGE_OF_CART, payload:1});

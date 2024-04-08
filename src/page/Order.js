@@ -4,14 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import OrderReceipt from "../component/OrderReceipt";
 import PaymentForm from "../component/PaymentForm";
-import { myOrderActions } from "../redux/actions/myOrderAction";
+import { orderActions } from "../redux/actions/orderAction";
 import { ccExpiresFormat } from "../utils/number";
 import "../style/order.style.css";
 
 const Order = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error, orderItemList, totalPrice, cartOrderStatus } = useSelector((state) => state.myOrder);
+  const { loading, error, orderItemList, totalPrice, cartOrderStatus } = useSelector((state) => state.order);
   const [shipInfo, setShipInfo] = useState({
     lastName: "",
     firstName: "",
@@ -75,7 +75,7 @@ const Order = () => {
     const orderList = [{info,items}];
     
     //오더 생성하고 주문 완료 페이지로 보내기.
-    dispatch(myOrderActions.createOrder(orderList, cartOrderStatus, navigate));
+    dispatch(orderActions.createOrder(orderList, cartOrderStatus, navigate));
 
   };
 

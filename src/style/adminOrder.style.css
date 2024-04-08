@@ -1,3 +1,40 @@
 .modal-dialog{
-    max-width: 700px;
+    max-width: 800px;
+}
+
+.order-button-area{
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+}
+.order-button-area button{
+    width: 96%;
+}
+
+.order-detail-dialog-close-btn{
+   background-color: rgb(147, 147, 147);
+   border: 1px solid  rgb(147, 147, 147); 
+}
+
+.order-detail-dialog-close-btn:hover{
+    background-color: rgb(127, 127, 127);
+    border: 1px solid  rgb(127, 127, 127);
+ }
+
+ .order-detail-dialog-items {
+    margin-top: 20px;
+    font-size: 20px;
+    text-align: center;
+ }
+ 
+.order-status-drop-down {
+    text-align: center;
+}
+
+.order-status-drop-down-toggle {
+    width: 98%;
+    /* background-color: white;
+    border: 1px solid black;
+    color: black; */
 }

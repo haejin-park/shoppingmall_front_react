@@ -1,49 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { Badge } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 import { badgeBg } from "../constants/order.constants";
 import { dateFormat } from "../utils/date";
+import { setOrderAndBadgeStatus } from "../utils/status";
 
 // 상태 우선 순위를 가지고 리스트에는 하나만 보여주고,상세 클릭하면 각각 보여주기 
-const OrderStatusCard = ({order}) => {
-  const [orderStatus, setOrderStatus] = useState('');
-  const [badgeStatus, setBadgeStatus] = useState('');
+const OrderStatusCard = ({order, openEditForm}) => {
+  const dispatch = useDispatch();
+  const [orderStatus, setOrderStatus] = useState();
+  const [badgeStatus, setBadgeStatus] = useState();
 
   useEffect(() => {
-    let orderStatus = '';
-    if(order.data.items.every((item) => item.status === 'refund')){
-      orderStatus = '전체 환불 완료';
-      setBadgeStatus('refund')
-    } else if(order.data.items.some((item) => item.status === 'refund')){
-      orderStatus = '부분 환불 완료';
-      setBadgeStatus('refund')
-    } else if(order.data.items.every((item) => item.status === 'cancel')){
-      orderStatus = '전체 취소 요청';
-      setBadgeStatus('cancel')
-    } else if(order.data.items.some((item) => item.status === 'cancel')){
-      orderStatus = '부분 취소 요청';
-      setBadgeStatus('cancel')
-    } else if(order.data.items.every((item) => item.status === 'delivered')){
-      orderStatus = '전체 배송 완료';
-      setBadgeStatus('delivered')
-    } else if(order.data.items.some((item) => item.status === 'delivered')){
-      orderStatus = '부분 배송 완료';
-      setBadgeStatus('delivered')
-    } else if(order.data.items.every((item) => item.status === 'shipping')){
-      orderStatus = '전체 배송 중';
-      setBadgeStatus('shipping')
-    } else if(order.data.items.some((item) => item.status === 'shipping')){
-      orderStatus = '부분 배송 중';
-      setBadgeStatus('shipping')
-    } else if(order.data.items.every((item) => item.status === 'preparing')){
-      orderStatus = '상품 준비 중';
-      setBadgeStatus('preparing')
-    }
+    const {orderStatus, badgeStatus}  = setOrderAndBadgeStatus(order.data.items);
     setOrderStatus(orderStatus);
-  }, [order.data.items]);
-  
+    setBadgeStatus(badgeStatus);
+  }, [dispatch, order]);  
 
   return (
-    <div className="status-card">
+    <div className="status-card" onClick={() => openEditForm(order)}>
       <div className="order-img-and-col">
         <div className="order-img-col">
           <img
