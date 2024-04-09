@@ -6,13 +6,13 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import ProductDetailDialog from "../component/ProductDetailDialog";
 import ProductTable from "../component/ProductTable";
 import * as types from '../constants/product.constants';
-import { adminProductActions } from "../redux/actions/adminProductAction";
+import { productActions } from "../redux/actions/productAction";
 import "../style/adminProduct.style.css";
 
 const AdminProduct = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {loading, error, productList, totalPageNum, currentPage} = useSelector((state) => state.adminProduct);
+  const {loading, error, adminProductList:productList, adminTotalPageNum:totalPageNum, adminCurrentPage:currentPage} = useSelector((state) => state.product); 
   const [showDialog, setShowDialog] = useState(false);
   const [mode, setMode] = useState("new");
   const [sortBy, setSortBy] = useState("latest");
@@ -32,7 +32,7 @@ const AdminProduct = () => {
   
   useEffect(() => { 
     //url쿼리 읽어오기(query) => 쿼리 값에 맞춰서 상품리스트 가져오기
-    dispatch(adminProductActions.getProductList({searchKeyword, currentPage}, sortBy));
+    dispatch(productActions.getAdminProductList({searchKeyword, currentPage, sortBy}));
   }, [query, searchKeyword, currentPage, dispatch, sortBy]);
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const AdminProduct = () => {
 
   const deleteItem = (id) => {
     //아이템 삭제하기 후 미들웨어에서 다시 조회 함수 호출
-    dispatch(adminProductActions.deleteProduct(id,{searchKeyword, currentPage}, sortBy));
+    dispatch(productActions.deleteProduct(id,{searchKeyword, currentPage, sortBy}));
   };
 
   const openEditForm = (product) => {
@@ -120,8 +120,6 @@ const AdminProduct = () => {
         mode={mode}
         showDialog={showDialog}
         setShowDialog={setShowDialog}
-        searchKeyword={searchKeyword}
-        currentPage={currentPage}
         sortBy={sortBy}
       />
     </div>

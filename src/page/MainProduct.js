@@ -5,13 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import ProductCard from "../component/ProductCard";
 import * as types from '../constants/product.constants';
-import { mainProductActions } from "../redux/actions/mainProductAction";
+import { productActions } from "../redux/actions/productAction";
 import '../style/mainProduct.style.css';
 
 const MainProduct = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {loading, error, productList, totalPageNum, currentPage} = useSelector((state) => state.mainProduct);
+  const {loading, error, mainProductList:productList, mainTotalPageNum:totalPageNum, mainCurrentPage:currentPage} = useSelector((state) => state.product);
+  // console.log('totalPageNum',totalPageNum);
   const [sortBy, setSortBy] = useState("orderOfPurchase");
   const [query, setQuery] = useSearchParams();
   const searchKeyword = query.get("searchKeyword") || "";
@@ -28,9 +29,9 @@ const MainProduct = () => {
   //리스트 조회시 페이지 번호 변경되도록
   useEffect(() => { 
     if(prevUserEmail !== null && currentUserEmail !== null && prevUserEmail !== currentUserEmail) { 
-      dispatch(mainProductActions.getProductList({searchCategory, searchKeyword, currentPage:1, sortBy}));
+      dispatch(productActions.getMainProductList({searchCategory, searchKeyword, currentPage:1, sortBy}));
     } else if(currentUserEmail === null) {
-      dispatch(mainProductActions.getProductList({searchCategory, searchKeyword, currentPage, sortBy}));
+      dispatch(productActions.getMainProductList({searchCategory, searchKeyword, currentPage, sortBy}));
     }
   }, [query, searchCategory, searchKeyword, currentPage, dispatch, sortBy, prevUserEmail, currentUserEmail]);
 

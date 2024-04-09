@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Alert, Button, Col, Form, Image, Modal, Row, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { CATEGORY, SIZE, STATUS } from "../constants/product.constants";
-import { adminProductActions } from "../redux/actions/adminProductAction";
+import { productActions } from "../redux/actions/productAction";
 import CloudinaryUploadWidget from "../utils/CloudinaryUploadWidget";
+import { useSearchParams } from "react-router-dom";
 
 const InitialFormData = {
   name: "",
@@ -15,15 +16,21 @@ const InitialFormData = {
   status: "active",
   price: "",
 };
-const ProductDetailDialog = ({ mode, showDialog, setShowDialog, searchKeyword, currentPage, sortBy }) => {
-  const { loading, error, selectedProduct } = useSelector((state) => state.commonProduct);
+
+const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
+  
+  const { loading, error, selectedProduct, adminCurrentPage:currentPage } = useSelector((state) => state.product);
   const [formData, setFormData] = useState(
     mode === "new" ? { ...InitialFormData } : {...selectedProduct }
   );
+  const [category, setCategory] = useState([...formData.category]);
   const [stock, setStock] = useState([]);
   const dispatch = useDispatch();
   const [stockError, setStockError] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [query, setQuery] = useSearchParams();
+  const searchKeyword = query.get("searchKeyword") || "";
+
 
   useEffect(() => {
     //수정 데이터 바로 불러와 지도록, 컴포넌트가 마운트될 때 selectedProduct가 초기에 값이 없는 경우 제어되지 않는 상태에 대한 경고 해결
@@ -91,24 +98,16 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, searchKeyword, c
   };
   
   const onHandleCategory = (event) => {
-    const {id, value} = event.target;
     //카테고리 이미 추가되어있으면 제거 
-    if (formData.category.includes(value)) {
-      const newCategory = formData.category.filter(
-        (item) => item !== value
-      ); 
-      setFormData({
-        ...formData,
-        [id]: [...newCategory],
-      });
+    if (formData.category.includes(event.target.value)) {
+      const newCategory = formData.category.filter((item) => item !== event.target.value); 
+      console.log('newCategory',newCategory);
+      setFormData({...formData, category: [...newCategory]});
       //아니면 추가
     } else {
-      setFormData({
-        ...formData,
-        [id]: [...formData.category, value],
-      });
+      setFormData({...formData, category: [...formData.category, event.target.value]});
     }
-  };
+  };  
 
   const uploadImage = (url) => {
     //이미지 업로드
@@ -135,10 +134,10 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, searchKeyword, c
 
     if (mode === "new") {
       //새 상품 만들기 후 미들웨어에서 다시 조회 함수 호출
-      dispatch(adminProductActions.createProduct({...formData, stock:stockObj}, sortBy));
+      dispatch(productActions.createProduct({...formData, stock:stockObj, sortBy}));
     } else {
       // 상품 수정하기 미들웨어에서 다시 조회 함수 호출
-      dispatch(adminProductActions.updateProduct({...formData, stock:stockObj}, {searchKeyword, currentPage}, sortBy));
+      dispatch(productActions.updateProduct({...formData, stock:stockObj}, {searchKeyword, currentPage, sortBy}));
     }
     handleClose();
   };
@@ -294,12 +293,15 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, searchKeyword, c
             <Form.Label>Category</Form.Label>
             <Form.Select
               multiple
-              onChange={onHandleCategory}
+              onClick={onHandleCategory}
               value={formData.category}
               required
             >
               {CATEGORY.map((item, idx) => (
-                <option key={idx} value={item.toLowerCase()}>
+                <option 
+                  key={idx} 
+                  value={item.toLowerCase()}
+                >
                   {item}
                 </option>
               ))}

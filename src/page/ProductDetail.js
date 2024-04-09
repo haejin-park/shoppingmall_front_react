@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import * as types from '../constants/order.constants';
 import { cartActions } from "../redux/actions/cartAction";
-import { commonProductActions } from "../redux/actions/commonProductAction";
+import { productActions } from "../redux/actions/productAction";
 import { commonUiActions } from "../redux/actions/commonUiAction";
 import "../style/productDetail.style.css";
 
@@ -15,7 +15,7 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
   const [query, setQuery] = useSearchParams(); 
   const searchKeyword = query.get("searchKeyword") || ''; 
   const { user } = useSelector((state) => state.user);
-  const { product, loading, error } = useSelector((state) => state.commonProduct);
+  const { product, loading, error } = useSelector((state) => state.product);
   const { selectedItem, currentPage } = useSelector((state) => state.cart);
   const [ cartItemInitialOption ] = useState([[selectedItem?.items?.size, selectedItem?.items?.qty]]);
   const [ selectedOption, setSelectedOption ] = useState(mode === "edit"? [[selectedItem?.items?.size, selectedItem?.items?.qty]] : []);
@@ -28,9 +28,9 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
   useEffect(() => {
     //상품 디테일 정보 가져오기
     if(id) {
-      dispatch(commonProductActions.getProductDetail(id));
+      dispatch(productActions.getProductDetail(id));
     } else if(cartProductId) {
-      dispatch(commonProductActions.getProductDetail(cartProductId));
+      dispatch(productActions.getProductDetail(cartProductId));
     }
   }, [id, cartProductId, dispatch]);
 
