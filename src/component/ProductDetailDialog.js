@@ -3,7 +3,6 @@ import { Alert, Button, Col, Form, Image, Modal, Row, Spinner } from "react-boot
 import { useDispatch, useSelector } from "react-redux";
 import { CATEGORY, SIZE, STATUS } from "../constants/product.constants";
 import { adminProductActions } from "../redux/actions/adminProductAction";
-import "../style/adminProduct.style.css";
 import CloudinaryUploadWidget from "../utils/CloudinaryUploadWidget";
 
 const InitialFormData = {

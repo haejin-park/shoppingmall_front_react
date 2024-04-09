@@ -7,6 +7,7 @@ import ProductDetailDialog from "../component/ProductDetailDialog";
 import ProductTable from "../component/ProductTable";
 import * as types from '../constants/product.constants';
 import { adminProductActions } from "../redux/actions/adminProductAction";
+import "../style/adminProduct.style.css";
 
 const AdminProduct = () => {
   const dispatch = useDispatch();
