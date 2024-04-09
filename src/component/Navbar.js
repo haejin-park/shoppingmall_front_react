@@ -160,14 +160,7 @@ const Navbar = () => {
     : navigate(`${mainProductPath}?searchCategory=${searchCategory}`);
     setSelectedCategory(category);
   }
-  
 
-  /* 
-  메뉴에 밑줄 그려주기
-  menu, underline들고오기 
-  horizontalIndicator만들기 => 아이템의 왼쪽 시작점부터 아이템의 넓이 만큼
-
-  */
 
   return (
     <div>
@@ -177,7 +170,7 @@ const Navbar = () => {
             <button className="closebtn" onClick={() => handleClose()}>
               &times;
             </button>
-            <div className="mt-2 main-search-box">
+            <div className="mt-2 main-side-search-box">
               <div className="search-box">
                 <FontAwesomeIcon className="search-icon" icon={faSearch} />
                 <input
@@ -209,7 +202,7 @@ const Navbar = () => {
             </div>
             <div>
               <div className="display-flex">
-                <div className="nav-function" onClick={() => handleOpen(250)}>
+                <div className="nav-function mobile-search-icon" onClick={() => handleOpen(250)}>
                   <FontAwesomeIcon icon={faSearch} />
                   {!isMobile && (
                       <span style={{ cursor: "pointer" }}>상품 검색</span>
@@ -276,6 +269,19 @@ const Navbar = () => {
               </li>
             ))}
           </ul>
+          <div className="main-search-box">
+            <div className="search-box">
+              <FontAwesomeIcon className="search-icon" icon={faSearch} />
+              <input
+                ref={inputRef}
+                type="text"
+                placeholder="상품명 검색"
+                onKeyPress={onCheckEnter}
+                onChange={onChangeHandler}
+                value={searchValue}
+              />
+            </div>
+          </div>
         </div>
       )}
     </div>
