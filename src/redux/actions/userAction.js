@@ -1,7 +1,8 @@
 import api from '../../utils/api';
 import * as types from '../../constants/user.constants';
 import { commonUiActions } from './commonUiAction';
-const loginWithToken = () => async (dispatch) => {
+
+const loginWithToken = (user) => async (dispatch) => {
   try {
     dispatch({type:types.LOGIN_WITH_TOKEN_REQUEST});
     const response = await api.get("/user/me");
@@ -9,7 +10,7 @@ const loginWithToken = () => async (dispatch) => {
     dispatch({type: types.LOGIN_WITH_TOKEN_SUCCESS, payload: response.data});
   } catch(error) {
     dispatch({type: types.LOGIN_WITH_TOKEN_FAIL, payload: error.message});
-    dispatch(logout());
+    dispatch(logout(user.email));
   }
 };
 
@@ -33,8 +34,7 @@ const loginWithEmail = (email, password, navigate) => async (dispatch) => {
   }
 };
 
-const logout = (email,setSearchValue) => async (dispatch) => {
-  setSearchValue('')
+const logout = (email) => async (dispatch) => {  
   sessionStorage.setItem('prevUserEmail', email);
   sessionStorage.removeItem("token");
   dispatch(commonUiActions.showToastMessage("로그아웃 되었습니다.", "success"));

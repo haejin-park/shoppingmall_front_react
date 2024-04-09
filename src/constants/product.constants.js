@@ -20,7 +20,7 @@ export const SET_SELECTED_PRODUCT = "SET_SELECTED_PRODUCT";
 export const CHANGE_PAGE_OF_ADMIN_PRODUCT = "CHANGE_PAGE_OF_ADMIN_PRODUCT";
 export const CHANGE_PAGE_OF_MAIN_PRODUCT = "CHANGE_PAGE_OF_MAIN_PRODUCT";
 export const TOGGLE_ITEM_DIALOG = "TOGGLE_ITEM_DIALOG";
-export const CATEGORY = ["Top", "Bottom", "Jacket", "Shirts", "Blouse", "Dress", "Pants", "Skirt"];
+export const CATEGORY = ["Man", "Woman", "Top", "Bottom", "Jacket", "Shirts", "Blouse", "Pants", "Skirt", "Dress"];
 export const STATUS = ["active", "disactive"];
 export const SIZE = ["XS", "S", "M", "L", "XL"];
 

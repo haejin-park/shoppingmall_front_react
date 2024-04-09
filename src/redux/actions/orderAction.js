@@ -47,7 +47,6 @@ const updateOrder = (id, orderItemIdList, orderStatusList, query, mode) => async
   try {
     dispatch({type:types.UPDATE_ORDER_REQUEST});
     const response = await api.put(`/order/${id}`,{orderItemIdList, orderStatusList});
-    // console.log('response.status',response.status);
     if(response.status !== 200) throw new Error(response.message);
     dispatch({type:types.UPDATE_ORDER_SUCCESS, payload: response.data});
     dispatch(orderActions.getOrderList(query, mode));

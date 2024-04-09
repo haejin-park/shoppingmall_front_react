@@ -16,6 +16,7 @@ import * as orderTypes from '../constants/order.constants';
 import * as productTypes from '../constants/product.constants';
 import { cartActions } from "../redux/actions/cartAction";
 import { userActions } from "../redux/actions/userAction";
+import { toTransformEnglishCategory } from "../utils/category";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ const Navbar = () => {
   const navigationType = useNavigationType();
   const [query, setQuery] = useSearchParams();
   const searchKeyword = query.get("searchKeyword") || "";
+  const searchCategory = query.get("searchCategory") || "";
   const inputRef = useRef(null);
   const { user } = useSelector((state) => state.user);
   const { cartItemCount } = useSelector((state) => state.cart);
@@ -30,13 +32,14 @@ const Navbar = () => {
   const [searchValue, setSearchValue] = useState("");
   const [width, setWidth] = useState(0);
   const [overlayStatus, setOverlayStatus] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const location = useLocation();
   const currentPath = location.pathname;
   const adminProductPath = '/admin/product';
   const myOrderPath ='/my/order';
   const cartPath = '/cart';
   const mainProductPath = '/';
-  
+
   useEffect(() => {
     if(!user && (currentPath === '/login' || currentPath === '/register')) {
       setLoginStatus(false);
@@ -70,22 +73,15 @@ const Navbar = () => {
     if (event.key === "Enter") {
       let searchKeyword = event.target.value;   
       dispatch({type:productTypes.CHANGE_PAGE_OF_MAIN_PRODUCT, payload:1});
-      navigate(`${mainProductPath}?searchKeyword=${searchKeyword}`);
+      searchCategory
+      ? navigate(`${mainProductPath}?searchCategory=${searchCategory}&searchKeyword=${searchKeyword}`)
+      : navigate(`${mainProductPath}?searchKeyword=${searchKeyword}`);
       if(width > 0) handleClose();
     }
   };
 
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
-  const categoryMenuList = [
-    "여성",
-    "Divided",
-    "남성",
-    "신생아/유아",
-    "아동",
-    "H&M HOME",
-    "Sale",
-    "지속가능성",
-  ];
+  const categoryMenuList = [ "남성", "여성", "상의", "하의", "재킷", "셔츠", "블라우스", "팬츠", "스커트", "원피스"];
 
   useEffect(() => {
     const handleEscapeKeyPress = (event) => {
@@ -109,17 +105,26 @@ const Navbar = () => {
   }
 
   const goAdminProduct = () => {
-    setSearchValue('')
+    setSearchValue('');
+    setSelectedCategory('');
     dispatch({type:productTypes.CHANGE_PAGE_OF_ADMIN_PRODUCT, payload:1});
     navigate(adminProductPath);
   }
 
+  //로그아웃 시 searchValue, searchCategory 세션에 저장
   const goLogout = () => {
-    dispatch(userActions.logout(user.email, setSearchValue));
+    dispatch(userActions.logout(user.email));
   }
 
+  // 로그인 이전유저와 다를 때만 비워지도록 => 로그인 버튼 클릭시 비웠다가 동일 유저면 navigate에 searchValue, selectedCategory추가
+  const goLogin = () => {
+    setSearchValue('');
+    setSelectedCategory('');
+    navigate("/login")
+  }
   const goCart = () => {
-    setSearchValue('')
+    setSearchValue('');
+    setSelectedCategory('');
     dispatch({type:cartTypes.CHECKED_CART_ITEM, payload:{checkedItemList:[], checkedItemTotalPrice:0}});
     dispatch({type:orderTypes.SAVE_ORDER_ITEM, payload:{orderItemList:[], totalPrice:0, cartOrderStatus:true}});
     dispatch({type:cartTypes.CHANGE_PAGE_OF_CART, payload:1});
@@ -128,6 +133,7 @@ const Navbar = () => {
 
   const goMyOrder = () => {
     setSearchValue('')
+    setSelectedCategory('');
     dispatch({type:cartTypes.CHECKED_CART_ITEM, payload:{checkedItemList:[], checkedItemTotalPrice:0}});
     dispatch({type:orderTypes.SAVE_ORDER_ITEM, payload:{orderItemList:[], totalPrice:0, cartOrderStatus:false}});
     dispatch({type:orderTypes.CHANGE_PAGE_OF_ORDER, payload:1});
@@ -136,20 +142,32 @@ const Navbar = () => {
 
   const goMainProduct = () => {
     setSearchValue('')
+    setSelectedCategory('');
     dispatch({type:cartTypes.CHECKED_CART_ITEM, payload:{checkedItemList:[], checkedItemTotalPrice:0}});
     dispatch({type:orderTypes.SAVE_ORDER_ITEM, payload:{orderItemList:[], totalPrice:0, cartOrderStatus:false}});
     dispatch({type:productTypes.CHANGE_PAGE_OF_MAIN_PRODUCT, payload:1});
     navigate(mainProductPath);
   }
 
-  const goCategory = ()=> {
-    setSearchValue('')
+  const goCategory = (category)=> {
     dispatch({type:cartTypes.CHECKED_CART_ITEM, payload:{checkedItemList:[], checkedItemTotalPrice:0}});
     dispatch({type:orderTypes.SAVE_ORDER_ITEM, payload:{orderItemList:[], totalPrice:0, cartOrderStatus:false}});
     //카테고리에 따라 리스트 조회할 수 있도록 dispatch 추가, navigate추가 하기
+    const searchCategory = toTransformEnglishCategory(category);
+    dispatch({type:productTypes.CHANGE_PAGE_OF_MAIN_PRODUCT, payload:1});
+    searchKeyword
+    ? navigate(`${mainProductPath}?searchCategory=${searchCategory}&searchKeyword=${searchKeyword}`)
+    : navigate(`${mainProductPath}?searchCategory=${searchCategory}`);
+    setSelectedCategory(category);
   }
-
   
+
+  /* 
+  메뉴에 밑줄 그려주기
+  menu, underline들고오기 
+  horizontalIndicator만들기 => 아이템의 왼쪽 시작점부터 아이템의 넓이 만큼
+
+  */
 
   return (
     <div>
@@ -174,7 +192,13 @@ const Navbar = () => {
             </div>
             <div className="side-menu-list" id="menu-list">
               {categoryMenuList.map((category, index) => (
-                <button key={index} onClick={() => goCategory()}>{category}</button>
+                <div key={index}>
+                  <button 
+                  className ={`side-category-menu-btn ${selectedCategory === category ? 'active' : ''}`}
+                  onClick={() => goCategory(category)}>
+                    {category}
+                  </button>
+                </div>
               ))}
             </div>
           </div>
@@ -207,7 +231,7 @@ const Navbar = () => {
                     )}
                   </div>
                   : 
-                  <div onClick={() => navigate("/login")} className="nav-function">
+                  <div onClick={() => goLogin()} className="nav-function">
                     <FontAwesomeIcon icon={faRightToBracket} />
                     {!isMobile && <span style={{ cursor: "pointer" }}>로그인</span>}
                   </div>
@@ -246,7 +270,9 @@ const Navbar = () => {
           <ul className="menu">
             {categoryMenuList.map((category, index) => (
               <li key={index}>
-                <button key={index} className="category-menu-btn" onClick={() => goCategory()}>{category}</button>
+                <button 
+                  className={`category-menu-btn ${selectedCategory === category ? 'active' : ''}`}
+                  onClick={() => goCategory(category)}>{category}</button>
               </li>
             ))}
           </ul>

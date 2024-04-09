@@ -326,6 +326,12 @@ body{
     margin-top: 25%;
   }
 
+  .side-category-menu-btn.active {
+    background-color: white;
+    color: black;
+    border-radius: 3px ;
+  }
+
 }
 
 @media screen and (max-width: 768px) {
@@ -365,10 +371,14 @@ input::-webkit-inner-spin-button {
   background-color: transparent;
 }
 
+ /* 밑줄 스타일 */
+.category-menu-btn.active {
+  border-bottom: 5px solid rgb(230, 55, 55);
+}
+
 .empty {
   background-color: rgba(185, 185, 185, 0.804);
   color:white;
   padding: 20px;
   text-align: center;
-
 }

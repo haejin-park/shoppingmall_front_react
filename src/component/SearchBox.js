@@ -20,6 +20,8 @@ const SearchBox = ({ placeholder, show, searchValue, setSearchValue }) => {
   const navigationType = useNavigationType();
   const [query, setQuery] = useSearchParams();
   const searchKeyword = query.get("searchKeyword") || "";
+  const searchCategory = query.get("searchCategory") || "";
+
 
   useEffect(() => {
     if(navigationType === "POP") setSearchValue(searchKeyword)
@@ -44,17 +46,16 @@ const SearchBox = ({ placeholder, show, searchValue, setSearchValue }) => {
       let searchKeyword = event.target.value;   
       if(currentPath === adminProductPath) {
         dispatch({type:productTypes.CHANGE_PAGE_OF_ADMIN_PRODUCT, payload:1});
-        navigate(`${currentPath}?searchKeyword=${searchKeyword}`);
       } else if(currentPath === adminOrderPath) {
         dispatch({type:orderTypes.CHANGE_PAGE_OF_ORDER, payload:1});
-        navigate(`${currentPath}?searchKeyword=${searchKeyword}`);
       } else if(currentPath === myOrderPath) {
         dispatch({type:orderTypes.CHANGE_PAGE_OF_ORDER, payload:1});
-        navigate(`${currentPath}?searchKeyword=${searchKeyword}`);
       } else if(currentPath === cartPath) {
         dispatch({type:cartTypes.CHANGE_PAGE_OF_CART, payload:1});
-        navigate(`${currentPath}?searchKeyword=${searchKeyword}`);
       }   
+      searchCategory
+      ? navigate(`${currentPath}?searchCategory=${searchCategory}&searchKeyword=${searchKeyword}`)
+      : navigate(`${currentPath}?searchKeyword=${searchKeyword}`);
     }
   };
 

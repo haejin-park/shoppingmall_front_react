@@ -15,6 +15,7 @@ const MainProduct = () => {
   const [sortBy, setSortBy] = useState("orderOfPurchase");
   const [query, setQuery] = useSearchParams();
   const searchKeyword = query.get("searchKeyword") || "";
+  const searchCategory = query.get("searchCategory") || "";
   const prevUserEmail = sessionStorage.getItem("prevUserEmail");
   const currentUserEmail = sessionStorage.getItem("currentUserEmail");
 
@@ -27,26 +28,31 @@ const MainProduct = () => {
   //리스트 조회시 페이지 번호 변경되도록
   useEffect(() => { 
     if(prevUserEmail !== null && currentUserEmail !== null && prevUserEmail !== currentUserEmail) { 
-      dispatch(mainProductActions.getProductList({searchKeyword, currentPage:1}, sortBy));
+      dispatch(mainProductActions.getProductList({searchCategory, searchKeyword, currentPage:1, sortBy}));
     } else if(currentUserEmail === null) {
-      dispatch(mainProductActions.getProductList({searchKeyword, currentPage}, sortBy));
+      dispatch(mainProductActions.getProductList({searchCategory, searchKeyword, currentPage, sortBy}));
     }
-  }, [query, searchKeyword, currentPage, dispatch, sortBy, prevUserEmail, currentUserEmail]);
+  }, [query, searchCategory, searchKeyword, currentPage, dispatch, sortBy, prevUserEmail, currentUserEmail]);
 
   // 페이지 url 변경되도록
   useEffect(() => {
+    let params = {};
     if(prevUserEmail!== null && currentUserEmail!== null && prevUserEmail !== currentUserEmail) {  
-      const params = new URLSearchParams({currentPage: 1}); 
-      const queryString = params.toString();
-      navigate(`?${queryString}`); 
-    } else if(currentUserEmail === null){
-      const params = searchKeyword 
-      ? new URLSearchParams({searchKeyword, currentPage}) 
-      : new URLSearchParams({currentPage});
-      const queryString = params.toString();
-      navigate(`?${queryString}`); 
+      params = new URLSearchParams({currentPage: 1}); 
+    } else if(currentUserEmail === null) {
+      if(searchKeyword && !searchCategory) {
+        params = new URLSearchParams({searchKeyword, currentPage}) 
+      } else if (!searchKeyword && searchCategory) {
+        params = new URLSearchParams({searchCategory, currentPage}) 
+      } else if (searchKeyword && searchCategory) {
+        params = new URLSearchParams({searchCategory, searchKeyword, currentPage}) 
+      } else if (!searchKeyword && !searchCategory && currentPage) {
+        params = new URLSearchParams({currentPage});
+      }
     } 
-  }, [searchKeyword, currentPage, navigate, prevUserEmail, currentUserEmail]);
+    const queryString = params.toString();
+    navigate(`?${queryString}`); 
+  }, [searchCategory, searchKeyword, currentPage, navigate, prevUserEmail, currentUserEmail]);
 
   const handlePageClick = ({ selected }) => {
     dispatch({type:types.CHANGE_PAGE_OF_MAIN_PRODUCT, payload:selected + 1});
