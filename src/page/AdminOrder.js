@@ -11,7 +11,7 @@ import { orderActions } from "../redux/actions/orderAction";
 const AdminOrder = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {loading, error, orderList, totalPageNum, currentPage} = useSelector((state) => state.order);
+  const {loading, orderList, totalPageNum, currentPage} = useSelector((state) => state.order);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useSearchParams();
   const searchKeyword = query.get("searchKeyword") || "";
@@ -56,20 +56,13 @@ const AdminOrder = () => {
   return (
     <div className="locate-center">
       <Container>
-      {loading && (
+        {loading && (
           <div className="spinner-box">
-          <Spinner animation="border" role="status">
-            <span className="visually-hidden loading-message">Loading...</span>
-          </Spinner>
-        </div>
-        )}
-        {error && (
-          <div>
-            <Alert variant="danger" className="error-message">
-              {error}
-            </Alert>
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden loading-message">Loading...</span>
+            </Spinner>
           </div>
-        )} 
+        )}
         {orderList.length <= 0
           ? 
             <div className="empty">

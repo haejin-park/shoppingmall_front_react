@@ -5,6 +5,8 @@ import { CATEGORY, SIZE, STATUS } from "../constants/product.constants";
 import { productActions } from "../redux/actions/productAction";
 import CloudinaryUploadWidget from "../utils/CloudinaryUploadWidget";
 import { useSearchParams } from "react-router-dom";
+import * as types from '../constants/product.constants';
+
 
 const InitialFormData = {
   name: "",
@@ -23,7 +25,6 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
   const [formData, setFormData] = useState(
     mode === "new" ? { ...InitialFormData } : {...selectedProduct }
   );
-  const [category, setCategory] = useState([...formData.category]);
   const [stock, setStock] = useState([]);
   const dispatch = useDispatch();
   const [stockError, setStockError] = useState(false);
@@ -51,6 +52,7 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
     //모든걸 초기화시키기
     mode === "new" ? setFormData({ ...InitialFormData }) : setFormData({...selectedProduct})
     setStock([]);
+    dispatch({type:types.DELETE_PRODUCT_ERROR})
   };
 
   const handleChange = (event) => {
@@ -134,24 +136,15 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
 
     if (mode === "new") {
       //새 상품 만들기 후 미들웨어에서 다시 조회 함수 호출
-      dispatch(productActions.createProduct({...formData, stock:stockObj, sortBy}));
+      dispatch(productActions.createProduct({...formData, stock:stockObj}, {searchKeyword: "", currentPage:1, sortBy},handleClose));
     } else {
       // 상품 수정하기 미들웨어에서 다시 조회 함수 호출
-      dispatch(productActions.updateProduct({...formData, stock:stockObj}, {searchKeyword, currentPage, sortBy}));
+      dispatch(productActions.updateProduct({...formData, stock:stockObj}, {searchKeyword, currentPage, sortBy},handleClose));
     }
-    handleClose();
   };
-
 
   return (
     <Modal show={showDialog} onHide={handleClose}>
-      {loading && (
-        <div className="spinner-box">
-          <Spinner animation="border" role="status">
-            <span className="visually-hidden loading-message">Loading...</span>
-          </Spinner>
-        </div>
-      )}
       {error && (
         <div>
           <Alert variant="danger" className="error-message">
@@ -159,7 +152,6 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
           </Alert>
         </div>
       )}
-      
       <Modal.Header closeButton>
         {mode === "new" ? (
           <Modal.Title>Create New Product</Modal.Title>
@@ -294,6 +286,7 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
             <Form.Select
               multiple
               onClick={onHandleCategory}
+              // onChange={onHandleCategory}
               value={formData.category}
               required
             >

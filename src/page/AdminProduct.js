@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Button, Container, Spinner } from "react-bootstrap";
+import { Button, Container, Spinner } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -12,7 +12,7 @@ import "../style/adminProduct.style.css";
 const AdminProduct = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {loading, error, adminProductList:productList, adminTotalPageNum:totalPageNum, adminCurrentPage:currentPage} = useSelector((state) => state.product); 
+  const {loading, adminProductList:productList, adminTotalPageNum:totalPageNum, adminCurrentPage:currentPage} = useSelector((state) => state.product); 
   const [showDialog, setShowDialog] = useState(false);
   const [mode, setMode] = useState("new");
   const [sortBy, setSortBy] = useState("latest");
@@ -33,7 +33,7 @@ const AdminProduct = () => {
   useEffect(() => { 
     //url쿼리 읽어오기(query) => 쿼리 값에 맞춰서 상품리스트 가져오기
     dispatch(productActions.getAdminProductList({searchKeyword, currentPage, sortBy}));
-  }, [query, searchKeyword, currentPage, dispatch, sortBy]);
+  }, [query, searchKeyword, currentPage, dispatch, sortBy, totalPageNum]);
 
   useEffect(() => {
     const params = searchKeyword 
@@ -77,13 +77,6 @@ const AdminProduct = () => {
             <span className="visually-hidden loading-message">Loading...</span>
           </Spinner>
         </div>
-        )}
-        {error && (
-          <div>
-            <Alert variant="danger" className="error-message">
-              {error}
-            </Alert>
-          </div>
         )}
         <Button className="mt-2 mb-2" onClick={handleClickNewItem}>
           Add New Item +

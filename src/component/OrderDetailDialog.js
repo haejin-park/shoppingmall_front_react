@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Dropdown, Form, Modal, Row, Table } from "react-bootstrap";
+import { Alert, Button, Col, Dropdown, Form, Modal, Row, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { ADMIN_ORDER_STATUS, CUSTOMER_ORDER_STATUS } from "../constants/order.constants";
 import { orderActions } from "../redux/actions/orderAction";
@@ -10,7 +10,7 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
   const dispatch = useDispatch();
   const [query, setQuery] = useSearchParams(); 
   const searchKeyword = query.get("searchKeyword") || ''; 
-  const {selectedOrder, currentPage} = useSelector((state) => state.order);
+  const {error, selectedOrder, currentPage} = useSelector((state) => state.order);
   const [orderStatusList, setOrderStatusList] = useState(selectedOrder.data.items.map((item) => item.status));
   const [checkedIndexList, setCheckedIndexList] = useState([]);
   const [checkedAll, setCheckedAll] = useState(false);
@@ -81,6 +81,13 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
   }
   return (
     <Modal show={open} onHide={handleClose} className="order-detail-dialog">
+      {error && (
+        <div>
+          <Alert variant="danger" className="error-message">
+            {error}
+          </Alert>
+        </div>
+      )} 
       <Modal.Header closeButton>
         <Modal.Title><strong>주문 상세</strong></Modal.Title>
       </Modal.Header>

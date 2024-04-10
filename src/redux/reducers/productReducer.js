@@ -42,6 +42,7 @@ function productReducer(state = initialState, action) {
     case types.CREATE_PRODUCT_SUCCESS:
     case types.UPDATE_PRODUCT_SUCCESS:
     case types.DELETE_PRODUCT_SUCCESS:
+    case types.DELETE_PRODUCT_ERROR:
       return {
         ...state,
         loading: false,
