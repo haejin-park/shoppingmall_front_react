@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Button, Col, Form, Image, Modal, Row, Spinner } from "react-bootstrap";
+import { Alert, Button, Col, Form, Image, Modal, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
+import * as types from '../constants/product.constants';
 import { CATEGORY, SIZE, STATUS } from "../constants/product.constants";
 import { productActions } from "../redux/actions/productAction";
 import CloudinaryUploadWidget from "../utils/CloudinaryUploadWidget";
-import { useSearchParams } from "react-router-dom";
-import * as types from '../constants/product.constants';
 
 
 const InitialFormData = {
@@ -21,7 +21,7 @@ const InitialFormData = {
 
 const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
   
-  const { loading, error, selectedProduct, adminCurrentPage:currentPage } = useSelector((state) => state.product);
+  const { error, selectedProduct, adminCurrentPage:currentPage } = useSelector((state) => state.product);
   const [formData, setFormData] = useState(
     mode === "new" ? { ...InitialFormData } : {...selectedProduct }
   );
@@ -29,6 +29,7 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
   const dispatch = useDispatch();
   const [stockError, setStockError] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [priceError, setPriceError] = useState(false);
   const [query, setQuery] = useSearchParams();
   const searchKeyword = query.get("searchKeyword") || "";
 
@@ -53,19 +54,18 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
     mode === "new" ? setFormData({ ...InitialFormData }) : setFormData({...selectedProduct})
     setStock([]);
     dispatch({type:types.DELETE_PRODUCT_ERROR})
+    setStockError(false);
+    setImageError(false);
+    setPriceError(false);
   };
 
   const handleChange = (event) => {
     //formData에 데이터 넣어주기
     const {id, value} = event.target;
     if (id === 'price') {
-      let parsedValue = parseInt(value);
-      if(parsedValue >= 1) {
-        setFormData({...formData, [id]: value});
-      } 
-    } else {
-      setFormData({...formData, [id]: value});
-    }
+      value <= 0 || value === ''? setPriceError(true):setPriceError(false);
+    } 
+    setFormData({...formData, [id]: value});
   };
 
   const addStock = (sizeLength) => { //이전 코드
@@ -103,7 +103,6 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
     //카테고리 이미 추가되어있으면 제거 
     if (formData.category.includes(event.target.value)) {
       const newCategory = formData.category.filter((item) => item !== event.target.value); 
-      console.log('newCategory',newCategory);
       setFormData({...formData, category: [...newCategory]});
       //아니면 추가
     } else {
@@ -129,6 +128,11 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
       setImageError(true);
       return;
     }
+
+    if(priceError) {
+      return;
+    }
+
     // 재고를 배열에서 객체로 바꿔주기 => [['M',2]] 에서 {M:2}로
     let stockObj = stock.reduce((total, item) => {
       return {...total, [item[0]]: parseInt(item[1])};
@@ -201,7 +205,7 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
         <Form.Group className="mb-3" controlId="stock">
           <Form.Label className="mr-1">Stock</Form.Label>
           {stockError && (
-            <span className="error-message mr-1">재고를 추가해주세요</span>
+            <span className="warning-message pr-1 mr-1">재고를 추가해주세요</span>
           )}
           <Button size="sm" onClick={() => addStock(SIZE.length)}>
             Add +
@@ -259,7 +263,7 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
         <Form.Group className="mb-3" controlId="image" required>
           <Form.Label className="mr-1">Image</Form.Label>
           {imageError && (
-            <span className="error-message">이미지를 업로드 해주세요</span>
+            <span className="warning-message">이미지를 업로드 해주세요</span>
           )}
           <CloudinaryUploadWidget uploadImage={uploadImage} />
           <Image
@@ -273,14 +277,14 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
           <Form.Group as={Col} controlId="price">
             <Form.Label>Price</Form.Label>
             <Form.Control
-              value={formData.price}
+              value={formData.price || ''}
               required
               onChange={handleChange}
               type="number"
               placeholder="price"
             />
+            {priceError && <span className="warning-message">금액은 1원 이상 입력해주세요</span>}
           </Form.Group>
-
           <Form.Group as={Col} controlId="category">
             <Form.Label>Category</Form.Label>
             <Form.Select
@@ -291,10 +295,7 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
               required
             >
               {CATEGORY.map((item, idx) => (
-                <option 
-                  key={idx} 
-                  value={item.toLowerCase()}
-                >
+                <option key={idx} value={item.toLowerCase()}>
                   {item}
                 </option>
               ))}
