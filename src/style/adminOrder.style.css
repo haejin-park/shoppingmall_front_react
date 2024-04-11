@@ -1,5 +1,5 @@
 .modal-dialog{
-    max-width: 800px;
+    max-width: 1000px;
 }
 
 .order-button-area{
@@ -27,14 +27,36 @@
     font-size: 20px;
     text-align: center;
  }
- 
+
+
 .order-status-drop-down {
     text-align: center;
+    margin-bottom: 10px;
 }
 
 .order-status-drop-down-toggle {
     width: 98%;
-    /* background-color: white;
-    border: 1px solid black;
-    color: black; */
+}
+
+.order-status-drop-down-menu {
+    width: 100%;
+}
+
+.status-reason {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.status-reason div {
+    width: 5%;
+}
+
+.status-reason input {
+    width: 95%;
+}
+
+.admin-order-table {
+    margin-top: 15px;
 }

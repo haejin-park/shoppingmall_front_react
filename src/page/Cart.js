@@ -31,6 +31,10 @@ const Cart = () => {
   const [deletedItemIdList, setDeletedItemIdList] = useState([]);
   const [deleteAllError, setDeleteAllError] = useState(false);
 
+  // useEffect(() => {
+  //   console.log('loading',loading);
+  // },[loading])
+
   useEffect(() => { 
     //url쿼리 읽어오기(query) => 쿼리 값에 맞춰서 상품리스트 가져오기
     dispatch(cartActions.getCartList({searchKeyword, currentPage}));

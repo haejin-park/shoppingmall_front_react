@@ -43,12 +43,13 @@ const getOrderDetail = (id) => async (dispatch) => {
   }
 };
 
-const updateOrder = (id, orderItemIdList, orderStatusList, query, mode) => async (dispatch) => {
+const updateOrder = (id, orderItemIdList, orderStatusList, orderStatusReasonList, query, mode) => async (dispatch) => {
   try {
     dispatch({type:types.UPDATE_ORDER_REQUEST});
-    const response = await api.put(`/order/${id}`,{orderItemIdList, orderStatusList});
+    const response = await api.put(`/order/${id}`,{orderItemIdList, orderStatusList, orderStatusReasonList});
     if(response.status !== 200) throw new Error(response.message);
     dispatch({type:types.UPDATE_ORDER_SUCCESS, payload: response.data});
+    dispatch(commonUiActions.showToastMessage("주문 상태 수정을 완료했습니다.", "success"));
     dispatch(orderActions.getOrderList(query, mode));
   } catch(error) {
     dispatch({type:types.UPDATE_ORDER_FAIL, payload:error.message});

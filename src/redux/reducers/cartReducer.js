@@ -36,7 +36,7 @@ function cartReducer(state = initialState, action) {
     case types.GET_CART_ITEM_COUNT_FAIL:
     return {
       ...state,
-      loading: true,
+      loading: false,
       error: ''
     }    
     
@@ -47,7 +47,7 @@ function cartReducer(state = initialState, action) {
     case types.GET_CART_ITEM_COUNT_SUCCESS:
       return {
         ...state,
-        loading: true,
+        loading: false,
         error: '',
         cartItemCount: payload
       }

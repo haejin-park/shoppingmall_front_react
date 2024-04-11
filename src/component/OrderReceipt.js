@@ -49,8 +49,8 @@ const OrderReceipt = ({cartOrderStatus}) => {
               <strong>선택 상품</strong>
               <div>
                 {checkedItemList.length > 0
-                  ? checkedItemList.map((item) => (<div key={item.items._id}>{item.productData[0].name}</div>)) 
-                  : orderItemList.map((item, index) => (<div key={index}>{item.productData[0].name}</div>)) 
+                  ? checkedItemList?.map((item) => (<div key={item.items._id}>{item.productData[0].name}</div>)) 
+                  : orderItemList?.map((item, index) => (<div key={index}>{item.productData[0].name}</div>)) 
                 }
               </div>
             </div>

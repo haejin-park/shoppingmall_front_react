@@ -10,10 +10,12 @@ const AppLayout = ({ children }) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
+  const storedToken = sessionStorage.getItem('token');
+
   useEffect(() => {
-    const storedToken = sessionStorage.getItem('token');
+    console.log('storedToken', storedToken);
     if(storedToken) dispatch(userActions.loginWithToken(user));
-  }, [dispatch, user]);
+  }, [storedToken, dispatch]);
 
   return (
     <div>
@@ -29,7 +31,7 @@ const AppLayout = ({ children }) => {
         </div>
       ) : (
       <>
-        <Navbar />
+        <Navbar/>
         {children}
       </>
       )}

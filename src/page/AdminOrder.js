@@ -7,6 +7,7 @@ import OrderDetailDialog from "../component/OrderDetailDialog";
 import OrderTable from "../component/OrderTable";
 import * as types from "../constants/order.constants";
 import { orderActions } from "../redux/actions/orderAction";
+import "../style/adminOrder.style.css";
 
 const AdminOrder = () => {
   const dispatch = useDispatch();
@@ -63,21 +64,23 @@ const AdminOrder = () => {
             </Spinner>
           </div>
         )}
-        {orderList.length <= 0
-          ? 
-            <div className="empty">
-              <h3>주문한 상품이 없습니다.</h3>
-            </div>
-          : orderList?.flatMap((order, index) => (
-          <OrderTable
-            key={index} 
-            index={index}
-            order={order}
-            header={tableHeader}
-            openEditForm={openEditForm}
-          />
-          ))
-        }
+        <div className="admin-order-table">
+          {orderList.length <= 0
+            ? 
+              <div className="empty">
+                <h3>주문한 상품이 없습니다.</h3>
+              </div>
+            : orderList?.flatMap((order, index) => (
+            <OrderTable
+              key={index} 
+              index={index}
+              order={order}
+              header={tableHeader}
+              openEditForm={openEditForm}
+            />
+            ))
+          }
+        </div>
         <ReactPaginate
           nextLabel="next >"
           onPageChange={handlePageClick}
