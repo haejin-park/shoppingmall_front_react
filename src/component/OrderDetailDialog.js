@@ -13,8 +13,8 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
   const {error, selectedOrder, currentPage} = useSelector((state) => state.order);
   const [orderStatusList, setOrderStatusList] = useState(selectedOrder.data.items.map((item) => item.status));
   const [orderStatusReasonList, setOrderStatusReasonList] = useState(selectedOrder.data.items.map((item) => item.statusReason));
+  const [orderStatusReasonError, setOrderStatusReasonError] = useState(false);
   const [newOrderStatusList, setNewOrderStatusList] = useState([]);
-  
   const [checkedIndexList, setCheckedIndexList] = useState([]);
   const [checkedAll, setCheckedAll] = useState(false);
   const [hiddenCheckbox, setHiddenCheckbox] = useState(false);
@@ -144,6 +144,9 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
       return;
     }
     const newReason = value;
+    if(value !== "" && orderStatusReasonError){
+      setOrderStatusReasonError(false);
+    }
     const updatedOrderStatusReasonList = orderStatusReasonList.map((status, index) => {
       if (checkedIndexList.includes(index)) {
         return newReason;
@@ -159,6 +162,16 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
       if(item === '') return;
     })
 
+    const hasEmptyReason = newOrderStatusList.some((status, index) => {
+      return (
+        (mode === "admin" && status === "환불 요청" && orderStatusReasonList[index] === "") || 
+        (mode === "customer" && status !== "" && orderStatusReasonList[index] === "")
+      ) 
+    })
+    if(hasEmptyReason) {
+      setOrderStatusReasonError(true);
+      return;
+    }
     dispatch(orderActions.updateOrder(selectedOrder.data._id, orderItemIdList, orderStatusList, orderStatusReasonList, {searchKeyword, currentPage}, mode));
     handleClose();
   };
@@ -166,7 +179,7 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
   
 
   if (!selectedOrder) {
-    return <></>;
+    return <div>선택된 주문데이터를 조회할 수 없습니다.</div>;
   }
   return (
     <Modal show={open} onHide={handleClose} className="order-detail-dialog">
@@ -357,6 +370,9 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
           </Dropdown.Menu>
         </Dropdown>
         }
+        {orderStatusReasonError && (
+          <span className="warning-message ml-2">주문 상태 사유를 선택해주세요</span>
+        )}
       <div className="order-button-area">
         <Col>
           <Button onClick={handleClose} className="order-detail-dialog-close-btn">

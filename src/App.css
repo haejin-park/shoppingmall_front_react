@@ -401,3 +401,7 @@ input::-webkit-inner-spin-button {
   padding: 20px;
   text-align: center;
 }
+
+.warning-message{
+  color: red;
+}
