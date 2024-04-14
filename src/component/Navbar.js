@@ -113,7 +113,7 @@ const Navbar = () => {
     setSearchValue('');
     setSelectedCategory('');
     const prevAdminSortBy = sessionStorage.getItem("prevAdminSortBy");
-    if(prevAdminSortBy !== "") sessionStorage.removeItem("prevAdminSortBy");
+    if(prevAdminSortBy) sessionStorage.removeItem("prevAdminSortBy");
     dispatch({type:productTypes.SELECT_SORT_BY_ADMIN_PRODUCT_LIST, payload: "latest"});
     dispatch({type:productTypes.CHANGE_PAGE_OF_ADMIN_PRODUCT, payload:1});
     navigate(adminProductPath);

@@ -33,7 +33,7 @@ const AdminNavbar = () => {
   const goMainProduct = () => {
     setSearchValue('')
     const prevMainSortBy = sessionStorage.getItem("prevMainSortBy");
-    if(prevMainSortBy !== "") sessionStorage.removeItem("prevMainSortBy");
+    if(prevMainSortBy) sessionStorage.removeItem("prevMainSortBy");
     dispatch({type:productTypes.SELECT_SORT_BY_MAIN_PRODUCT_LIST, payload:"popularity"});
     dispatch({type:productTypes.CHANGE_PAGE_OF_MAIN_PRODUCT, payload:1});
     navigate(mainProductPath);
@@ -44,7 +44,7 @@ const AdminNavbar = () => {
     setSearchValue('')
     setPlacehorder('상품명 검색')
     const prevAdminSortBy = sessionStorage.getItem("prevAdminSortBy");
-    if(prevAdminSortBy !== "") sessionStorage.removeItem("prevAdminSortBy");
+    if(prevAdminSortBy) sessionStorage.removeItem("prevAdminSortBy");
     dispatch({type:productTypes.SELECT_SORT_BY_ADMIN_PRODUCT_LIST, payload: "latest"});
     dispatch({type:productTypes.CHANGE_PAGE_OF_ADMIN_PRODUCT, payload:1});
     navigate(adminProductPath);
