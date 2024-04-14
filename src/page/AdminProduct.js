@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Container, Dropdown, Spinner } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useNavigationType, useSearchParams } from "react-router-dom";
 import ProductDetailDialog from "../component/ProductDetailDialog";
 import ProductTable from "../component/ProductTable";
 import * as types from '../constants/product.constants';
@@ -18,6 +18,8 @@ const AdminProduct = () => {
   const [mode, setMode] = useState("new");
   const [query, setQuery] = useSearchParams();
   const searchKeyword = query.get("searchKeyword") || "";
+  const navigationType = useNavigationType();
+  const prevAdminSortBy = sessionStorage.getItem("prevAdminSortBy");
 
   const tableHeader = [
     "#",
@@ -31,8 +33,14 @@ const AdminProduct = () => {
   ];
   
   useEffect(() => { 
-    dispatch(productActions.getAdminProductList({searchKeyword, currentPage, sortBy}));
-  }, [query, searchKeyword, currentPage, dispatch, sortBy, totalPageNum]);
+    if(navigationType === "POP" && prevAdminSortBy) {
+      let sortBy = prevAdminSortBy;
+      dispatch({type:types.SELECT_SORT_BY_ADMIN_PRODUCT_LIST, payload: sortBy});
+      dispatch(productActions.getAdminProductList({searchKeyword, currentPage, sortBy: prevAdminSortBy}));
+    } else if(navigationType !== "POP"){
+      dispatch(productActions.getAdminProductList({searchKeyword, currentPage, sortBy}));
+    }
+  }, [navigationType, query, searchKeyword, currentPage, dispatch, sortBy, totalPageNum, prevAdminSortBy]);
 
   useEffect(() => {
     const params = searchKeyword 

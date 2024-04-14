@@ -1,5 +1,5 @@
-import api from '../../utils/api';
 import * as types from '../../constants/user.constants';
+import api from '../../utils/api';
 import { commonUiActions } from './commonUiAction';
 
 const loginWithToken = (user) => async (dispatch) => {
@@ -21,7 +21,7 @@ const loginWithEmail = (email, password, navigate) => async (dispatch) => {
     if(response.status !== 200) throw new Error(response.message);
     sessionStorage.setItem("currentUserEmail", email);
     const prevUserEmail = sessionStorage.getItem("prevUserEmail");
-    email === prevUserEmail ? navigate(-1) : navigate('/');
+    email === prevUserEmail? navigate(-1) : navigate('/');
     dispatch({type: types.LOGIN_SUCCESS, payload: response.data});
     sessionStorage.setItem("token", response.data.token);
     api.defaults.headers.authorization = `Bearer ${response.data.token}`;

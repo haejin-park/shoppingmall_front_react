@@ -17,7 +17,6 @@ const AdminNavbar = () => {
   const adminProductPath = '/admin/product';
   const mainProductPath = '/';
 
-
   useEffect(() => {
     const handleResize = () => {
       setTabletwSize(window.innerWidth <= 992);
@@ -33,19 +32,21 @@ const AdminNavbar = () => {
 
   const goMainProduct = () => {
     setSearchValue('')
-    dispatch({type:productTypes.CHANGE_PAGE_OF_MAIN_PRODUCT, payload:1});
+    const prevMainSortBy = sessionStorage.getItem("prevMainSortBy");
+    if(prevMainSortBy !== "") sessionStorage.removeItem("prevMainSortBy");
     dispatch({type:productTypes.SELECT_SORT_BY_MAIN_PRODUCT_LIST, payload:"popularity"});
+    dispatch({type:productTypes.CHANGE_PAGE_OF_MAIN_PRODUCT, payload:1});
     navigate(mainProductPath);
-    
   }
 
   const goAdminProduct = () => {
     setShow(false);
     setSearchValue('')
     setPlacehorder('상품명 검색')
-    dispatch({type:productTypes.CHANGE_PAGE_OF_ADMIN_PRODUCT, payload:1});
+    const prevAdminSortBy = sessionStorage.getItem("prevAdminSortBy");
+    if(prevAdminSortBy !== "") sessionStorage.removeItem("prevAdminSortBy");
     dispatch({type:productTypes.SELECT_SORT_BY_ADMIN_PRODUCT_LIST, payload: "latest"});
-
+    dispatch({type:productTypes.CHANGE_PAGE_OF_ADMIN_PRODUCT, payload:1});
     navigate(adminProductPath);
   };
 

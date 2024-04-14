@@ -58,7 +58,8 @@ function productReducer(state = initialState, action) {
         error: '',
         mainProductList: payload.productList,
         mainTotalPageNum: payload.totalPageNum,
-        mainCurrentPage: payload.currentPage
+        mainCurrentPage: payload.currentPage,
+        mainSortBy:payload.sortBy
       }
 
     case types.CHANGE_PAGE_OF_MAIN_PRODUCT:
@@ -76,7 +77,8 @@ function productReducer(state = initialState, action) {
         error: '',
         adminProductList: payload.productList,
         adminTotalPageNum: payload.totalPageNum,
-        adminCurrentPage: payload.currentPage
+        adminCurrentPage: payload.currentPage,
+        adminSortBy:payload.sortBy
       }
 
     case types.CHANGE_PAGE_OF_ADMIN_PRODUCT:
