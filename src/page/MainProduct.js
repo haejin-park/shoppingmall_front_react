@@ -18,13 +18,6 @@ const MainProduct = () => {
   const prevUserEmail = sessionStorage.getItem("prevUserEmail");
   const currentUserEmail = sessionStorage.getItem("currentUserEmail");
 
-/*
-  이전 user email로 메인 3페이지에서 로그아웃 후 => 다른 user email로 로그인하면 메인 1페이지 이동하도록
-  1페이지 이동은 로그인 시 한번만 실행 되도록 loginAction에서 메인 이동 후 prevUserEmail, currentUserEmail 삭제
-  로그아웃 한 상태에서도 검색 되도록 currentUserEmail === null일 때 조회 가능하게
-*/
-
-  //리스트 조회시 페이지 번호 변경되도록
   useEffect(() => { 
     if(prevUserEmail !== null && currentUserEmail !== null && prevUserEmail !== currentUserEmail) { 
       dispatch(productActions.getMainProductList({searchCategory, searchKeyword, currentPage:1, sortBy}));
@@ -33,7 +26,6 @@ const MainProduct = () => {
     }
   }, [query, searchCategory, searchKeyword, currentPage, dispatch, sortBy, prevUserEmail, currentUserEmail]);
 
-  // 페이지 url 변경되도록
   useEffect(() => {
     let params = {};
     if(prevUserEmail!== null && currentUserEmail!== null && prevUserEmail !== currentUserEmail) {  

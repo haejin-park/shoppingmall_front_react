@@ -4,8 +4,8 @@ import { useLocation, useNavigationType } from "react-router";
 import AdminNavbar from "../component/AdminNavbar";
 import Navbar from "../component/Navbar";
 import ToastMessage from "../component/ToastMessage";
-import { userActions } from "../redux/actions/userAction";
 import * as productTypes from '../constants/product.constants';
+import { userActions } from "../redux/actions/userAction";
 
 const AppLayout = ({ children }) => {
   const location = useLocation();

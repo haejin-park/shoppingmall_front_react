@@ -7,7 +7,6 @@ import { CATEGORY, SIZE, STATUS } from "../constants/product.constants";
 import { productActions } from "../redux/actions/productAction";
 import CloudinaryUploadWidget from "../utils/CloudinaryUploadWidget";
 
-
 const InitialFormData = {
   name: "",
   sku: "",
@@ -20,11 +19,8 @@ const InitialFormData = {
 };
 
 const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
-  
   const { error, selectedProduct, adminCurrentPage:currentPage } = useSelector((state) => state.product);
-  const [formData, setFormData] = useState(
-    mode === "new" ? { ...InitialFormData } : {...selectedProduct }
-  );
+  const [formData, setFormData] = useState(mode === "new" ? { ...InitialFormData } : {...selectedProduct });
   const [stock, setStock] = useState([]);
   const dispatch = useDispatch();
   const [stockError, setStockError] = useState(false);
@@ -35,22 +31,18 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
 
 
   useEffect(() => {
-    //수정 데이터 바로 불러와 지도록, 컴포넌트가 마운트될 때 selectedProduct가 초기에 값이 없는 경우 제어되지 않는 상태에 대한 경고 해결
     if(mode === "new"){
       setFormData({ ...InitialFormData })
-      setStock([]);//상품 수정 화면 열었다가 상품 생성 열었을 때 이전에 수정한 상품 stock안불러와지게
+      setStock([]); 
     } else {
       setFormData({...selectedProduct }) 
-      //selectedProduct의 stock객체를 배열로 바꾼뒤 setStock에 넣는다 ex){ S:2, M:2 } =>[[S:2], [M,2]] 
       const stockArrary = Object.entries(selectedProduct.stock);
       setStock(stockArrary);
     }
   }, [mode, selectedProduct, showDialog]);
 
   const handleClose = () => {
-    //다이얼로그 닫아주기
     setShowDialog(false);
-    //모든걸 초기화시키기
     mode === "new" ? setFormData({ ...InitialFormData }) : setFormData({...selectedProduct})
     setStock([]);
     dispatch({type:types.DELETE_PRODUCT_ERROR})
@@ -60,7 +52,6 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
   };
 
   const handleChange = (event) => {
-    //formData에 데이터 넣어주기
     const {id, value} = event.target;
     if (id === 'price') {
       value <= 0 || value === ''? setPriceError(true):setPriceError(false);
@@ -68,22 +59,19 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
     setFormData({...formData, [id]: value});
   };
 
-  const addStock = (sizeLength) => { //이전 코드
+  const addStock = (sizeLength) => { 
     if(stock.length < sizeLength) {
       setStock([...stock, []]);
       setStockError(false)
     }
   };
 
-  const deleteStock = (index) => { //기존 코드
-    //삭제 클릭한 index 제외
+  const deleteStock = (index) => { 
     const newStock = stock.filter((item, idx) => idx !== index);
     setStock(newStock);
   };
 
-  // 내부 배열도 새로운 배열로 생성
   const handleStockSizeChange = (value, index) => {
-    //value는 사이즈, index는 stock의 인덱스
     const newStock = stock.map((item, idx) => {
       if (idx === index) return [value, item[1]]; 
       return item;
@@ -91,7 +79,6 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
     setStock(newStock);
   }
   const handleStockQtyChange = (value, index) => {
-    //value는 수량, index는 stock의 인덱스
     const newStock = stock.map((item, idx) => {
       if (idx === index && value >= 0) return [item[0], value];  
       return item;
@@ -100,26 +87,21 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
   };
   
   const onHandleCategory = (event) => {
-    //카테고리 이미 추가되어있으면 제거 
     if (formData.category.includes(event.target.value)) {
       const newCategory = formData.category.filter((item) => item !== event.target.value); 
       setFormData({...formData, category: [...newCategory]});
-      //아니면 추가
     } else {
       setFormData({...formData, category: [...formData.category, event.target.value]});
     }
   };  
 
   const uploadImage = (url) => {
-    //이미지 업로드
     setFormData({...formData, image:url});
     setImageError(false)
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    
-    //재고를 입력하지 않았으면 에러
     if(stock?.length === 0) {
       setStockError(true);
       return;
@@ -133,16 +115,13 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
       return;
     }
 
-    // 재고를 배열에서 객체로 바꿔주기 => [['M',2]] 에서 {M:2}로
     let stockObj = stock.reduce((total, item) => {
       return {...total, [item[0]]: parseInt(item[1])};
     },{});
 
     if (mode === "new") {
-      //새 상품 만들기 후 미들웨어에서 다시 조회 함수 호출
       dispatch(productActions.createProduct({...formData, stock:stockObj}, {searchKeyword: "", currentPage:1, sortBy},handleClose));
     } else {
-      // 상품 수정하기 미들웨어에서 다시 조회 함수 호출
       dispatch(productActions.updateProduct({...formData, stock:stockObj}, {searchKeyword, currentPage, sortBy},handleClose));
     }
   };

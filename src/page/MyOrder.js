@@ -20,7 +20,6 @@ const MyOrder = () => {
   const [placeholder, setPlacehorder] = useState('상품명 검색');
   const [open, setOpen] = useState(false);
 
-  //오더리스트 들고오기
   useEffect(() => {
     dispatch(orderActions.getOrderList({searchKeyword, currentPage}, "customer"));
   }, [query, searchKeyword, currentPage, dispatch]);
@@ -47,7 +46,6 @@ const MyOrder = () => {
     setOpen(false);
   };
 
-  // 오더리스트가 없다면? 주문한 상품이 없습니다 메세지 보여주기
   return (
     <Container className="status-card-container">
       {loading && (
@@ -94,7 +92,7 @@ const MyOrder = () => {
           onPageChange={handlePageClick}
           pageRangeDisplayed={8}
           pageCount={totalPageNum}
-          forcePage={currentPage - 1} // 1페이지면 여긴 2가됨 (한개씩 +1 되므로 -1해줘야함)
+          forcePage={currentPage - 1}
           previousLabel="< previous"
           renderOnZeroPageCount={null}
           pageClassName="page-item"

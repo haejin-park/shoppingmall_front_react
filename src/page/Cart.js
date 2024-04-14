@@ -3,21 +3,12 @@ import { Alert, Button, Col, Container, Form, Row, Spinner } from "react-bootstr
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import * as types from '../constants/cart.constants';
 import CartProductCard from "../component/CartProductCard";
 import OrderReceipt from "../component/OrderReceipt";
 import SearchBox from "../component/SearchBox";
+import * as types from '../constants/cart.constants';
 import { cartActions } from "../redux/actions/cartAction";
 import "../style/cart.style.css";
-
-/*
-카트 페이지 해야할거
-페이지 8개씩 최신 순 정렬
-체크박스 추가 -> 체크한 만큼 아이템 리스트, 최종 금액 변경
-옵션 변경 버튼 => 사이즈 수정하면 기존 카트 상품 지우고 새로 추가해서 기존에 사이즈가 있다면 수량이 추가되게 
-갯수 수정에 따른 금액 변경 
-삭제
-*/
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -31,16 +22,10 @@ const Cart = () => {
   const [deletedItemIdList, setDeletedItemIdList] = useState([]);
   const [deleteAllError, setDeleteAllError] = useState(false);
 
-  // useEffect(() => {
-  //   console.log('loading',loading);
-  // },[loading])
-
   useEffect(() => { 
-    //url쿼리 읽어오기(query) => 쿼리 값에 맞춰서 상품리스트 가져오기
     dispatch(cartActions.getCartList({searchKeyword, currentPage}));
   }, [query, searchKeyword, currentPage, dispatch]);
 
-  // 개별로 전체 선택 했을 때도 전체 선택 체크 되도록
   useEffect(() => {
     if(checkedItemList.length === cartList.length) {
       dispatch({type:types.CHECKED_ALL, payload:true});
@@ -55,7 +40,6 @@ const Cart = () => {
     }
   }, [checkedItemList]);
 
-  // 페이지가 변경되도록
   useEffect(() => {
     const params = searchKeyword 
     ? new URLSearchParams({searchKeyword, currentPage}) 
@@ -79,8 +63,6 @@ const Cart = () => {
     dispatch({type:types.CHANGE_PAGE_OF_CART, payload:selected + 1});
   };
 
-
-  //삭제 후 체크된 상품 필터링
   const filteredCheckedItemList = (deleteItemIdList) => {
     const updatedCheckedItemList = checkedItemList.filter((checkedItem) => {
       return !deleteItemIdList.includes(checkedItem.items._id);
@@ -91,33 +73,23 @@ const Cart = () => {
     dispatch({type:types.CHECKED_CART_ITEM, payload:{checkedItemList:updatedCheckedItemList, checkedItemTotalPrice:totalPrice}});
   }
 
-  //선택한 상품 삭제
   const deleteCartItemList = (checkedItemIdList) => {
     if(checkedItemIdList.length <= 0) {
       setDeleteAllError(true);
       return; 
     }
-    if(checkedItemIdList) { //체크된 상품 삭제
+    if(checkedItemIdList) { 
       dispatch(cartActions.deleteCartItemList(checkedItemIdList,{searchKeyword, currentPage}));
       filteredCheckedItemList(checkedItemIdList);
     } 
   }
 
-  //더이상 판매하지 않는 삭제된 상품 삭제
   const deleteDeletedProductList = () => { 
     if(deleteCartItemList) {
       dispatch(cartActions.deleteCartItemList(deletedItemIdList,{searchKeyword, currentPage}));
       filteredCheckedItemList(deletedItemIdList); 
     }
   }
-
-/* 
-전체 선택
-체크시 모두 선택 되어있으면 (길이가 같으면) 해제
-체크시 체크 박스 리스트 길이와 카트 리스트 길이가 다르면 
-체크박스를 선택하면 checkedItemList에 cartList가 담긴다
-cartList전체 합으로 totalPrice를 구해서 checkedItemTotalPrice를 계산한다
-*/
 
   const onCheckAllItem = () =>  {
     if(checkedItemList.length === cartList.length) {
@@ -132,7 +104,6 @@ cartList전체 합으로 totalPrice를 구해서 checkedItemTotalPrice를 계산
     }
   };
 
-  
   return (
     <div>
       <Container className="cart-page-container">
@@ -223,7 +194,7 @@ cartList전체 합으로 totalPrice를 구해서 checkedItemTotalPrice를 계산
             onPageChange={handlePageClick}
             pageRangeDisplayed={8}
             pageCount={totalPageNum}
-            forcePage={currentPage - 1} // 1페이지면 여긴 2가됨 (한개씩 +1 되므로 -1해줘야함)
+            forcePage={currentPage - 1} 
             previousLabel="< previous"
             renderOnZeroPageCount={null}
             pageClassName="page-item"

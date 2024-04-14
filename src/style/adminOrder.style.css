@@ -8,6 +8,7 @@
     justify-content: space-between;
     text-align: center;
 }
+
 .order-button-area button{
     width: 96%;
 }
@@ -22,11 +23,11 @@
     border: 1px solid  rgb(127, 127, 127);
  }
 
- .order-detail-dialog-items {
+.order-detail-dialog-items {
     margin-top: 20px;
     font-size: 20px;
     text-align: center;
- }
+}
 
 
 .order-status-drop-down {

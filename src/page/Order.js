@@ -5,8 +5,8 @@ import { useNavigate } from "react-router";
 import OrderReceipt from "../component/OrderReceipt";
 import PaymentForm from "../component/PaymentForm";
 import { orderActions } from "../redux/actions/orderAction";
-import { ccExpiresFormat } from "../utils/number";
 import "../style/order.style.css";
+import { ccExpiresFormat } from "../utils/number";
 
 const Order = () => {
   const dispatch = useDispatch();
@@ -28,21 +28,17 @@ const Order = () => {
     focus: '',
   });
 
-
-  // url로 결제 페이지에 오려할 때 주문리스트가 없으면 이전 페이지로 이동 하도록
   useEffect(() => {
     if(orderItemList.length === 0) navigate(-1);
   },[orderItemList, navigate]);
   
   const handleFormChange = (event) => {
-    //shipInfo에 값 넣어주기
     const {name, value} = event.target;
     setShipInfo({...shipInfo, [name]:value});
 
   };
 
   const handlePaymentInfoChange = (event) => {
-    //카드정보 넣어주기
     const {name, value} = event.target;
     if(name === "expiry"){
       let newValue = ccExpiresFormat(value)
@@ -73,12 +69,8 @@ const Order = () => {
       };          
     })
     const orderList = [{info,items}];
-    
-    //오더 생성하고 주문 완료 페이지로 보내기.
     dispatch(orderActions.createOrder(orderList, cartOrderStatus, navigate));
-
   };
-
 
   return (
     <Container>

@@ -21,15 +21,6 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
   const [hiddenStatusDropdwon, setHiddenStatusDropdown] = useState(false);
   const [visibleReasonDropdwon, setVisibleReasonDropdown] = useState(false);
 
-/*
-주문 상태 선택 드롭 박스 보임 여부
-
-소비자
-=> item 상태 전체가 취소 요청 || 교환요청 || 반품요청 || 환불 요청 || 환불 완료 중 하나이면 체크박스, 주문 상태 선택 드롭박스가 보이게
-
-판매자
-=> item 상태 전체가 배송 완료 || 환불 완료가 아닐 때만 드롭박스 보이게
-*/
   useEffect(() => {
     let bool = false;
     if(mode === "customer") {
@@ -41,23 +32,10 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
         return item.status === "배송 완료" || item.status === "환불 완료"
       });
     } 
-    console.log('bool',bool);
     setHiddenStatusDropdown(bool);
     setHiddenCheckbox(bool);
   }, [mode, selectedOrder])
 
-  /* 
-  주문 상태 사유 선택 드롭 박스 보임 여부
-  체크된게 있고 새로운 주문 상태가 있을 경우 
-
-  소비자 
-  => 보이게 
-
-  관리자
-  => 새로운 주문 상태 리스트 newOrderStatusList에 
-  index가 checkIndexList에 포함되어있고 
-  상태가 환불 요청일 때만 드롭다운 보이게
-  */
   useEffect(() => {
     if (checkedIndexList.length === 0 || newOrderStatusList.length === 0) {
       setVisibleReasonDropdown(false);
@@ -76,21 +54,6 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
   
   },[mode, checkedIndexList, newOrderStatusList]); 
 
-  /*
-  추가해야할거
-  체크박스
-
-  바꿔야할거
-  셀렉트박스 => 드롭다운
-
-  parmas로 보낼거(order조회시 필요) 
-  selectedOrder.data._id
-
-  body로 보낼거
-  items 각각의 _id와 status 리스트
-  */
-
-  // index로 개별체크박스, 전체 체크박스 리스트 만들기
   useEffect(() => {
     checkedIndexList.length === selectedOrder.data.items.length? setCheckedAll(true) : setCheckedAll(false);
   },[checkedIndexList, selectedOrder, dispatch]); 
@@ -115,7 +78,6 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
     }
   };
 
-  // 체크박스 index에 해당하는 주문상태 리스트 업데이트
   const selectOrderStatus = (value) => {
     if (checkedIndexList.length === 0) {
       return;
@@ -128,7 +90,6 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
       return status;
     });
 
-    //새로운 주문 상태만 있는 리스트
     const newOrderStatusList = selectedOrder.data.items.map((_v, index) => {
       if (checkedIndexList.includes(index)) {
         return newStatus;
@@ -176,8 +137,6 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
     handleClose();
   };
   
-  
-
   if (!selectedOrder) {
     return <div>선택된 주문데이터를 조회할 수 없습니다.</div>;
   }
@@ -291,19 +250,6 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
               주문 상태 선택
             </Dropdown.Toggle>
             <Dropdown.Menu className="order-status-drop-down-menu">
-            {/*     
-              선택한 주문 초기 상태에서 체크한 index에 해당하고
-
-              소비자일 때  disabled
-              - !상품 준비 중 => 취소 요청 disabled
-              - !배송중, !배송 완료  => 교환 요청 || 반품 요청 disabled
-
-              관리자일 때 disabled
-              - !상품 준비중, !교환 요청 => 배송중 disabled
-              - !배송중 => 배송완료 disabled
-              - !상품 준비 중, !취소 요청, !교환 요청, !반품 요청 => 환불 요청 disabled
-              - !환불 요청 => 환불 완료 disabled
-            */}
               {mode === "customer" 
                 ? CUSTOMER_ORDER_STATUS.map((status, idx) => (
                   <Dropdown.Item 
@@ -368,7 +314,7 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
               ))
             }
           </Dropdown.Menu>
-        </Dropdown>
+          </Dropdown>
         }
         {orderStatusReasonError && (
           <span className="warning-message ml-2">주문 상태 사유를 선택해주세요</span>

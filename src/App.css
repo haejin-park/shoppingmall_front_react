@@ -407,7 +407,6 @@ input::-webkit-inner-spin-button {
   background-color: transparent;
 }
 
- /* 밑줄 스타일 */
 .category-menu-btn.active {
   border-bottom: 5px solid rgb(230, 55, 55);
 }

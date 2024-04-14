@@ -27,7 +27,6 @@ const SearchBox = ({ placeholder, show, searchValue, setSearchValue }) => {
     if(navigationType === "POP") setSearchValue(searchKeyword)
   }, [navigationType, setSearchValue, searchKeyword]);
 
-  // 관리자 검색창 열릴 때 입력필드 포커스
   useEffect(() => {
     if(inputRef.current)
     inputRef.current.focus();
@@ -36,10 +35,7 @@ const SearchBox = ({ placeholder, show, searchValue, setSearchValue }) => {
   const onChangeHandler = (event) => {
     setSearchValue(event.target.value);
   }
-
-  //각 페이지에서 keyword읽을 수 있게 naviagte에 쿼리스트링 보내주고,
-  //처음 검색할 때 1페이지가 되게 dispatch해주면 
-  //각 페이지에서 page 넣어서 url 바꿔줌
+  
   const onCheckEnter = (event) => {
     if (event.key === "Enter") {
       let currentPath = location.pathname;

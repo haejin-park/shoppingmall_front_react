@@ -57,8 +57,6 @@ const updateOrder = (id, orderItemIdList, orderStatusList, orderStatusReasonList
   }
 };
 
-
-
 export const orderActions = {
   createOrder,
   getOrderList,

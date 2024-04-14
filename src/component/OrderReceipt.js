@@ -13,7 +13,6 @@ const OrderReceipt = ({cartOrderStatus}) => {
   const dispatch = useDispatch();
   const [deletedProductError, setDeletedProductError] = useState(false);
   
-//삭제된 상품 체크 해제시 에러 문구 사라지도록
   useEffect(() => {
     const deletedProductStats = checkedItemList.some(item => item.productData[0].isDeleted)
     if(!deletedProductStats) {
@@ -21,7 +20,6 @@ const OrderReceipt = ({cartOrderStatus}) => {
     }
   },[checkedItemList])
 
-//주문 하기 클릭시 삭제된 상품은 결제할 수 없도록
   const goOrder = () => {
     const deletedProductStats = checkedItemList.some(item => item.productData[0].isDeleted)
     if(deletedProductStats) {

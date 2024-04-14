@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
+import { Dropdown } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useNavigationType, useSearchParams } from "react-router-dom";
 import * as cartTypes from '../constants/cart.constants';
@@ -18,7 +19,6 @@ import { cartActions } from "../redux/actions/cartAction";
 import { userActions } from "../redux/actions/userAction";
 import { transformEnglishSortBy } from "../utils/\bsortBy";
 import { toTransformEnglishCategory } from "../utils/category";
-import { Dropdown } from "react-bootstrap";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -65,7 +65,6 @@ const Navbar = () => {
     }
   }, [navigationType, setSearchValue, searchKeyword, sortBy, dispatch]);
 
-  // 검색창 열릴 때 입력필드 포커스
   useEffect(() => {
     if(inputRef.current)
     inputRef.current.focus();
@@ -118,12 +117,10 @@ const Navbar = () => {
     dispatch({type:productTypes.SELECT_SORT_BY_MAIN_PRODUCT_LIST, payload: "latest"});
   }
 
-  //로그아웃 시 searchValue, searchCategory 세션에 저장
   const goLogout = () => {
     dispatch(userActions.logout(user.email));
   }
 
-  // 로그인 이전유저와 다를 때만 비워지도록 => 로그인 버튼 클릭시 비웠다가 동일 유저면 navigate에 searchValue, selectedCategory추가
   const goLogin = () => {
     setSearchValue('');
     setSelectedCategory('');
@@ -161,7 +158,6 @@ const Navbar = () => {
   const goCategory = (category)=> {
     dispatch({type:cartTypes.CHECKED_CART_ITEM, payload:{checkedItemList:[], checkedItemTotalPrice:0}});
     dispatch({type:orderTypes.SAVE_ORDER_ITEM, payload:{orderItemList:[], totalPrice:0, cartOrderStatus:false}});
-    //카테고리에 따라 리스트 조회할 수 있도록 dispatch 추가, navigate추가 하기
     const searchCategory = toTransformEnglishCategory(category);
     dispatch({type:productTypes.CHANGE_PAGE_OF_MAIN_PRODUCT, payload:1});
     searchKeyword

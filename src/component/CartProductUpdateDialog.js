@@ -7,7 +7,6 @@ const CartProductUpdateDialog = ({ mode, setMode, showDialog, setShowDialog, car
   const { loading, error } = useSelector((state) => state.cart);
 
   const handleClose = () => {
-    //다이얼로그 닫아주기
     setShowDialog(false);
     setMode("");
   };

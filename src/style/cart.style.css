@@ -108,13 +108,16 @@
   .cart-row {
     display: flex;
   }
+
   .product-list-col {
     width: 60%;
-  }   
+  } 
+
   .order-receipt-col {
     width: 40%;
   }
 }
+
 @media (min-width: 768px) {
     .receipt-container{
         position: sticky;  

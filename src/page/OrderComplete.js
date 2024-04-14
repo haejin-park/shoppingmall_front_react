@@ -7,7 +7,6 @@ import "../style/order.style.css";
 const OrderComplete = () => {
   const {orderNum} = useSelector((state) => state.order);
   const navigate = useNavigate();
-  //만약 주문번호가 없는상태로 주문 완료 페이지에 왔다면 다시 이전페이지로 돌아가기
   useEffect(() => {
     if(!orderNum) navigate(-1);
   },[orderNum, navigate])

@@ -20,7 +20,7 @@ const AppRouter = () => {
 
   useEffect(() => {
     if(user && (location.pathname === '/login' || location.pathname === '/register')) {
-      navigate(-1); //이전 페이지 이동
+      navigate(-1); 
     } 
   }, [user, location.pathname, navigate]);
   return (

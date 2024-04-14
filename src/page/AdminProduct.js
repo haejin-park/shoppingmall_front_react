@@ -31,7 +31,6 @@ const AdminProduct = () => {
   ];
   
   useEffect(() => { 
-    //url쿼리 읽어오기(query) => 쿼리 값에 맞춰서 상품리스트 가져오기
     dispatch(productActions.getAdminProductList({searchKeyword, currentPage, sortBy}));
   }, [query, searchKeyword, currentPage, dispatch, sortBy, totalPageNum]);
 
@@ -44,27 +43,21 @@ const AdminProduct = () => {
   }, [searchKeyword, currentPage, navigate]);
 
   const deleteItem = (id) => {
-    //아이템 삭제하기 후 미들웨어에서 다시 조회 함수 호출
     dispatch(productActions.deleteProduct(id,{searchKeyword, currentPage, sortBy}));
   };
 
   const openEditForm = (product) => {
     dispatch({type:types.SET_SELECTED_PRODUCT, payload:product});
-    //edit모드로 설정하고
     setMode('edit');
-    // 아이템 수정다이얼로그 열어주기
     setShowDialog(true);
   };
 
   const handleClickNewItem = () => {
-    //new 모드로 설정하고
     setMode('new');
-    // 다이얼로그 열어주기
     setShowDialog(true);
   };
 
   const handlePageClick = ({ selected }) => {
-    //  쿼리에 페이지값 바꿔주기
     dispatch({type:types.CHANGE_PAGE_OF_ADMIN_PRODUCT, payload:selected + 1});
   };
 
@@ -114,7 +107,7 @@ const AdminProduct = () => {
           onPageChange={handlePageClick}
           pageRangeDisplayed={8}
           pageCount={totalPageNum}
-          forcePage={currentPage - 1} // 1페이지면 여긴 2가됨 (한개씩 +1 되므로 -1해줘야함)
+          forcePage={currentPage - 1}
           previousLabel="< previous"
           renderOnZeroPageCount={null}
           pageClassName="page-item"

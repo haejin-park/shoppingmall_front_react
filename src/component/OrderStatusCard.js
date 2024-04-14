@@ -5,7 +5,6 @@ import { badgeBg } from "../constants/order.constants";
 import { dateFormat } from "../utils/date";
 import { setOrderAndBadgeStatus } from "../utils/status";
 
-// 상태 우선 순위를 가지고 리스트에는 하나만 보여주고,상세 클릭하면 각각 보여주기 
 const OrderStatusCard = ({order, openEditForm}) => {
   const dispatch = useDispatch();
   const [orderStatus, setOrderStatus] = useState();

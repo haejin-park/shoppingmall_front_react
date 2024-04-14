@@ -20,8 +20,6 @@ const CartProductCard = ({ item, checkedAll }) => {
     setTotalPrice(item.productData[0]?.price * item.items.qty)
   },[item.productData, item.items.qty]);
 
-
-  //아이템을 지운다
   const deleteCartItem = (_id) => {
     dispatch(cartActions.deleteCartItem(_id, {searchKeyword, currentPage}));
     const updatedCheckedItemList = checkedItemList.filter(checkedItem => checkedItem.items._id !== _id);
@@ -37,15 +35,6 @@ const CartProductCard = ({ item, checkedAll }) => {
     });
   };
 
-  /*
-    체크한 아이템이 checkedItemList에 있으면 
-    => 체크된 아이템이 아닌것만 filter 해서 checkedItemList 디스패치
-    => 체크된 아이템 금액 빼기 
-
-    체크한 아이템이 checkedItemList에 없으면
-    => 체크된 아이템 checkedItemList에 추가 
-    => 체크된 아이템 금액 더하기
-  */
   const onCheckItem = (item) => {
     const totalPrice = item.productData[0]?.price * item.items.qty;
     const isChecked = checkedItemList.includes(item);
