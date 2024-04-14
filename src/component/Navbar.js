@@ -16,7 +16,9 @@ import * as orderTypes from '../constants/order.constants';
 import * as productTypes from '../constants/product.constants';
 import { cartActions } from "../redux/actions/cartAction";
 import { userActions } from "../redux/actions/userAction";
+import { transformEnglishSortBy } from "../utils/\bsortBy";
 import { toTransformEnglishCategory } from "../utils/category";
+import { Dropdown } from "react-bootstrap";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -27,6 +29,7 @@ const Navbar = () => {
   const searchCategory = query.get("searchCategory") || "";
   const inputRef = useRef(null);
   const { user } = useSelector((state) => state.user);
+  const { mainSortBy:sortBy } = useSelector((state) => state.product);
   const { cartItemCount } = useSelector((state) => state.cart);
   const [loginStatus, setLoginStatus] = useState(true);
   const [searchValue, setSearchValue] = useState("");
@@ -56,8 +59,11 @@ const Navbar = () => {
 
 
   useEffect(() => {
-    if(navigationType === "POP") setSearchValue(searchKeyword)
-  }, [navigationType, setSearchValue, searchKeyword]);
+    if(navigationType === "POP") {
+      setSearchValue(searchKeyword)
+      dispatch({type:productTypes.SELECT_SORT_BY_MAIN_PRODUCT_LIST, payload: sortBy});
+    }
+  }, [navigationType, setSearchValue, searchKeyword, sortBy, dispatch]);
 
   // 검색창 열릴 때 입력필드 포커스
   useEffect(() => {
@@ -109,6 +115,7 @@ const Navbar = () => {
     setSelectedCategory('');
     dispatch({type:productTypes.CHANGE_PAGE_OF_ADMIN_PRODUCT, payload:1});
     navigate(adminProductPath);
+    dispatch({type:productTypes.SELECT_SORT_BY_MAIN_PRODUCT_LIST, payload: "latest"});
   }
 
   //로그아웃 시 searchValue, searchCategory 세션에 저장
@@ -137,6 +144,7 @@ const Navbar = () => {
     dispatch({type:cartTypes.CHECKED_CART_ITEM, payload:{checkedItemList:[], checkedItemTotalPrice:0}});
     dispatch({type:orderTypes.SAVE_ORDER_ITEM, payload:{orderItemList:[], totalPrice:0, cartOrderStatus:false}});
     dispatch({type:orderTypes.CHANGE_PAGE_OF_ORDER, payload:1});
+    dispatch({type:productTypes.SELECT_SORT_BY_MAIN_PRODUCT_LIST, payload:"popularity"});
     navigate(myOrderPath);
   }
 
@@ -146,6 +154,7 @@ const Navbar = () => {
     dispatch({type:cartTypes.CHECKED_CART_ITEM, payload:{checkedItemList:[], checkedItemTotalPrice:0}});
     dispatch({type:orderTypes.SAVE_ORDER_ITEM, payload:{orderItemList:[], totalPrice:0, cartOrderStatus:false}});
     dispatch({type:productTypes.CHANGE_PAGE_OF_MAIN_PRODUCT, payload:1});
+    dispatch({type:productTypes.SELECT_SORT_BY_ADMIN_PRODUCT_LIST, payload: "latest"});
     navigate(mainProductPath);
   }
 
@@ -161,6 +170,11 @@ const Navbar = () => {
     setSelectedCategory(category);
   }
 
+  const selectSortBy = (value) => {
+    const sortBy = transformEnglishSortBy(value)
+    sessionStorage.setItem("prevMainSortBy", sortBy);
+    dispatch({type:productTypes.SELECT_SORT_BY_MAIN_PRODUCT_LIST, payload: sortBy});
+  }
 
   return (
     <div>
@@ -194,6 +208,20 @@ const Navbar = () => {
                 </div>
               ))}
             </div>
+            <Dropdown
+              className="main-side-sort-by-dropdown sort-by"
+              align="start"
+              onSelect={(value) => selectSortBy(value)}
+            >
+            <Dropdown.Toggle variant="light" id="dropdown-basic" align="start">
+              정렬 기준
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+            {productTypes.SORT_BY.map((sort, index) => (
+              <Dropdown.Item key={index} eventKey={sort}>{sort}</Dropdown.Item>
+            ))}
+            </Dropdown.Menu> 
+            </Dropdown>
           </div>
           <div className={`overlay ${overlayStatus ? 'overlay-show' : ''}`}></div>
           <div className="nav-header">
@@ -260,15 +288,6 @@ const Navbar = () => {
       </div>
       {loginStatus && (
         <div className="nav-menu-area">
-          <ul className="menu">
-            {categoryMenuList.map((category, index) => (
-              <li key={index}>
-                <button 
-                  className={`category-menu-btn ${selectedCategory === category ? 'active' : ''}`}
-                  onClick={() => goCategory(category)}>{category}</button>
-              </li>
-            ))}
-          </ul>
           <div className="main-search-box">
             <div className="search-box">
               <FontAwesomeIcon className="search-icon" icon={faSearch} />
@@ -282,6 +301,29 @@ const Navbar = () => {
               />
             </div>
           </div>
+          <ul className="menu">
+            {categoryMenuList.map((category, index) => (
+              <li key={index}>
+                <button 
+                  className={`category-menu-btn ${selectedCategory === category ? 'active' : ''}`}
+                  onClick={() => goCategory(category)}>{category}</button>
+              </li>
+            ))}
+          </ul>
+          <Dropdown
+              className="main-sort-by-dropdown sort-by"
+              align="start"
+              onSelect={(value) => selectSortBy(value)}
+            >
+            <Dropdown.Toggle variant ="" id="dropdown-basic" align="start">
+              정렬 기준
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+            {productTypes.SORT_BY.map((sort, index) => (
+              <Dropdown.Item key={index} eventKey={sort}>{sort}</Dropdown.Item>
+            ))}
+            </Dropdown.Menu> 
+          </Dropdown>
         </div>
       )}
     </div>

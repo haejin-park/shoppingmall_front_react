@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Alert, Col, Container, Row, Spinner } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,9 +11,7 @@ import '../style/mainProduct.style.css';
 const MainProduct = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {loading, error, mainProductList:productList, mainTotalPageNum:totalPageNum, mainCurrentPage:currentPage} = useSelector((state) => state.product);
-  // console.log('totalPageNum',totalPageNum);
-  const [sortBy, setSortBy] = useState("orderOfPurchase");
+  const {loading, error, mainProductList:productList, mainTotalPageNum:totalPageNum, mainCurrentPage:currentPage, mainSortBy:sortBy} = useSelector((state) => state.product);
   const [query, setQuery] = useSearchParams();
   const searchKeyword = query.get("searchKeyword") || "";
   const searchCategory = query.get("searchCategory") || "";

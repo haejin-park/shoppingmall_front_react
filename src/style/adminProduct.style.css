@@ -35,3 +35,19 @@
     color: red;
     padding-right: 10px;
 }
+
+.product-add-btn {
+    height: 40px;
+}
+
+.admin-product-sort-by-and-add-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0px;
+}
+
+.admin-side-sort-by-dropdown {
+    font-weight: bold;
+  }
+  

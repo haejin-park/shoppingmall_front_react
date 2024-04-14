@@ -11,6 +11,8 @@ const initialState = {
   adminCurrentPage: 1,
   selectedProduct: {},
   product: {},
+  mainSortBy: 'popularity',
+  adminSortBy: 'latest'
 };
 
 function productReducer(state = initialState, action) {
@@ -101,6 +103,22 @@ function productReducer(state = initialState, action) {
         error: '',
         product: payload.product
       } 
+
+    case types.SELECT_SORT_BY_MAIN_PRODUCT_LIST:
+      return {
+        ...state,
+        loading: false,
+        error: '',
+        mainSortBy: payload
+      }  
+
+    case types.SELECT_SORT_BY_ADMIN_PRODUCT_LIST:
+      return {
+        ...state,
+        loading: false,
+        error: '',
+        adminSortBy: payload
+      }  
 
     default: 
       return state;  

@@ -4,6 +4,7 @@ import { commonUiActions } from './commonUiAction';
 
 const getMainProductList = (query) => async (dispatch) => {
   try {
+    console.log('query',query);
     dispatch({type:types.GET_MAIN_PRODUCT_LIST_REQUEST});
     const response = await api.get(`/product`, {params: {...query}});
     if(response.status !== 200) throw new Error(response.message);
@@ -17,8 +18,7 @@ const getMainProductList = (query) => async (dispatch) => {
 const getAdminProductList = (query) => async (dispatch) => {
   try {
     dispatch({type:types.GET_ADMIN_PRODUCT_LIST_REQUEST});
-    let options = {params: {...query}};
-    const response = await api.get(`/product`, options);
+    const response = await api.get(`/product`, {params: {...query}});
     if(response.status !== 200) throw new Error(response.message);
     dispatch({type:types.GET_ADMIN_PRODUCT_LIST_SUCCESS, payload: response.data});
   } catch(error) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Container, Spinner } from "react-bootstrap";
+import { Button, Container, Dropdown, Spinner } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -8,14 +8,14 @@ import ProductTable from "../component/ProductTable";
 import * as types from '../constants/product.constants';
 import { productActions } from "../redux/actions/productAction";
 import "../style/adminProduct.style.css";
+import { transformEnglishSortBy } from "../utils/\bsortBy";
 
 const AdminProduct = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {loading, adminProductList:productList, adminTotalPageNum:totalPageNum, adminCurrentPage:currentPage} = useSelector((state) => state.product); 
+  const {loading, adminProductList:productList, adminTotalPageNum:totalPageNum, adminCurrentPage:currentPage, adminSortBy: sortBy} = useSelector((state) => state.product); 
   const [showDialog, setShowDialog] = useState(false);
   const [mode, setMode] = useState("new");
-  const [sortBy, setSortBy] = useState("latest");
   const [query, setQuery] = useSearchParams();
   const searchKeyword = query.get("searchKeyword") || "";
 
@@ -68,6 +68,12 @@ const AdminProduct = () => {
     dispatch({type:types.CHANGE_PAGE_OF_ADMIN_PRODUCT, payload:selected + 1});
   };
 
+  const selectSortBy = (value) => {
+    const sortBy = transformEnglishSortBy(value)
+    sessionStorage.setItem("prevAdminSortBy", sortBy);
+    dispatch({type:types.SELECT_SORT_BY_ADMIN_PRODUCT_LIST, payload: sortBy});
+  }
+
   return (
     <div className="locate-center">
       <Container>
@@ -78,9 +84,25 @@ const AdminProduct = () => {
           </Spinner>
         </div>
         )}
-        <Button className="mt-2 mb-2" onClick={handleClickNewItem}>
-          Add New Item +
-        </Button>
+        <div className="admin-product-sort-by-and-add-btn">
+          <Dropdown
+              className="admin-side-sort-by-dropdown sort-by"
+              align="start"
+              onSelect={(value) => selectSortBy(value)}
+            >
+            <Dropdown.Toggle id="dropdown-basic" align="start">
+              상품 정렬 기준
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+            {types.SORT_BY.map((sort, index) => (
+              <Dropdown.Item key={index} eventKey={sort}>{sort}</Dropdown.Item>
+            ))}
+            </Dropdown.Menu> 
+          </Dropdown>
+          <Button className="product-add-btn" onClick={handleClickNewItem}>
+            Add New Item +
+          </Button>
+        </div>
         <ProductTable
           header={tableHeader}
           productList={productList}

@@ -34,6 +34,7 @@ const AdminNavbar = () => {
   const goMainProduct = () => {
     setSearchValue('')
     dispatch({type:productTypes.CHANGE_PAGE_OF_MAIN_PRODUCT, payload:1});
+    dispatch({type:productTypes.SELECT_SORT_BY_MAIN_PRODUCT_LIST, payload:"popularity"});
     navigate(mainProductPath);
     
   }
@@ -43,6 +44,8 @@ const AdminNavbar = () => {
     setSearchValue('')
     setPlacehorder('상품명 검색')
     dispatch({type:productTypes.CHANGE_PAGE_OF_ADMIN_PRODUCT, payload:1});
+    dispatch({type:productTypes.SELECT_SORT_BY_ADMIN_PRODUCT_LIST, payload: "latest"});
+
     navigate(adminProductPath);
   };
 
@@ -68,19 +71,18 @@ const AdminNavbar = () => {
             show={show}
           />
         </div>
-        <div className="admin-side-navbar-item">Admin Account</div>
         <ul className="side-navbar-area">
           <li
             className="admin-side-navbar-item"
             onClick={() => goAdminProduct()}
           >
-            product
+            상품 관리
           </li>
           <li
             className="admin-side-navbar-item"
             onClick={() => goAdminOrder()}
           >
-            order
+            주문 관리
           </li>
         </ul>
       </div>

@@ -24,4 +24,8 @@ export const DELETE_PRODUCT_ERROR = "DELETE_PRODUCT__ERROR";
 export const CATEGORY = ["Man", "Woman", "Top", "Bottom", "Jacket", "Shirts", "Blouse", "Pants", "Skirt", "Dress"];
 export const STATUS = ["active", "disactive"];
 export const SIZE = ["XS", "S", "M", "L", "XL"];
+export const SORT_BY = ["인기순", "최신순"];
+export const SELECT_SORT_BY_ADMIN_PRODUCT_LIST = "SELECT_SORT_BY_ADMIN_PRODUCT_LIST";
+export const SELECT_SORT_BY_MAIN_PRODUCT_LIST = "SELECT_SORT_BY_MAIN_PRODUCT_LIST";
+
 
