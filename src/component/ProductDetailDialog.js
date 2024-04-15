@@ -268,8 +268,7 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
             <Form.Label>Category</Form.Label>
             <Form.Select
               multiple
-              onClick={onHandleCategory}
-              // onChange={onHandleCategory}
+              onChange={onHandleCategory}
               value={formData.category}
               required
             >
