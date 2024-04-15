@@ -252,7 +252,7 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
             </Dropdown.Menu>
           </Dropdown>          
           {selectedOption?.map((item, index) => (
-            <div className="selected-option-box" key={index}>
+            <div className="selected-option-div" key={index}>
               <Row className="selected-option-row">
                 <Col sm={2} xs={2}>
                   {item[0]}
