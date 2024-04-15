@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Alert, Button, Container, Form, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
+import * as types from '../constants/user.constants';
 import { userActions } from "../redux/actions/userAction";
 import "../style/register.style.css";
+
 const Register = () => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
@@ -22,6 +23,7 @@ const Register = () => {
 
   const register = (event) => {
     event.preventDefault();
+    dispatch({type:types.DELETE_USER_ERROR});
     const {email, name, password, confirmPassword, policy} = formData;
       if(password !== confirmPassword){
         setPasswordError("비밀번호가 일치하지 않습니다.");
@@ -38,7 +40,6 @@ const Register = () => {
 
   const handleChange = (event) => {
     event.preventDefault();
-    // 값을 읽어서 FormData에 넣어주기
     const {id, value, checked} = event.target;
     if(id === "policy") {
       setFormData({...formData, [id]:checked});
@@ -47,10 +48,10 @@ const Register = () => {
     }
   };
 
-  useEffect(() => {
-
-  }, [loading, error])
-
+  const  goBackLogin = () => {
+    dispatch({type:types.DELETE_USER_ERROR});
+    navigate("/login");
+  }
 return (
   <Container className="register-area">
     {loading && (
@@ -124,11 +125,12 @@ return (
             isInvalid={policyError}
           />
         </Form.Group>
-        <Link to="/login">로그인으로 돌아가기</Link>
+        <div>
+        <Button  variant="danger" type="submit">회원가입</Button>
+        <Button className="ml-2" variant="danger" onClick={goBackLogin}>로그인으로 돌아가기</Button>
+        </div>
       </div>
-      <Button variant="danger" type="submit">
-        회원가입
-      </Button>
+
     </Form>
   </Container>
   );
