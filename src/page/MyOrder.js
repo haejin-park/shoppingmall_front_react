@@ -105,7 +105,6 @@ const MyOrder = () => {
           breakLinkClassName="page-link"
           containerClassName="pagination"
           activeClassName="active"
-          className="display-center list-style-none mt-2"
         />
       </Row>
       {open && <OrderDetailDialog open={open} handleClose={handleClose} mode="customer" />}

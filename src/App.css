@@ -422,3 +422,8 @@ input::-webkit-inner-spin-button {
 .warning-message{
   color: red;
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+}

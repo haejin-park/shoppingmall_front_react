@@ -105,7 +105,6 @@ const MainProduct = () => {
               breakLinkClassName="page-link"
               containerClassName="pagination"
               activeClassName="active"
-              className="display-center list-style-none"
             />
         </Row>
       </Container>
