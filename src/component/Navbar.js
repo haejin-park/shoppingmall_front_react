@@ -17,8 +17,8 @@ import * as orderTypes from '../constants/order.constants';
 import * as productTypes from '../constants/product.constants';
 import { cartActions } from "../redux/actions/cartAction";
 import { userActions } from "../redux/actions/userAction";
-import { transformEnglishSortBy } from "../utils/\bsortBy";
 import { toTransformEnglishCategory } from "../utils/category";
+import { transformEnglishSortBy } from "../utils/sortBy";
 
 const Navbar = () => {
   const dispatch = useDispatch();

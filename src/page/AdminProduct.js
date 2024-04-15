@@ -8,7 +8,7 @@ import ProductTable from "../component/ProductTable";
 import * as types from '../constants/product.constants';
 import { productActions } from "../redux/actions/productAction";
 import "../style/adminProduct.style.css";
-import { transformEnglishSortBy } from "../utils/\bsortBy";
+import { transformEnglishSortBy } from "../utils/sortBy";
 
 const AdminProduct = () => {
   const dispatch = useDispatch();
