@@ -13,7 +13,7 @@ const MainProduct = () => {
   const navigate = useNavigate();
   const navigationType = useNavigationType();
   const {loading, error, mainProductList:productList, mainTotalPageNum:totalPageNum, mainCurrentPage:currentPage, mainSortBy:sortBy} = useSelector((state) => state.product);
-  const [query, setQuery] = useSearchParams();
+  const [query] = useSearchParams();
   const searchKeyword = query.get("searchKeyword") || "";
   const searchCategory = query.get("searchCategory") || "";
   const prevUserEmail = sessionStorage.getItem("prevUserEmail");

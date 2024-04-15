@@ -8,7 +8,7 @@ import { orderActions } from "../redux/actions/orderAction";
 
 const OrderDetailDialog = ({ open, handleClose, mode }) => {
   const dispatch = useDispatch();
-  const [query, setQuery] = useSearchParams(); 
+  const [query] = useSearchParams();
   const searchKeyword = query.get("searchKeyword") || ''; 
   const {error, selectedOrder, currentPage} = useSelector((state) => state.order);
   const [orderStatusList, setOrderStatusList] = useState(selectedOrder.data.items.map((item) => item.status));

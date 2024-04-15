@@ -18,7 +18,7 @@ const SearchBox = ({ placeholder, show, searchValue, setSearchValue }) => {
   const cartPath ='/cart';
   const inputRef = useRef(null);
   const navigationType = useNavigationType();
-  const [query, setQuery] = useSearchParams();
+  const [query] = useSearchParams();
   const searchKeyword = query.get("searchKeyword") || "";
   const searchCategory = query.get("searchCategory") || "";
 

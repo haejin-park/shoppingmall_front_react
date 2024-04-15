@@ -25,7 +25,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const navigationType = useNavigationType();
-  const [query, setQuery] = useSearchParams();
+  const [query] = useSearchParams();
   const searchKeyword = query.get("searchKeyword") || "";
   const searchCategory = query.get("searchCategory") || "";
   const inputRef = useRef(null);

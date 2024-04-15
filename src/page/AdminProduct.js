@@ -16,7 +16,7 @@ const AdminProduct = () => {
   const {loading, adminProductList:productList, adminTotalPageNum:totalPageNum, adminCurrentPage:currentPage, adminSortBy: sortBy} = useSelector((state) => state.product); 
   const [showDialog, setShowDialog] = useState(false);
   const [mode, setMode] = useState("new");
-  const [query, setQuery] = useSearchParams();
+  const [query] = useSearchParams();
   const searchKeyword = query.get("searchKeyword") || "";
   const navigationType = useNavigationType();
   const prevAdminSortBy = sessionStorage.getItem("prevAdminSortBy");

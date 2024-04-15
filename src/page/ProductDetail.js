@@ -12,7 +12,7 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-  const [query, setQuery] = useSearchParams(); 
+  const [query] = useSearchParams(); 
   const searchKeyword = query.get("searchKeyword") || ''; 
   const { user } = useSelector((state) => state.user);
   const { product, loading, error } = useSelector((state) => state.product);

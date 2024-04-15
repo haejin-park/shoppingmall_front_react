@@ -14,7 +14,7 @@ const AdminOrder = () => {
   const navigate = useNavigate();
   const {loading, orderList, totalPageNum, currentPage} = useSelector((state) => state.order);
   const [open, setOpen] = useState(false);
-  const [query, setQuery] = useSearchParams();
+  const [query] = useSearchParams();
   const searchKeyword = query.get("searchKeyword") || "";
 
   const tableHeader = [

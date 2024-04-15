@@ -26,7 +26,7 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
   const [stockError, setStockError] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [priceError, setPriceError] = useState(false);
-  const [query, setQuery] = useSearchParams();
+  const [query] = useSearchParams();
   const searchKeyword = query.get("searchKeyword") || "";
 
 

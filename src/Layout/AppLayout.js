@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigationType } from "react-router";
+import { useLocation } from "react-router";
 import AdminNavbar from "../component/AdminNavbar";
 import Navbar from "../component/Navbar";
 import ToastMessage from "../component/ToastMessage";

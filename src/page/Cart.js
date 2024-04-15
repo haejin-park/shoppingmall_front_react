@@ -14,10 +14,9 @@ const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {loading, error, cartList, checkedItemList, checkedAll, totalPageNum, currentPage} = useSelector((state) => state.cart);
-  const [query, setQuery] = useSearchParams();
+  const [query] = useSearchParams();
   const searchKeyword = query.get("searchKeyword") || "";
   const [searchValue, setSearchValue] = useState("");
-  const [placeholder, setPlacehorder] = useState('상품명 검색');
   const [deletedStatus, setDeletedStatus] = useState(false);
   const [deletedItemIdList, setDeletedItemIdList] = useState([]);
   const [deleteAllError, setDeleteAllError] = useState(false);
@@ -125,7 +124,7 @@ const Cart = () => {
           <Col xs={12} className="product-list-col">
             <div className="common-search-box">
               <SearchBox 
-                placeholder={placeholder}
+                placeholder="상품명 검색"
                 searchValue={searchValue} 
                 setSearchValue={setSearchValue}
               />

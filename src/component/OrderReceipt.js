@@ -14,15 +14,15 @@ const OrderReceipt = ({cartOrderStatus}) => {
   const [deletedProductError, setDeletedProductError] = useState(false);
   
   useEffect(() => {
-    const deletedProductStats = checkedItemList.some(item => item.productData[0].isDeleted)
-    if(!deletedProductStats) {
+    const deletedProductStatus = checkedItemList.some(item => item.productData[0].isDeleted)
+    if(!deletedProductStatus) {
       setDeletedProductError(false);
     }
   },[checkedItemList])
 
   const goOrder = () => {
-    const deletedProductStats = checkedItemList.some(item => item.productData[0].isDeleted)
-    if(deletedProductStats) {
+    const deletedProductStatus = checkedItemList.some(item => item.productData[0].isDeleted)
+    if(deletedProductStatus) {
       setDeletedProductError(true);
       return;
     }

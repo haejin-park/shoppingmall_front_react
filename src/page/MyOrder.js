@@ -14,10 +14,9 @@ const MyOrder = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {loading, error, orderList, totalPageNum, currentPage} = useSelector((state) => state.order);
-  const [query, setQuery] = useSearchParams(); 
+  const [query] = useSearchParams(); 
   const searchKeyword = query.get("searchKeyword") || ''; 
   const [searchValue, setSearchValue] = useState("");
-  const [placeholder, setPlacehorder] = useState('상품명 검색');
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -65,7 +64,7 @@ const MyOrder = () => {
       <Row>
         <div className="common-search-box">
           <SearchBox 
-            placeholder={placeholder}
+            placeholder="상품명 검색"
             searchValue={searchValue} 
             setSearchValue={setSearchValue}
           />
