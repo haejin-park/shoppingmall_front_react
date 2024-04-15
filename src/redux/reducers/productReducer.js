@@ -44,7 +44,6 @@ function productReducer(state = initialState, action) {
     case types.CREATE_PRODUCT_SUCCESS:
     case types.UPDATE_PRODUCT_SUCCESS:
     case types.DELETE_PRODUCT_SUCCESS:
-    case types.DELETE_PRODUCT_ERROR:
       return {
         ...state,
         loading: false,
@@ -121,6 +120,12 @@ function productReducer(state = initialState, action) {
         error: '',
         adminSortBy: payload
       }  
+
+    case types.DELETE_PRODUCT_ERROR:
+      return {
+        ...state,
+        error: ''
+      }
 
     default: 
       return state;  

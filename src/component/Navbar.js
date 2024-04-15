@@ -15,6 +15,7 @@ import { useLocation, useNavigate, useNavigationType, useSearchParams } from "re
 import * as cartTypes from '../constants/cart.constants';
 import * as orderTypes from '../constants/order.constants';
 import * as productTypes from '../constants/product.constants';
+import * as userTypes from '../constants/user.constants';
 import { cartActions } from "../redux/actions/cartAction";
 import { userActions } from "../redux/actions/userAction";
 import { toTransformEnglishCategory } from "../utils/category";
@@ -28,7 +29,7 @@ const Navbar = () => {
   const searchKeyword = query.get("searchKeyword") || "";
   const searchCategory = query.get("searchCategory") || "";
   const inputRef = useRef(null);
-  const { user } = useSelector((state) => state.user);
+  const { user, error:userError } = useSelector((state) => state.user);
   const { mainSortBy:sortBy } = useSelector((state) => state.product);
   const { cartItemCount } = useSelector((state) => state.cart);
   const [loginStatus, setLoginStatus] = useState(true);
@@ -152,6 +153,7 @@ const Navbar = () => {
     const prevMainSortBy = sessionStorage.getItem("prevMainSortBy");
     if(prevMainSortBy) sessionStorage.removeItem("prevMainSortBy");
     dispatch({type:productTypes.SELECT_SORT_BY_MAIN_PRODUCT_LIST, payload: "popularity"});
+    if(userError) dispatch({type:userTypes.DELETE_USER_ERROR});
     dispatch({type:cartTypes.CHECKED_CART_ITEM, payload:{checkedItemList:[], checkedItemTotalPrice:0}});
     dispatch({type:orderTypes.SAVE_ORDER_ITEM, payload:{orderItemList:[], totalPrice:0, cartOrderStatus:false}});
     dispatch({type:productTypes.CHANGE_PAGE_OF_MAIN_PRODUCT, payload:1});

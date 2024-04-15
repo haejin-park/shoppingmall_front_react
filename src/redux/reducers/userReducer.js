@@ -62,6 +62,13 @@ function userReducer(state = initialState, action) {
         user: null,
         token: ''
       }    
+
+      case types.DELETE_USER_ERROR:
+        return {
+          ...state,
+          error: '',
+        }
+  
     
     default: 
       return state; 

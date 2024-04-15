@@ -2,7 +2,8 @@ import { GoogleLogin } from '@react-oauth/google';
 import React, { useState } from "react";
 import { Alert, Button, Container, Form, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import * as types from '../constants/user.constants';
 import { userActions } from "../redux/actions/userAction";
 import "../style/login.style.css";
 
@@ -15,12 +16,19 @@ const Login = () => {
 
   const loginWithEmail = (event) => {
     event.preventDefault();
+    dispatch({type:types.DELETE_USER_ERROR});
     if(email && password) dispatch(userActions.loginWithEmail(email, password, navigate));
   };
 
   const handleGoogleLogin = async (googleData) => {
+    dispatch({type:types.DELETE_USER_ERROR});
     dispatch(userActions.loginWithGoogle({googleToken: googleData.credential}, navigate));
   };
+  
+  const goRegister = () => {
+    dispatch({type:types.DELETE_USER_ERROR});
+    navigate("/register");
+  }
 
   return (
     <Container className="login-area">
@@ -60,14 +68,9 @@ const Login = () => {
           />
         </Form.Group>
         <div className="display-space-between login-button-area">
-          <Button variant="danger" type="submit">
-            Login
-          </Button>
-          <div>
-            아직 계정이 없으세요? <Link to="/register">회원가입 하기</Link>{" "}
-          </div>
+          <Button variant="danger" type="submit">Login</Button> 
+          <Button variant="danger" onClick={goRegister}>회원가입 하기</Button>
         </div>
-
         <div className="diffrent-account-login">
           <p>-외부 계정으로 로그인하기-</p>
           <div className="display-center">
