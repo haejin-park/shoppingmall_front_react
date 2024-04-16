@@ -5,7 +5,7 @@
   "main": "test.js",
   "scripts": { 
     "dev": "cross-env NODE_ENV=development react-scripts start",
-    "prod": "cross-env NODE_ENV=production react-script start",
+    "prod": "cross-env NODE_ENV=production react-scripts start",
     "build": "cross-env NODE_ENV=production CI=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
