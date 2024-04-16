@@ -8,7 +8,6 @@ let backURL = process.env.NODE_ENV === 'production'
 
 const api = axios.create({
   baseURL: backURL,
-  withCredentials : true,
   headers: {
     "Content-Type": "application/json",
     "authorization": token? `Bearer ${token}` : undefined
