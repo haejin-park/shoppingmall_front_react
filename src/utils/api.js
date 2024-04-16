@@ -3,7 +3,7 @@ import axios from "axios";
 const token = sessionStorage.getItem("token");
 
 let backURL = process.env.NODE_ENV === 'production' 
-?  `${process.env.REACT_APP_BACKEND_PROXY}/api`
+?  `${process.env.REACT_APP_BACK_PROXY}/api`
 : `${process.env.REACT_APP_BACK_DEV_URL}/api`
 
 const api = axios.create({
