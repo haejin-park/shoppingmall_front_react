@@ -41,12 +41,15 @@ body{
   justify-content: space-between;
 }
 
-.mobile-search-icon {
+.main-search-icon {
   visibility: hidden;
 }
 
-.burger-menu{
+.main-burger-menu, .no-main-burger-menu {
   margin-left: 20px;
+} 
+
+.main-burger-menu{
   visibility: hidden;
 }
 
@@ -295,11 +298,11 @@ body{
 }
 
 @media screen and (max-width: 1200px) {
-  .mobile-search-icon {
+  .main-search-icon {
     visibility:visible;
   }
 
-  .burger-menu{
+  .main-burger-menu{
     visibility:visible;
   }
   .nav-menu-area  {

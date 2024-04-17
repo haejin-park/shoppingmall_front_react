@@ -209,34 +209,53 @@ const Navbar = () => {
                 </div>
               ))}
             </div>
-            <Dropdown
-              className="main-side-sort-by-dropdown sort-by"
-              align="start"
-              onSelect={(value) => selectSortBy(value)}
-            >
-            <Dropdown.Toggle variant="light" id="dropdown-basic" align="start">
-              정렬 기준
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-            {productTypes.SORT_BY.map((sort, index) => (
-              <Dropdown.Item key={index} eventKey={sort}>{sort}</Dropdown.Item>
-            ))}
-            </Dropdown.Menu> 
-            </Dropdown>
+            {location.pathname === mainProductPath &&
+              <Dropdown
+                className="main-side-sort-by-dropdown sort-by"
+                align="start"
+                onSelect={(value) => selectSortBy(value)}
+              >
+                <Dropdown.Toggle variant="light" id="dropdown-basic" align="start">
+                  정렬 기준
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                {productTypes.SORT_BY.map((sort, index) => (
+                  <Dropdown.Item key={index} eventKey={sort}>{sort}</Dropdown.Item>
+                ))}
+                </Dropdown.Menu> 
+              </Dropdown>
+            }
           </div>
           <div className={`overlay ${overlayStatus ? 'overlay-show' : ''}`}></div>
           <div className="nav-header">
-            <div className="burger-menu">
-              <FontAwesomeIcon icon={faBars} onClick={() => handleOpen(250)} />
-            </div>
+            {location.pathname === mainProductPath &&
+              <div className="main-burger-menu">
+                <FontAwesomeIcon icon={faBars} onClick={() => handleOpen(250)} />
+              </div>
+            }
+            {location.pathname !== mainProductPath &&
+              <div className="no-main-burger-menu">
+                <FontAwesomeIcon icon={faBars} onClick={() => handleOpen(250)} />
+              </div>
+            }
             <div>
               <div className="display-flex">
-                <div className="nav-function mobile-search-icon" onClick={() => handleOpen(250)}>
+                {location.pathname === mainProductPath &&
+                 <div onClick={() => handleOpen(250)} className='nav-function main-search-icon'>
                   <FontAwesomeIcon icon={faSearch} />
                   {!isMobile && (
                       <span style={{ cursor: "pointer" }}>상품 검색</span>
                   )}
                 </div>
+                }
+                {location.pathname !== mainProductPath && 
+                 <div onClick={() => handleOpen(250)} className='nav-function'>
+                  <FontAwesomeIcon icon={faSearch} />
+                  {!isMobile && (
+                      <span style={{ cursor: "pointer" }}>상품 검색</span>
+                  )}
+                </div>
+                }
                 {user && user.level === "admin" && (
                   <div onClick={() => goAdminProduct()} className="nav-function">
                     <FontAwesomeIcon icon={faUser} />
@@ -287,7 +306,7 @@ const Navbar = () => {
           <img width={100} src="/image/hm-logo.png" alt="hm-logo.png" />
         </div>
       </div>
-      {loginStatus && (
+      {location.pathname === mainProductPath && (
         <Container className="nav-menu-area">
           <Dropdown
               className="main-sort-by-dropdown sort-by"
