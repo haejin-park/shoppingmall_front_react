@@ -309,9 +309,6 @@ body{
   .nav-header{
     margin-bottom:10px;
   }
-  .nav-logo{
-    margin-bottom: 0px;
-  }
 
   .side-menu-list {
     display: flex;
