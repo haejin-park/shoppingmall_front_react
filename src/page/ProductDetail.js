@@ -216,10 +216,10 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
         </div>
       )}
       <Row>
-        <Col sm={6}>
+        <Col md={6}>
           <img src={product.image} className="w-100" alt={product.name} />
         </Col>
-        <Col className="product-info-area" sm={6}>
+        <Col className="product-info-area" md={6}>
           <div className="product-info">{product.name}</div>
           <div className="product-info">₩ {product.price}</div>
           <div className="product-info">{product.description}</div>
