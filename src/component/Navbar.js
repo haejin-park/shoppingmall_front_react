@@ -178,7 +178,7 @@ const Navbar = () => {
   }
 
   return (
-    <Container>
+    <div>
       {loginStatus && ( 
         <div>
           <div className="side-menu" style={{ width }}>
@@ -288,29 +288,7 @@ const Navbar = () => {
         </div>
       </div>
       {loginStatus && (
-        <div className="nav-menu-area">
-          <div className="main-search-box">
-            <div className="search-box">
-              <FontAwesomeIcon className="search-icon" icon={faSearch} />
-              <input
-                ref={inputRef}
-                type="text"
-                placeholder="상품명 검색"
-                onKeyPress={onCheckEnter}
-                onChange={onChangeHandler}
-                value={searchValue}
-              />
-            </div>
-          </div>
-          <ul className="menu">
-            {categoryMenuList.map((category, index) => (
-              <li key={index}>
-                <button 
-                  className={`category-menu-btn ${selectedCategory === category ? 'active' : ''}`}
-                  onClick={() => goCategory(category)}>{category}</button>
-              </li>
-            ))}
-          </ul>
+        <Container className="nav-menu-area">
           <Dropdown
               className="main-sort-by-dropdown sort-by"
               align="start"
@@ -325,9 +303,32 @@ const Navbar = () => {
             ))}
             </Dropdown.Menu> 
           </Dropdown>
-        </div>
+
+          <ul className="menu">
+            {categoryMenuList.map((category, index) => (
+              <li key={index}>
+                <button 
+                  className={`category-menu-btn ${selectedCategory === category ? 'active' : ''}`}
+                  onClick={() => goCategory(category)}>{category}</button>
+              </li>
+            ))}
+          </ul>
+          <div className="main-search-box">
+            <div className="search-box">
+              <FontAwesomeIcon className="search-icon" icon={faSearch} />
+              <input
+                ref={inputRef}
+                type="text"
+                placeholder="상품명 검색"
+                onKeyPress={onCheckEnter}
+                onChange={onChangeHandler}
+                value={searchValue}
+              />
+            </div>
+          </div>
+        </Container>
       )}
-    </Container>
+    </div>
   );
 };
 

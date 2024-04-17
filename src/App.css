@@ -7,7 +7,7 @@ body{
   display:flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 40px;
+  margin-top: 20px;
 }
 
 .nav-header .nav-function {
@@ -38,7 +38,7 @@ body{
 
 .nav-menu-area{
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .mobile-search-icon {
@@ -58,8 +58,6 @@ body{
 
 .main-sort-by-dropdown {
   margin-top: 20px;
-  left:13%;
-  position: absolute;
 }
 
 .main-side-sort-by-dropdown {
@@ -77,8 +75,7 @@ body{
 
 .main-search-box{
   margin-top: 20px;
-  right: 13%;
-  position: absolute;
+  height: 30px;
   border-bottom: 1px solid black
 }
 
@@ -308,11 +305,8 @@ body{
   .nav-menu-area  {
     display: none;
   }
-  .nav-function:last-child{
-    margin-right: 0px;
-  }
+
   .nav-header{
-    margin-top: 20px;
     margin-bottom:10px;
   }
   .nav-logo{
