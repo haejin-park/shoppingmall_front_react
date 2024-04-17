@@ -9,7 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
-import { Dropdown } from "react-bootstrap";
+import { Container, Dropdown } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useNavigationType, useSearchParams } from "react-router-dom";
 import * as cartTypes from '../constants/cart.constants';
@@ -178,7 +178,7 @@ const Navbar = () => {
   }
 
   return (
-    <div>
+    <Container>
       {loginStatus && ( 
         <div>
           <div className="side-menu" style={{ width }}>
@@ -327,7 +327,7 @@ const Navbar = () => {
           </Dropdown>
         </div>
       )}
-    </div>
+    </Container>
   );
 };
 

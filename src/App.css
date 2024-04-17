@@ -7,8 +7,6 @@ body{
   display:flex;
   justify-content: space-between;
   align-items: center;
-  margin-right: 20px;
-  margin-right: 12%;
   margin-top: 40px;
 }
 
@@ -316,7 +314,6 @@ body{
   .nav-header{
     margin-top: 20px;
     margin-bottom:10px;
-    margin-right: 2.5%;
   }
   .nav-logo{
     margin-bottom: 0px;
