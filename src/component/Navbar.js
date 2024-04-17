@@ -303,7 +303,7 @@ const Navbar = () => {
               onSelect={(value) => selectSortBy(value)}
             >
             <Dropdown.Toggle variant="" id="dropdown-basic" align="start">
-              정렬 기준
+              상품 정렬
             </Dropdown.Toggle>
             <Dropdown.Menu>
             {productTypes.SORT_BY.map((sort, index) => (

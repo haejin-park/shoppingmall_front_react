@@ -18,14 +18,14 @@ const OrderTable = ({ index, order, header, openEditForm }) => {
   return (
     <div className="overflow-x">
       <Table striped bordered hover>
-        <thead>
+        <thead className="table-header">
           <tr>
             {header.map((title) => (
               <th key={title}>{title}</th>
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="table-data">
           <tr key={order.data._id} onClick={() => openEditForm(order)}>
             <td>{index}</td>
             <td>{order.data.info.orderNum}</td>

@@ -58,6 +58,19 @@
     width: 95%;
 }
 
-.admin-order-table {
-    margin-top: 15px;
+.admin-order-div {
+    display: flex;
+    flex-direction: column;
 }
+
+.admin-order-search-box{
+    border-bottom: 1px solid rgb(0, 0, 0);
+    margin: 20px 0px; 
+}
+  
+.admin-order-search-box input {
+    width: 95%;
+    margin-left:5px;
+    padding: 5px;
+}
+  

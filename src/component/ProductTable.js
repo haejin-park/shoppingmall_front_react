@@ -6,7 +6,7 @@ const ProductTable = ({ header, productList, deleteItem, openEditForm }) => {
     <div className="overflow-x">
       {productList?.length > 0 ? (
         <Table striped bordered hover>
-          <thead>
+          <thead className="table-header">
             <tr>
               {header.map((title, index) => (
                 <th key={index}>{title}</th>
@@ -14,36 +14,36 @@ const ProductTable = ({ header, productList, deleteItem, openEditForm }) => {
             </tr>
           </thead>
             {productList?.map((item, index) => (
-              <tbody key={index}>
+              <tbody className="table-data" key={index}>
                 <tr>
-                  <th>{index}</th>
-                  <th>{item.sku}</th>
-                  <th style={{ minWidth: "100px" }}>{item.name}</th>
-                  <th>{item.price.toLocaleString()}</th>
-                  <th>
+                  <td>{index}</td>
+                  <td>{item.sku}</td>
+                  <td className="product-table-item-name">{item.name}</td>
+                  <td>{item.price.toLocaleString()}</td>
+                  <td>
                     {Object.keys(item.stock).map((size, index) => (
                       <div key={index}>
                         {size}:{item.stock[size]}
                       </div>
                     ))}
-                  </th>
-                  <th>
+                  </td>
+                  <td>
                     <img src={item.image} width={100} alt={item.image} />
-                  </th>
-                  <th>{item.status}</th>
-                  <th style={{ minWidth: "100px" }}>
+                  </td>
+                  <td>{item.status}</td>
+                  <td className="product-table-btn">
                     <Button
                       size="sm"
                       variant="danger"
                       onClick={() => deleteItem(item._id)}
-                      className="mr-1"
+                      className="product-table-delete-btn"
                     >
-                      -
+                      삭제
                     </Button>
                     <Button size="sm" onClick={() => openEditForm(item)}>
-                      Edit
+                      수정
                     </Button>
-                  </th>
+                  </td>
                 </tr>
               </tbody>
             ))}

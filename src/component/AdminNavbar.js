@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as orderTypes from '../constants/order.constants';
 import * as productTypes from '../constants/product.constants';
-import SearchBox from "./SearchBox";
 
 const AdminNavbar = () => {
   const dispatch = useDispatch();
@@ -12,7 +11,6 @@ const AdminNavbar = () => {
   const [show, setShow] = useState(false);
   const [tabletSize, setTabletwSize] = useState(window.innerWidth <= 992);
   const [searchValue, setSearchValue] = useState("");
-  const [placeholder, setPlacehorder] = useState('상품명 검색');
   const adminOrderPath ='/admin/order';
   const adminProductPath = '/admin/product';
   const mainProductPath = '/';
@@ -42,7 +40,6 @@ const AdminNavbar = () => {
   const goAdminProduct = () => {
     setShow(false);
     setSearchValue('')
-    setPlacehorder('상품명 검색')
     const prevAdminSortBy = sessionStorage.getItem("prevAdminSortBy");
     if(prevAdminSortBy) sessionStorage.removeItem("prevAdminSortBy");
     dispatch({type:productTypes.SELECT_SORT_BY_ADMIN_PRODUCT_LIST, payload: "latest"});
@@ -53,7 +50,6 @@ const AdminNavbar = () => {
   const goAdminOrder = () => {
     setShow(false);
     setSearchValue('')
-    setPlacehorder('주문 번호 검색')
     dispatch({type:orderTypes.CHANGE_PAGE_OF_ORDER, payload:1});
     navigate(adminOrderPath);
   };
@@ -63,14 +59,6 @@ const AdminNavbar = () => {
       <div className="admin-side-navbar-content">
         <div onClick={() => goMainProduct()}>
           <img width={100} src="/image/hm-logo.png" alt="hm-logo.png" />
-        </div>
-        <div className="mt-2 admin-search-box">
-          <SearchBox 
-            placeholder={placeholder}
-            searchValue={searchValue} 
-            setSearchValue={setSearchValue}
-            show={show}
-          />
         </div>
         <ul className="side-navbar-area">
           <li

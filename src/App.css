@@ -100,16 +100,6 @@ body{
   color: white
 }
 
-.admin-search-box{
-  border-bottom: 1px solid rgb(0, 0, 0);
-  margin-bottom: 10%;  
-}
-
-.admin-search-box input {
-  margin-left:5px;
-  padding: 5px;
-}
-
 .common-search-box{
   border-bottom: 1px solid rgb(0, 0, 0);
   margin-bottom: 3%;  
@@ -118,6 +108,7 @@ body{
 .common-search-box input {
   margin-left:5px;
   padding: 5px;
+  width: 95%;
 }
 
 .card{
@@ -351,8 +342,6 @@ body{
   .main-sort-by-dropdown {
     margin-top: 0px;
   }
-  
-
 }
 
 @media screen and (max-width: 992px) {
@@ -401,7 +390,6 @@ body{
   .card:hover{
     transform: scale(1.01);
   }
-  
 }
 
 .display-flex{
@@ -455,3 +443,9 @@ input::-webkit-inner-spin-button {
   display: flex;
   justify-content: center;
 }
+
+.table-header, .table-data{
+  text-align: center;
+}
+
+

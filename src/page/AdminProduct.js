@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useNavigationType, useSearchParams } from "react-router-dom";
 import ProductDetailDialog from "../component/ProductDetailDialog";
 import ProductTable from "../component/ProductTable";
+import SearchBox from "../component/SearchBox";
 import * as types from '../constants/product.constants';
 import { productActions } from "../redux/actions/productAction";
 import "../style/adminProduct.style.css";
@@ -15,22 +16,12 @@ const AdminProduct = () => {
   const navigate = useNavigate();
   const {loading, adminProductList:productList, adminTotalPageNum:totalPageNum, adminCurrentPage:currentPage, adminSortBy: sortBy} = useSelector((state) => state.product); 
   const [showDialog, setShowDialog] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const [mode, setMode] = useState("new");
   const [query] = useSearchParams();
   const searchKeyword = query.get("searchKeyword") || "";
   const navigationType = useNavigationType();
   const prevAdminSortBy = sessionStorage.getItem("prevAdminSortBy");
-
-  const tableHeader = [
-    "#",
-    "Sku",
-    "Name",
-    "Price",
-    "Stock",
-    "Image",
-    "Status",
-    "",
-  ];
   
   useEffect(() => { 
     if(navigationType === "POP" && prevAdminSortBy) {
@@ -85,27 +76,36 @@ const AdminProduct = () => {
           </Spinner>
         </div>
         )}
-        <div className="admin-product-sort-by-and-add-btn">
-          <Dropdown
+        <div className="admin-product-div">
+          <div className="admin-product-search-box">
+            <SearchBox 
+              placeholder="상품명 검색"
+              searchValue={searchValue} 
+              setSearchValue={setSearchValue}
+            />
+          </div>
+          <div className="admin-dropdown-and-button">
+           <Dropdown
               className="admin-side-sort-by-dropdown sort-by"
               align="start"
               onSelect={(value) => selectSortBy(value)}
             >
-            <Dropdown.Toggle id="dropdown-basic" align="start">
-              상품 정렬 기준
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-            {types.SORT_BY.map((sort, index) => (
-              <Dropdown.Item key={index} eventKey={sort}>{sort}</Dropdown.Item>
-            ))}
-            </Dropdown.Menu> 
-          </Dropdown>
-          <Button className="product-add-btn" onClick={handleClickNewItem}>
-            Add New Item +
-          </Button>
+              <Dropdown.Toggle id="dropdown-basic" align="start">
+                정렬 
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+              {types.SORT_BY.map((sort, index) => (
+                <Dropdown.Item key={index} eventKey={sort}>{sort}</Dropdown.Item>
+              ))}
+              </Dropdown.Menu> 
+            </Dropdown>
+            <Button className="product-add-btn" onClick={handleClickNewItem}>
+              추가
+            </Button>
+          </div>
         </div>
         <ProductTable
-          header={tableHeader}
+          header={types.productTableHeader}
           productList={productList}
           deleteItem={deleteItem}
           openEditForm={openEditForm}

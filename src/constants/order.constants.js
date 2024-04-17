@@ -17,6 +17,8 @@ export const UPDATE_ORDER_REQUEST = "UPDATE_ORDER_REQUEST";
 export const UPDATE_ORDER_SUCCESS = "UPDATE_ORDER_SUCCESS";
 export const UPDATE_ORDER_FAIL = "UPDATE_ORDER_FAIL";
 export const CHANGE_PAGE_OF_ORDER = "CHANGE_PAGE_OF_ORDER";
+export const orderTableHeader = ["#", "주문 번호", "주문 날짜", "사용자 이메일", "주문 상품명", "주소", "총 금액", "상태"];
+
 export const badgeBg = {
   preparing: "primary",
   cancelRequest: "secondary",

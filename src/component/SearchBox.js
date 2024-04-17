@@ -8,7 +8,7 @@ import * as cartTypes from '../constants/cart.constants';
 import * as orderTypes from '../constants/order.constants';
 import * as productTypes from '../constants/product.constants';
 
-const SearchBox = ({ placeholder, show, searchValue, setSearchValue }) => {
+const SearchBox = ({ placeholder, searchValue, setSearchValue }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -30,7 +30,7 @@ const SearchBox = ({ placeholder, show, searchValue, setSearchValue }) => {
   useEffect(() => {
     if(inputRef.current)
     inputRef.current.focus();
-  }, [show]);
+  },[]);
 
   const onChangeHandler = (event) => {
     setSearchValue(event.target.value);
