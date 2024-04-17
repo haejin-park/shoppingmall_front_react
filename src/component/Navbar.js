@@ -34,7 +34,8 @@ const Navbar = () => {
   const { cartItemCount } = useSelector((state) => state.cart);
   const [loginStatus, setLoginStatus] = useState(true);
   const [searchValue, setSearchValue] = useState("");
-  const [width, setWidth] = useState(0);
+  const [sideCategoryMenuWidth, setSideCategoryMenuWidth] = useState(0);
+  const [sideSearchWidth, setSideSearchWidth] = useState(0);
   const [overlayStatus, setOverlayStatus] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const location = useLocation();
@@ -69,7 +70,7 @@ const Navbar = () => {
   useEffect(() => {
     if(inputRef.current)
     inputRef.current.focus();
-  }, [width]);
+  }, [sideSearchWidth]);
 
   const onChangeHandler = (event) => {
     setSearchValue(event.target.value);
@@ -82,7 +83,12 @@ const Navbar = () => {
       searchCategory
       ? navigate(`${mainProductPath}?searchCategory=${searchCategory}&searchKeyword=${searchKeyword}`)
       : navigate(`${mainProductPath}?searchKeyword=${searchKeyword}`);
-      if(width > 0) handleClose();
+      if(sideCategoryMenuWidth > 0) {
+        handleCloseSideCategoryMenu();
+      } else if(sideSearchWidth > 0) {
+        handleCloseSideSearchMenu();
+
+      }
     }
   };
 
@@ -91,7 +97,10 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleEscapeKeyPress = (event) => {
-      if (event.key === 'Escape') handleClose();
+      if (event.key === 'Escape') {
+        handleCloseSideSearchMenu();
+        handleCloseSideCategoryMenu();
+      }
     };
     document.addEventListener('keydown', handleEscapeKeyPress);
   
@@ -100,13 +109,22 @@ const Navbar = () => {
     };
   }, []); 
 
-  const handleOpen = (width) => {
-    setWidth(width);
+  const handleOpenSideCategoryMenu= (width) => {
+    setSideCategoryMenuWidth(width);
     setOverlayStatus(true)
   }
 
-  const handleClose = () => {
-    setWidth(0);
+  const handleCloseSideCategoryMenu = () => {
+    setSideCategoryMenuWidth(0);
+    setOverlayStatus(false)
+  }
+  const handleOpenSideSearchMenu = (width) => {
+    setSideSearchWidth(width);
+    setOverlayStatus(true)
+  }
+
+  const handleCloseSideSearchMenu = () => {
+    setSideSearchWidth(0);
     setOverlayStatus(false)
   }
 
@@ -181,8 +199,24 @@ const Navbar = () => {
     <div>
       {loginStatus && ( 
         <div>
-          <div className="side-menu" style={{ width }}>
-            <button className="closebtn" onClick={() => handleClose()}>
+          <div className="side-category-menu" style={{ width: sideCategoryMenuWidth }}>
+            <button className="closebtn" onClick={() => handleCloseSideCategoryMenu()}>
+              &times;
+            </button>
+            <div className={location.pathname === mainProductPath ? "side-category-menu-list" : 'no-main-side-category-menu-list'} id="menu-list">
+              {categoryMenuList.map((category, index) => (
+                <div key={index}>
+                  <button 
+                  className ={`side-category-menu-btn ${selectedCategory === category ? 'active' : ''}`}
+                  onClick={() => goCategory(category)}>
+                    {category}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="side-search-menu" style={{ width: sideSearchWidth }}>
+            <button className="closebtn" onClick={() => handleCloseSideSearchMenu()}>
               &times;
             </button>
             <div className="mt-2 main-side-search-box">
@@ -198,42 +232,15 @@ const Navbar = () => {
                 />
               </div>
             </div>
-            <div className="side-menu-list" id="menu-list">
-              {categoryMenuList.map((category, index) => (
-                <div key={index}>
-                  <button 
-                  className ={`side-category-menu-btn ${selectedCategory === category ? 'active' : ''}`}
-                  onClick={() => goCategory(category)}>
-                    {category}
-                  </button>
-                </div>
-              ))}
-            </div>
-            {location.pathname === mainProductPath &&
-              <Dropdown
-                className="main-side-sort-by-dropdown sort-by"
-                align="start"
-                onSelect={(value) => selectSortBy(value)}
-              >
-                <Dropdown.Toggle variant="light" id="dropdown-basic" align="start">
-                  정렬 기준
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                {productTypes.SORT_BY.map((sort, index) => (
-                  <Dropdown.Item key={index} eventKey={sort}>{sort}</Dropdown.Item>
-                ))}
-                </Dropdown.Menu> 
-              </Dropdown>
-            }
           </div>
           <div className={`overlay ${overlayStatus ? 'overlay-show' : ''}`}></div>
           <div className="nav-header">
             <div className={location.pathname === mainProductPath? "main-burger-menu" : "no-main-burger-menu"}>
-              <FontAwesomeIcon icon={faBars} onClick={() => handleOpen(250)} />
+              <FontAwesomeIcon icon={faBars} onClick={() => handleOpenSideCategoryMenu(250)} />
             </div>
             <div>
               <div className="display-flex">
-                <div onClick={() => handleOpen(250)} className={`nav-function ${location.pathname === mainProductPath?'main-search-icon':''}`}>
+                <div onClick={() => handleOpenSideSearchMenu(250)} className={`nav-function ${location.pathname === mainProductPath?'main-search-icon':''}`}>
                   <FontAwesomeIcon icon={faSearch} />
                   {!isMobile && (
                       <span style={{ cursor: "pointer" }}>상품 검색</span>
@@ -296,7 +303,7 @@ const Navbar = () => {
               align="start"
               onSelect={(value) => selectSortBy(value)}
             >
-            <Dropdown.Toggle variant ="" id="dropdown-basic" align="start">
+            <Dropdown.Toggle variant="" id="dropdown-basic" align="start">
               정렬 기준
             </Dropdown.Toggle>
             <Dropdown.Menu>
