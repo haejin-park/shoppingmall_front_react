@@ -228,34 +228,17 @@ const Navbar = () => {
           </div>
           <div className={`overlay ${overlayStatus ? 'overlay-show' : ''}`}></div>
           <div className="nav-header">
-            {location.pathname === mainProductPath &&
-              <div className="main-burger-menu">
-                <FontAwesomeIcon icon={faBars} onClick={() => handleOpen(250)} />
-              </div>
-            }
-            {location.pathname !== mainProductPath &&
-              <div className="no-main-burger-menu">
-                <FontAwesomeIcon icon={faBars} onClick={() => handleOpen(250)} />
-              </div>
-            }
+            <div className={location.pathname === mainProductPath? "main-burger-menu" : "no-main-burger-menu"}>
+              <FontAwesomeIcon icon={faBars} onClick={() => handleOpen(250)} />
+            </div>
             <div>
               <div className="display-flex">
-                {location.pathname === mainProductPath &&
-                 <div onClick={() => handleOpen(250)} className='nav-function main-search-icon'>
+                <div onClick={() => handleOpen(250)} className={`nav-function ${location.pathname === mainProductPath?'main-search-icon':''}`}>
                   <FontAwesomeIcon icon={faSearch} />
                   {!isMobile && (
                       <span style={{ cursor: "pointer" }}>상품 검색</span>
                   )}
                 </div>
-                }
-                {location.pathname !== mainProductPath && 
-                 <div onClick={() => handleOpen(250)} className='nav-function'>
-                  <FontAwesomeIcon icon={faSearch} />
-                  {!isMobile && (
-                      <span style={{ cursor: "pointer" }}>상품 검색</span>
-                  )}
-                </div>
-                }
                 {user && user.level === "admin" && (
                   <div onClick={() => goAdminProduct()} className="nav-function">
                     <FontAwesomeIcon icon={faUser} />
