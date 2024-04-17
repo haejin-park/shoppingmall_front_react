@@ -301,20 +301,18 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
             </Col>
           </Row>
           ) : (
-          user?.level === "customer" && (  
           <Row className="product-detail-btn-row">
             <Col>
-              <Button className="add-button" variant="dark" onClick={addCartItem}>
+              <Button className="add-button" variant="dark" onClick={addCartItem} disabled={!user || user?.level === "admin"}>
                 장바구니
               </Button>     
             </Col>
             <Col>
-              <Button className="order-button" variant="dark" onClick={goOrder}>
+              <Button className="order-button" variant="dark" onClick={goOrder} disabled={!user || user?.level === "admin"}>
                 주문하기
               </Button>
             </Col>
           </Row>
-          )
           )}
           {deletedProductError && (
           <div className="deleted-product-error-message">
