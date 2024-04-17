@@ -93,7 +93,6 @@ const Navbar = () => {
   };
 
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
-  const categoryMenuList = [ "남성", "여성", "상의", "하의", "재킷", "셔츠", "블라우스", "팬츠", "스커트", "원피스"];
 
   useEffect(() => {
     const handleEscapeKeyPress = (event) => {
@@ -204,7 +203,7 @@ const Navbar = () => {
               &times;
             </button>
             <div className={location.pathname === mainProductPath ? "side-category-menu-list" : 'no-main-side-category-menu-list'} id="menu-list">
-              {categoryMenuList.map((category, index) => (
+              {productTypes.categoryMenuList.map((category, index) => (
                 <div key={index}>
                   <button 
                   className ={`side-category-menu-btn ${selectedCategory === category ? 'active' : ''}`}
@@ -314,7 +313,7 @@ const Navbar = () => {
           </Dropdown>
 
           <ul className="menu">
-            {categoryMenuList.map((category, index) => (
+            {productTypes.categoryMenuList.map((category, index) => (
               <li key={index}>
                 <button 
                   className={`category-menu-btn ${selectedCategory === category ? 'active' : ''}`}
