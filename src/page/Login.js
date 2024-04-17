@@ -73,7 +73,7 @@ const Login = () => {
         </div>
         <div className="diffrent-account-login">
           <p>-외부 계정으로 로그인하기-</p>
-          <div className="display-center">
+          <div className="google-login-div">
             <GoogleLogin
               onSuccess={handleGoogleLogin}
               onError={(error) => {

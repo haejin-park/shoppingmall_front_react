@@ -182,7 +182,7 @@ const ProductDetailDialog = ({ mode, showDialog, setShowDialog, sortBy }) => {
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="stock">
-          <Form.Label className="mr-1">Stock</Form.Label>
+          <Form.Label className="mr-2">Stock</Form.Label>
           {stockError && (
             <span className="warning-message pr-1 mr-1">재고를 추가해주세요</span>
           )}

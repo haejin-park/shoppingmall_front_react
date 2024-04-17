@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { Button } from "react-bootstrap";
-import "../App.css";
-import "../style/common.style.css";
 
 const CLOUDNAME = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
 const UPLOADPRESET = process.env.REACT_APP_CLOUDINARY_PRESET;

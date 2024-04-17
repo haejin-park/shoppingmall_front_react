@@ -18,3 +18,8 @@
   margin-top: 20px;
   text-align: center;
 }
+
+.google-login-div {
+  display: flex;
+  justify-content: center;
+}

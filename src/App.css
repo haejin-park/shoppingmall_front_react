@@ -427,25 +427,3 @@ input::-webkit-inner-spin-button {
   border-bottom: 5px solid rgb(230, 55, 55);
 }
 
-.empty {
-  background-color: rgba(185, 185, 185, 0.804);
-  color:white;
-  padding: 20px;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.warning-message{
-  color: red;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-}
-
-.table-header, .table-data{
-  text-align: center;
-}
-
-
