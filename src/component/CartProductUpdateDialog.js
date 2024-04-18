@@ -30,7 +30,7 @@ const CartProductUpdateDialog = ({ mode, setMode, showDialog, setShowDialog, car
       <Modal.Header closeButton>
         <Modal.Title>장바구니 상품 옵션 수정</Modal.Title>
       </Modal.Header>
-      <ProductDetail mode={mode} cartProductId={cartProductId} setShowDialog={setShowDialog} setMode={setMode}/>
+      <ProductDetail handleClose={handleClose} mode={mode} cartProductId={cartProductId} setShowDialog={setShowDialog} setMode={setMode}/>
     </Modal>
   );
 };

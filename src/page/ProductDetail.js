@@ -8,7 +8,7 @@ import { commonUiActions } from "../redux/actions/commonUiAction";
 import { productActions } from "../redux/actions/productAction";
 import "../style/productDetail.style.css";
 
-const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
+const ProductDetail = ({handleClose, mode, cartProductId, setShowDialog, setMode}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -294,7 +294,7 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
           {mode === "edit" ? (
           <Row className="cart-btn-row">
             <Col>
-              <Button className="cart-cancel-btn" variant="secondary">
+              <Button className="cart-cancel-btn" variant="secondary" onClick={handleClose}>
                 취소
               </Button>
             </Col>
