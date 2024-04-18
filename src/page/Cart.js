@@ -19,7 +19,6 @@ const Cart = () => {
   const [searchValue, setSearchValue] = useState("");
   const [deletedStatus, setDeletedStatus] = useState(false);
   const [deletedItemIdList, setDeletedItemIdList] = useState([]);
-  const [deleteAllError, setDeleteAllError] = useState(false);
 
   useEffect(() => { 
     dispatch(cartActions.getCartList({searchKeyword, currentPage}));
@@ -33,11 +32,6 @@ const Cart = () => {
     }
     },[checkedItemList, cartList, dispatch]); 
   
-  useEffect(() => {
-    if(checkedItemList.length > 0) {
-      setDeleteAllError(false);
-    }
-  }, [checkedItemList]);
 
   useEffect(() => {
     const params = searchKeyword 
@@ -73,10 +67,7 @@ const Cart = () => {
   }
 
   const deleteCartItemList = (checkedItemIdList) => {
-    if(checkedItemIdList.length <= 0) {
-      setDeleteAllError(true);
-      return; 
-    }
+
     if(checkedItemIdList) { 
       dispatch(cartActions.deleteCartItemList(checkedItemIdList,{searchKeyword, currentPage}));
       filteredCheckedItemList(checkedItemIdList);
@@ -131,18 +122,13 @@ const Cart = () => {
             </div>
             {cartList.length > 0 ?
               <>
-                {deleteAllError && (
-                  <Alert variant="danger" className="error-message">
-                    삭제할 상품을 선택해주세요
-                  </Alert>
-                )}
                 <div className="select-and-delete-box">
                   <Form.Check 
                     label="전체 선택" 
                     onChange={() => onCheckAllItem()} 
                     checked={checkedAll}
                   />
-                  <Button variant="dark" className="mt-1" size="sm" onClick={() => deleteCartItemList(checkedItemList.map(item => item.items._id))}>
+                  <Button variant="dark" className="mt-1" size="sm" onClick={() => deleteCartItemList(checkedItemList.map(item => item.items._id))}  disabled={checkedItemList.length <= 0}>
                     선택 삭제
                   </Button>
                 </div>
