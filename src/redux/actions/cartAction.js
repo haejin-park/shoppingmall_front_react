@@ -36,6 +36,7 @@ const deleteCartItem = (_id, query) => async (dispatch) => {
     const response = await api.delete(`/cart/delete/${_id}`);
     if(response.status !== 200) throw new Error(response.message);
     dispatch({type:types.DELETE_CART_ITEM_SUCCESS, payload: response.data.cartItemCount});
+    dispatch(commonUiActions.showToastMessage("장바구니 항목 삭제를 완료했습니다.", "success"));
     await dispatch(cartActions.getCartList(query));
   } catch(error) {
     dispatch({type:types.DELETE_CART_ITEM_FAIL, payload:error.message});
