@@ -12,7 +12,7 @@ export const toTransformEnglishCategory = (category) => {
             return "jacket";
         case "후드티":
             return "hoodie";
-        case "스웨트 셔츠":
+        case "스웨트셔츠":
             return "sweat-shirts";
         case "티셔츠":
             return "t-shirts";
