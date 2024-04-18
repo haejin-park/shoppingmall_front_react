@@ -46,7 +46,7 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
       setVisibleReasonDropdown(true);
     } else if(mode === 'admin') {
       const visibleReasonDropdown = newOrderStatusList.some((status, index) => {
-        return checkedIndexList.includes(index) && status === "환불 요청";
+        return checkedIndexList.includes(index) && (status === "환불 요청" || status === "환불 불가");
         }  
       );
       setVisibleReasonDropdown(visibleReasonDropdown);
@@ -187,8 +187,8 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
                     <Form.Check 
                       disabled={     
                         selectedOrder.data.items.some((item, index) => (
-                        (mode === "customer" && (item.status === '취소 요청' || item.status === '교환 요청' || item.status === '반품 요청' ||  item.status === '환불 요청' ||  item.status === '환불 완료'))
-                        || (mode === "admin" && (item.status === '배송 완료' || item.status === '환불 완료'))
+                        (mode === "customer" && (item.status !== '상품 준비 중' && item.status !== '배송 중' && item.status !== '배송 완료'))
+                        || (mode === "admin" && (item.status === '배송 완료' || item.status === '환불 완료' || item.status === '환불 불가'))
                       ))}
                       onChange={() => onCheckAllItem()} 
                       checked={checkedAll}
@@ -212,8 +212,8 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
                       <td>
                         <Form.Check 
                           disabled={
-                            (mode === "customer" && (item.status === '취소 요청' || item.status === '교환 요청' || item.status === '반품 요청' ||  item.status === '환불 요청' ||  item.status === '환불 완료'))
-                            || (mode === "admin" && (item.status === '배송 완료' || item.status === '환불 완료'))
+                            (mode === "customer" && (item.status !== '상품 준비 중' && item.status !== '배송 중' && item.status !== '배송 완료'))
+                            || (mode === "admin" && (item.status === '배송 완료' || item.status === '환불 완료' || item.status === '환불 불가'))
                           }
                           onChange={() => onCheckItem(index)}
                           checked={checkedIndexList.includes(index) || checkedAll} 
@@ -255,8 +255,8 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
                   <Dropdown.Item 
                     disabled={selectedOrder.data.items.some((item, index) => {
                       return checkedIndexList.includes(index) && (
-                      (item.status !== "상품 준비 중" && status === "취소 요청") || 
-                      ((item.status !== "배송 중" && item.status !== "배송 완료") && (status === "교환 요청" || status === "반품 요청"))
+                      (status === "취소 요청" && item.status !== "상품 준비 중") || 
+                      ((status === "교환 요청" || status === "반품 요청") && (item.status !== "배송 중" && item.status !== "배송 완료"))
                       )})}
                     key={idx} 
                     eventKey={status}
@@ -268,10 +268,11 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
                   <Dropdown.Item 
                     disabled={selectedOrder.data.items.some((item, index) => {
                       return checkedIndexList.includes(index) && (
-                      ((item.status !== "상품 준비 중" && item.status !== "교환 요청") && status === "배송 중") ||
-                      (item.status !== "배송 중" && status === "배송 완료") ||
-                      ((item.status !== "상품 준비 중" && item.status !== "취소 요청" && item.status !== "교환 요청" && item.status !== "반품 요청") && status === "환불 요청") ||
-                      (item.status !== "환불 요청" && status === "환불 완료")
+                      (status === "배송 중" && (item.status !== "상품 준비 중" && item.status !== "교환 요청")) ||
+                      (status === "배송 완료" && item.status !== "배송 중") ||
+                      (status === "환불 요청" && (item.status !== "상품 준비 중" && item.status !== "취소 요청" && item.status !== "반품 요청")) ||
+                      (status === "환불 완료" && item.status !== "환불 요청") || 
+                      (status === "환불 불가" && (item.status !== "취소 요청" && item.status !== "반품 요청"))
                       )})}
                     key={idx} 
                     eventKey={status}
@@ -300,7 +301,7 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
             {mode === "customer" 
               ? CUSTOMER_ORDER_STATUS_REASON.map((reason, idx) => (
                 <Dropdown.Item 
-                  disabled={newOrderStatusList.includes("취소 요청") && (reason === "판매자 귀책 사유:상품 파손" || reason === "판매자 귀책 사유:오배송")}
+                  disabled={(reason === "판매자 귀책 사유:상품 파손" || reason === "판매자 귀책 사유:오배송") && newOrderStatusList.includes("취소 요청")}
                   key={idx} 
                   eventKey={reason}
                 >
@@ -308,7 +309,14 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
                 </Dropdown.Item>
               ))
               : ADMIN_ORDER_STATUS_REASON.map((reason, idx) => (
-                <Dropdown.Item key={idx} eventKey={reason}>
+                <Dropdown.Item 
+                  disabled={
+                    (reason === "소비자 귀책 : 상품 파손으로 인한 환불 불가" && newOrderStatusList.includes("환불 요청")) 
+                    || (reason === "판매자 귀책 : 재고 부족으로 인한 환불" && newOrderStatusList.includes("환불 불가")) 
+                  }
+                  key={idx} 
+                  eventKey={reason}                   
+                 >
                   {reason}
                 </Dropdown.Item>
               ))
