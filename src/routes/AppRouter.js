@@ -1,17 +1,17 @@
 import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Route, Routes, useLocation, useNavigate } from "react-router";
 import AdminOrder from "../page/AdminOrder";
 import AdminProduct from "../page/AdminProduct";
 import Cart from "../page/Cart";
 import Login from "../page/Login";
-import MyOrder from "../page/MyOrder";
-import OrderComplete from "../page/OrderComplete";
-import Order from "../page/Order";
 import MainProduct from "../page/MainProduct";
+import MyOrder from "../page/MyOrder";
+import Order from "../page/Order";
+import OrderComplete from "../page/OrderComplete";
 import ProductDetail from "../page/ProductDetail";
 import Register from "../page/Register";
 import PrivateRoute from "./PrivateRoute";
-import { useSelector } from "react-redux";
 
 const AppRouter = () => {
   let location = useLocation();
