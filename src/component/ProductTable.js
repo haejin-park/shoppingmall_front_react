@@ -18,7 +18,7 @@ const ProductTable = ({ header, productList, deleteItem, openEditForm }) => {
                 <tr>
                   <td>{index}</td>
                   <td>{item.sku}</td>
-                  <td className="product-table-item-name">{item.name}</td>
+                  <td>{item.name}</td>
                   <td>{item.price.toLocaleString()}</td>
                   <td>
                     {Object.keys(item.stock).map((size, index) => (
@@ -31,7 +31,7 @@ const ProductTable = ({ header, productList, deleteItem, openEditForm }) => {
                     <img src={item.image} width={100} alt={item.image} />
                   </td>
                   <td>{item.status}</td>
-                  <td className="product-table-btn">
+                  <td>
                     <Button
                       size="sm"
                       variant="danger"

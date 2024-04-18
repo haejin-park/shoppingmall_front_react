@@ -73,4 +73,7 @@
     margin-left:5px;
     padding: 5px;
 }
-  
+
+.order-detail-dialog-order-item-id {
+    min-width: 100px;
+}

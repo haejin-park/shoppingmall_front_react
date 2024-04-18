@@ -180,7 +180,7 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
         <p className="order-detail-dialog-items"><strong>주문 내역</strong></p>
         <div className="overflow-x">
           <Table>
-            <thead>
+            <thead className="table-header">
               <tr>
                 {!hiddenCheckbox && 
                   <th>
@@ -204,10 +204,10 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
                 <th>총 금액</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody >
               {selectedOrder.data.items.length > 0 &&
                 selectedOrder.data.items.map((item, index) => (
-                  <tr key={item._id}>
+                  <tr className="table-data" key={item._id}>
                     {!hiddenCheckbox && 
                       <td>
                         <Form.Check 
@@ -220,7 +220,7 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
                         />
                       </td>
                     }
-                    <td>{item._id}</td>
+                    <td className="order-detail-dialog-order-item-id">{item._id}</td>
                     <td>{item.productData.name}</td>
                     <td>{orderStatusList[index]}</td>
                     <td>{orderStatusReasonList[index]}</td>
@@ -231,7 +231,7 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
                 ))}
               <tr>
                 <th colSpan={!hiddenCheckbox ? 7 : 6}>총계:</th>
-                <td>{(selectedOrder.data.info.totalPrice).toLocaleString()}</td>
+                <td className="table-data">{(selectedOrder.data.info.totalPrice).toLocaleString()}</td>
               </tr>
             </tbody>
           </Table>
