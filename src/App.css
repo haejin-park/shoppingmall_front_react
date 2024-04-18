@@ -280,7 +280,6 @@ body{
 }
 
 .admin-navbar-col {
-  max-width: 300px;
   min-width: 300px;
   width: 15%;
   min-height: 100vh;
@@ -347,7 +346,6 @@ body{
 @media screen and (max-width: 992px) {
 
   .admin-navbar-row{
-    display: flex;
     flex-direction: column;
   }
 
@@ -368,12 +366,18 @@ body{
 
   .admin-side-navbar-toggle{
     display:block;
+
   }
 
   .admin-side-navbar {
     display:block;
-    width: 300px;
     padding: 0px 5px;
+  }
+
+  #offcanvasNavbar-expand {
+    border: 1px solid red;
+    min-width: 300px;
+    width: 15%;
   }
 
 }
