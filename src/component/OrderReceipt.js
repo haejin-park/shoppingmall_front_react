@@ -68,6 +68,7 @@ const OrderReceipt = ({cartOrderStatus}) => {
             variant="dark"
             className="payment-button"
             onClick={() => goOrder()}
+            disabled={checkedItemList.length <= 0}
           >
             주문 하기
           </Button>
