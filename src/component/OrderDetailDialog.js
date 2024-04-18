@@ -272,7 +272,7 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
                       (status === "배송 완료" && item.status !== "배송 중") ||
                       (status === "환불 요청" && (item.status !== "상품 준비 중" && item.status !== "취소 요청" && item.status !== "반품 요청")) ||
                       (status === "환불 완료" && item.status !== "환불 요청") || 
-                      (status === "환불 불가" && (item.status !== "취소 요청" && item.status !== "반품 요청"))
+                      (status === "환불 불가" && item.status !== "반품 요청")
                       )})}
                     key={idx} 
                     eventKey={status}
