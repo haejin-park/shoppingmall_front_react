@@ -38,6 +38,11 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
   },[product]);
 
   useEffect(() => {
+    if(selectedOption.length === 0 && qtyError) setQtyError(false)
+  },[selectedOption, qtyError]);
+
+
+  useEffect(() => {
     if(selectedOption.length <= 0) {
       setOptionChangeStatus(false);
       return;
@@ -128,7 +133,6 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
       initialState();
     } catch(error) {}
   };
-
 
   const goOrder = async() => {
     try {
@@ -303,12 +307,12 @@ const ProductDetail = ({mode, cartProductId, setShowDialog, setMode}) => {
           ) : (
           <Row className="product-detail-btn-row">
             <Col>
-              <Button className="add-button" variant="dark" onClick={addCartItem} disabled={!user || user?.level === "admin"}>
+              <Button className="add-button" variant="dark" onClick={addCartItem} disabled={!user || user?.level === "admin" || selectedOption.some((item) => !item[1])}>
                 장바구니
               </Button>     
             </Col>
             <Col>
-              <Button className="order-button" variant="dark" onClick={goOrder} disabled={!user || user?.level === "admin"}>
+              <Button className="order-button" variant="dark" onClick={goOrder} disabled={!user || user?.level === "admin" || selectedOption.some((item) => !item[1])}>
                 주문하기
               </Button>
             </Col>
