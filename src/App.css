@@ -375,7 +375,6 @@ body{
   }
 
   #offcanvasNavbar-expand {
-    border: 1px solid red;
     min-width: 300px;
     width: 15%;
   }

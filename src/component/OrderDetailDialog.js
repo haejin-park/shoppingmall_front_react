@@ -13,23 +13,31 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
   const {error, selectedOrder, currentPage} = useSelector((state) => state.order);
   const [orderStatusList, setOrderStatusList] = useState(selectedOrder.data.items.map((item) => item.status));
   const [orderStatusReasonList, setOrderStatusReasonList] = useState(selectedOrder.data.items.map((item) => item.statusReason));
-  const [orderStatusReasonError, setOrderStatusReasonError] = useState(false);
-  const [newOrderStatusList, setNewOrderStatusList] = useState([]);
+  const [orderStatusReasonError, setOrderStatusReasonError] = useState('');
+  const [newOrderStatusList, setNewOrderStatusList] = useState(Array.from({ length: selectedOrder.data.items.length }, () => ""));
   const [checkedIndexList, setCheckedIndexList] = useState([]);
   const [checkedAll, setCheckedAll] = useState(false);
   const [hiddenCheckbox, setHiddenCheckbox] = useState(false);
   const [hiddenStatusDropdwon, setHiddenStatusDropdown] = useState(false);
   const [visibleReasonDropdwon, setVisibleReasonDropdown] = useState(false);
 
+
+  useEffect(() => {
+    if(checkedIndexList.length > 0) {
+      const sortedCheckedIndexList = checkedIndexList.sort();
+      setCheckedIndexList(sortedCheckedIndexList);
+    }
+  }, [checkedIndexList]);
+
   useEffect(() => {
     let bool = false;
     if(mode === "customer") {
       bool = selectedOrder.data.items.every((item) => {
-        return (item.status === "취소 요청" || item.status === "교환 요청" || item.status === "반품 요청" || item.status === "환불 요청" || item.status === "환불 완료")
+        return item.status !== "상품 준비 중" && item.status !== "배송 중" && item.status !== "배송 완료"
       });
     } else if(mode === 'admin') {
       bool = selectedOrder.data.items.every((item) => {
-        return item.status === "배송 완료" || item.status === "환불 완료"
+        return item.status === "배송 완료" || item.status === "환불 완료" || item.status === "환불 불가" || item.status === "교환 불가"
       });
     } 
     setHiddenStatusDropdown(bool);
@@ -41,18 +49,37 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
       setVisibleReasonDropdown(false);
       return;
     } 
+    const firstCheckedNewOrderStatus = newOrderStatusList[checkedIndexList[0]];
 
-    if(mode === "customer") {
-      setVisibleReasonDropdown(true);
-    } else if(mode === 'admin') {
-      const visibleReasonDropdown = newOrderStatusList.some((status, index) => {
-        return checkedIndexList.includes(index) && (status === "환불 요청" || status === "환불 불가");
+    const checkedStatusIsAllExistAndSame = checkedIndexList.every((index) => {
+      return newOrderStatusList[index] && newOrderStatusList[index] === firstCheckedNewOrderStatus;
+    });
+
+    if(mode === 'customer') {
+      setVisibleReasonDropdown(checkedStatusIsAllExistAndSame); 
+    }
+
+    if(mode === 'admin') {
+      const checkedStatusRequiresDropdown = newOrderStatusList.some((status, index) => {
+        return checkedIndexList.includes(index) && 
+        (((selectedOrder.data.items[index].status === "상품 준비 중" || selectedOrder.data.items[index].status === "교환 요청") &&  status === "환불 요청") || 
+          status === "환불 불가" || 
+          status === "교환 불가"
+        );
         }  
       );
-      setVisibleReasonDropdown(visibleReasonDropdown);
+
+      if (!checkedStatusRequiresDropdown && !checkedStatusIsAllExistAndSame) {
+        setVisibleReasonDropdown(false);
+      } else if (!checkedStatusRequiresDropdown && checkedStatusIsAllExistAndSame) {
+          setVisibleReasonDropdown(false);
+      } else if (checkedStatusRequiresDropdown && !checkedStatusIsAllExistAndSame) {
+          setVisibleReasonDropdown(false);
+      } else {
+        setVisibleReasonDropdown(true);
+      }
     }
-  
-  },[mode, checkedIndexList, newOrderStatusList]); 
+  },[mode, checkedIndexList, newOrderStatusList, selectedOrder]); 
 
   useEffect(() => {
     checkedIndexList.length === selectedOrder.data.items.length? setCheckedAll(true) : setCheckedAll(false);
@@ -64,7 +91,7 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
       const updatedCheckedIndexList = checkedIndexList.filter(checkedIndex => checkedIndex !== index);
       setCheckedIndexList(updatedCheckedIndexList)
     } else {  
-      setCheckedIndexList([...checkedIndexList, index])    
+      setCheckedIndexList([...checkedIndexList, index]);
     }
   }
 
@@ -89,24 +116,34 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
       }
       return status;
     });
-
-    const newOrderStatusList = selectedOrder.data.items.map((_v, index) => {
+    const newSelectedOrderStatusList = newOrderStatusList.map((status, index) => {
       if (checkedIndexList.includes(index)) {
         return newStatus;
       }
-      return "";
+      return status;
     });
     setOrderStatusList(updatedOrderStatusList);
-    setNewOrderStatusList(newOrderStatusList);
+    setNewOrderStatusList(newSelectedOrderStatusList);
   };
 
   const selectOrderStatusReason = (value) => {
     if (checkedIndexList.length === 0) {
       return;
     }
+
+    const noMatchReason = orderStatusList.some((status, index) => {
+      return (
+        orderStatusReasonList[index] === "" 
+      ) 
+    })
+    if(noMatchReason) {
+      setOrderStatusReasonError('주문 상태에 알맞지 않은 사유는 선택할 수 없습니다. 알맞은 주문 상태 사유를 선택해 주세요.');
+      return;
+    }
+
     const newReason = value;
-    if(value !== "" && orderStatusReasonError){
-      setOrderStatusReasonError(false);
+    if(newReason !== "" && orderStatusReasonError && !noMatchReason){
+      setOrderStatusReasonError('');
     }
     const updatedOrderStatusReasonList = orderStatusReasonList.map((status, index) => {
       if (checkedIndexList.includes(index)) {
@@ -125,14 +162,16 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
 
     const hasEmptyReason = newOrderStatusList.some((status, index) => {
       return (
-        (mode === "admin" && status === "환불 요청" && orderStatusReasonList[index] === "") || 
-        (mode === "customer" && status !== "" && orderStatusReasonList[index] === "")
+        orderStatusReasonList[index] === "" && 
+        ((mode === "admin" && ((selectedOrder.data.items[index].status === "상품 준비 중" && status === "환불 요청")  || status === "환불 불가" ||  status === "교환 불가")) || 
+        (mode === "customer" && status !== ""))
       ) 
     })
     if(hasEmptyReason) {
-      setOrderStatusReasonError(true);
+      setOrderStatusReasonError('주문 상태 사유를 선택해주세요');
       return;
     }
+    
     dispatch(orderActions.updateOrder(selectedOrder.data._id, orderItemIdList, orderStatusList, orderStatusReasonList, {searchKeyword, currentPage}, mode));
     handleClose();
   };
@@ -188,7 +227,7 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
                       disabled={     
                         selectedOrder.data.items.some((item, index) => (
                         (mode === "customer" && (item.status !== '상품 준비 중' && item.status !== '배송 중' && item.status !== '배송 완료'))
-                        || (mode === "admin" && (item.status === '배송 완료' || item.status === '환불 완료' || item.status === '환불 불가'))
+                        || (mode === "admin" && (item.status === '배송 완료' || item.status === '환불 완료' || item.status === '환불 불가' || item.status === '교환 불가'))
                       ))}
                       onChange={() => onCheckAllItem()} 
                       checked={checkedAll}
@@ -213,7 +252,7 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
                         <Form.Check 
                           disabled={
                             (mode === "customer" && (item.status !== '상품 준비 중' && item.status !== '배송 중' && item.status !== '배송 완료'))
-                            || (mode === "admin" && (item.status === '배송 완료' || item.status === '환불 완료' || item.status === '환불 불가'))
+                            || (mode === "admin" && (item.status === '배송 완료' || item.status === '환불 완료' || item.status === '환불 불가' || item.status === '교환 불가'))
                           }
                           onChange={() => onCheckItem(index)}
                           checked={checkedIndexList.includes(index) || checkedAll} 
@@ -272,7 +311,8 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
                       (status === "배송 완료" && item.status !== "배송 중") ||
                       (status === "환불 요청" && (item.status !== "상품 준비 중" && item.status !== "취소 요청" && item.status !== "반품 요청")) ||
                       (status === "환불 완료" && item.status !== "환불 요청") || 
-                      (status === "환불 불가" && item.status !== "반품 요청")
+                      (status === "환불 불가" && item.status !== "반품 요청") || 
+                      (status === "교환 불가" && item.status !== "교환 요청")
                       )})}
                     key={idx} 
                     eventKey={status}
@@ -301,7 +341,10 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
             {mode === "customer" 
               ? CUSTOMER_ORDER_STATUS_REASON.map((reason, idx) => (
                 <Dropdown.Item 
-                  disabled={(reason === "판매자 귀책 사유:상품 파손" || reason === "판매자 귀책 사유:오배송") && newOrderStatusList.includes("취소 요청")}
+                  disabled={
+                    ((reason === "판매자 귀책 사유:상품 파손" || reason === "판매자 귀책 사유:오배송") && newOrderStatusList.includes("취소 요청")) ||
+                    ((reason === "판매자 귀책 사유:배송 지연") && (newOrderStatusList.includes("교환 요청") || newOrderStatusList.includes("반품 요청"))) 
+                  }
                   key={idx} 
                   eventKey={reason}
                 >
@@ -311,8 +354,9 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
               : ADMIN_ORDER_STATUS_REASON.map((reason, idx) => (
                 <Dropdown.Item 
                   disabled={
-                    (reason === "소비자 귀책 : 상품 파손으로 인한 환불 불가" && newOrderStatusList.includes("환불 요청")) 
-                    || (reason === "판매자 귀책 : 재고 부족으로 인한 환불" && newOrderStatusList.includes("환불 불가")) 
+                    ((reason === "소비자 귀책 : 상품 파손으로 인한 환불 불가" || reason ===  "수거 전 : 재고 부족으로 인한 교환 불가" || reason === "소비자 귀책 : 상품 파손으로 인한 교환 불가") && newOrderStatusList.includes("환불 요청")) || 
+                    ((reason === "판매자 귀책 : 재고 부족으로 인한 환불" || reason ===  "수거 전 : 재고 부족으로 인한 교환 불가" || reason === "소비자 귀책 : 상품 파손으로 인한 교환 불가") && newOrderStatusList.includes("환불 불가")) || 
+                    (reason === "소비자 귀책 : 상품 파손으로 인한 환불 불가" && newOrderStatusList.includes("교환 불가")) 
                   }
                   key={idx} 
                   eventKey={reason}                   
@@ -324,8 +368,8 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
           </Dropdown.Menu>
           </Dropdown>
         }
-        {orderStatusReasonError && (
-          <span className="warning-message ml-2">주문 상태 사유를 선택해주세요</span>
+        {orderStatusReasonError !=="" && (
+          <span className="warning-message ml-2">orderStatusReasonError</span>
         )}
       <div className="order-button-area">
         <Col>
