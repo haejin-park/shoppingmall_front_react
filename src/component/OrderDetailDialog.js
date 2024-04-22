@@ -13,7 +13,7 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
   const {error, selectedOrder, currentPage} = useSelector((state) => state.order);
   const [orderStatusList, setOrderStatusList] = useState(selectedOrder.data.items.map((item) => item.status));
   const [orderStatusReasonList, setOrderStatusReasonList] = useState(selectedOrder.data.items.map((item) => item.statusReason));
-  const [orderStatusReasonError, setOrderStatusReasonError] = useState('');
+  const [orderStatusReasonError, setOrderStatusReasonError] = useState(false);
   const [newOrderStatusList, setNewOrderStatusList] = useState(Array.from({ length: selectedOrder.data.items.length }, () => ""));
   const [checkedIndexList, setCheckedIndexList] = useState([]);
   const [checkedAll, setCheckedAll] = useState(false);
@@ -131,19 +131,9 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
       return;
     }
 
-    const noMatchReason = orderStatusList.some((status, index) => {
-      return (
-        orderStatusReasonList[index] === "" 
-      ) 
-    })
-    if(noMatchReason) {
-      setOrderStatusReasonError('주문 상태에 알맞지 않은 사유는 선택할 수 없습니다. 알맞은 주문 상태 사유를 선택해 주세요.');
-      return;
-    }
-
     const newReason = value;
-    if(newReason !== "" && orderStatusReasonError && !noMatchReason){
-      setOrderStatusReasonError('');
+    if(newReason !== "" && orderStatusReasonError){
+      setOrderStatusReasonError(false);
     }
     const updatedOrderStatusReasonList = orderStatusReasonList.map((status, index) => {
       if (checkedIndexList.includes(index)) {
@@ -168,7 +158,7 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
       ) 
     })
     if(hasEmptyReason) {
-      setOrderStatusReasonError('주문 상태 사유를 선택해주세요');
+      setOrderStatusReasonError(true);
       return;
     }
     
@@ -368,8 +358,8 @@ const OrderDetailDialog = ({ open, handleClose, mode }) => {
           </Dropdown.Menu>
           </Dropdown>
         }
-        {orderStatusReasonError !=="" && (
-          <span className="warning-message ml-2">orderStatusReasonError</span>
+        {orderStatusReasonError && (
+          <span className="warning-message ml-2">주문 상태 사유를 선택해주세요</span>
         )}
       <div className="order-button-area">
         <Col>
