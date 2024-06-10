@@ -71,7 +71,7 @@ const Login = () => {
           <Button variant="danger" type="submit">Login</Button> 
           <Button variant="danger" onClick={goRegister}>회원가입 하기</Button>
         </div>
-        <div className="diffrent-account-login">
+        {/* <div className="diffrent-account-login">
           <p>-외부 계정으로 로그인하기-</p>
           <div className="google-login-div">
             <GoogleLogin
@@ -81,7 +81,7 @@ const Login = () => {
               }}
             />
           </div>
-        </div>
+        </div> */}
       </Form>
     </Container>
   );
