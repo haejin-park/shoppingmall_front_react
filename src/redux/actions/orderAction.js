@@ -31,18 +31,6 @@ const getOrderList = (query, mode) => async (dispatch) => {
   }
 };
 
-const getOrderDetail = (id) => async (dispatch) => {
-  try {
-    dispatch({type:types.GET_ORDER_DETAIL_REQUEST});
-    const response = await api.get(`/order/${id}`);
-    if(response.status !== 200) throw new Error(response.message);
-    dispatch({type:types.GET_ORDER_DETAIL_SUCCESS, payload: response.data});
-  } catch(error) {
-    dispatch({type:types.GET_ORDER_DETAIL_FAIL, payload:error.message});
-    dispatch(commonUiActions.showToastMessage(error.message, "error"));
-  }
-};
-
 const updateOrder = (id, orderItemIdList, orderStatusList, orderStatusReasonList, query, mode) => async (dispatch) => {
   try {
     dispatch({type:types.UPDATE_ORDER_REQUEST});
@@ -60,6 +48,5 @@ const updateOrder = (id, orderItemIdList, orderStatusList, orderStatusReasonList
 export const orderActions = {
   createOrder,
   getOrderList,
-  getOrderDetail,
   updateOrder,
 };

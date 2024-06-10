@@ -4,6 +4,7 @@ const initialState = {
   loading: false,
   error: '',
   orderList: [],
+  orderItemList: [],
   totalPrice: 0,
   cartOrderStatus: false,
   totalPageNum: 1,
@@ -17,7 +18,6 @@ function orderReducer(state = initialState, action) {
   switch(type) {
     case types.CREATE_ORDER_REQUEST:
     case types.GET_ORDER_LIST_REQUEST:
-    case types.GET_ORDER_DETAIL_REQUEST:
     case types.UPDATE_ORDER_REQUEST:
       return {
         ...state,
@@ -26,7 +26,6 @@ function orderReducer(state = initialState, action) {
       }
     case types.CREATE_ORDER_FAIL:
     case types.GET_ORDER_LIST_FAIL:
-    case types.GET_ORDER_DETAIL_FAIL:
     case types.UPDATE_ORDER_FAIL:
       return {
         ...state,
@@ -77,15 +76,7 @@ function orderReducer(state = initialState, action) {
         error: '',
         selectedOrder: payload
       }
-
-    case types.GET_ORDER_DETAIL_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        error: '',
-        order: payload.order
-      }  
-  
+      
     case types.UPDATE_ORDER_SUCCESS:
       return {
         ...state,
