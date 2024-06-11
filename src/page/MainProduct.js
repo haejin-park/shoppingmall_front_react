@@ -45,7 +45,7 @@ const MainProduct = () => {
     } 
     const queryString = params.toString();
     navigate(`?${queryString}`); 
-  }, [searchCategory, searchKeyword, currentPage, navigate, prevUserEmail, currentUserEmail]);
+  }, [searchCategory, searchKeyword, currentPage, navigate]);
 
   const handlePageClick = ({ selected }) => {
     dispatch({type:types.CHANGE_PAGE_OF_MAIN_PRODUCT, payload:selected + 1});
