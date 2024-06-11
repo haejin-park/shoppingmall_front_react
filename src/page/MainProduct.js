@@ -21,13 +21,13 @@ const MainProduct = () => {
   const prevMainSortBy = sessionStorage.getItem("prevMainSortBy");
 
   useEffect(() => { 
-    if(prevUserEmail !== null && currentUserEmail !== null && prevUserEmail !== currentUserEmail) { 
+    if(prevUserEmail && currentUserEmail && prevUserEmail !== currentUserEmail) { 
       dispatch(productActions.getMainProductList({searchCategory, searchKeyword, currentPage:1, sortBy:"popularity"}));
-    } else if(navigationType === "POP" && currentUserEmail === null && prevMainSortBy) {
+    } else if(navigationType === "POP" && !currentUserEmail && prevMainSortBy) {
       let sortBy = prevMainSortBy
       dispatch({type:types.SELECT_SORT_BY_MAIN_PRODUCT_LIST, payload: sortBy});
       dispatch(productActions.getMainProductList({searchCategory, searchKeyword, currentPage, sortBy}));
-    } else if(navigationType !== "POP" && currentUserEmail === null) {
+    } else if(!currentUserEmail) {
       dispatch(productActions.getMainProductList({searchCategory, searchKeyword, currentPage, sortBy}));
     } 
   }, [navigationType, query, searchCategory, searchKeyword, currentPage, dispatch, sortBy, prevUserEmail, currentUserEmail, prevMainSortBy]);
