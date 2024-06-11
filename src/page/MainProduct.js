@@ -34,18 +34,14 @@ const MainProduct = () => {
 
   useEffect(() => {
     let params = {};
-    if(prevUserEmail!== null && currentUserEmail!== null && prevUserEmail !== currentUserEmail) {  
-      params = new URLSearchParams({currentPage: 1}); 
-    } else if(currentUserEmail === null) {
-      if(searchKeyword && !searchCategory) {
-        params = new URLSearchParams({searchKeyword, currentPage}) 
-      } else if (!searchKeyword && searchCategory) {
-        params = new URLSearchParams({searchCategory, currentPage}) 
-      } else if (searchKeyword && searchCategory) {
-        params = new URLSearchParams({searchCategory, searchKeyword, currentPage}) 
-      } else if (!searchKeyword && !searchCategory && currentPage) {
-        params = new URLSearchParams({currentPage});
-      }
+    if (!searchKeyword && !searchCategory && currentPage) {
+      params = new URLSearchParams({currentPage});
+    } else if(searchKeyword && !searchCategory && currentPage) {
+      params = new URLSearchParams({searchKeyword, currentPage}) 
+    } else if (!searchKeyword && searchCategory && currentPage) {
+      params = new URLSearchParams({searchCategory, currentPage}) 
+    } else if (searchKeyword && searchCategory && currentPage) {
+      params = new URLSearchParams({searchCategory, searchKeyword, currentPage}) 
     } 
     const queryString = params.toString();
     navigate(`?${queryString}`); 
